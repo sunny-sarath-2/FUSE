@@ -89,18 +89,7 @@ class LoginLayout extends Component {
                     </Form>
                   </CardBody>
                 </Card>
-              </CardGroup>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
-  }
-}
-
-export default LoginLayout;
-{
-  /* <Card
+                <Card
                   className="text-white bg-primary py-5 d-md-down-none"
                   style={{ width: "44%" }}
                 >
@@ -124,5 +113,14 @@ export default LoginLayout;
                       </Link>
                     </div>
                   </CardBody>
-                </Card> */
+                </Card>
+              </CardGroup>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
 }
+
+export default LoginLayout;

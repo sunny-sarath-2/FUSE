@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
@@ -30,30 +30,68 @@ import CardIcon from "../../components/Card/CardIcon";
 import CardBody from "../../components/Card/CardBody";
 import CardFooter from "../../components/Card/CardFooter";
 
-import { bugs, website, server } from "../../variables/general";
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "../../variables/charts";
-
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle";
 import html from "../../../public/template/index.html";
+
+var sjc = require("shooju-client");
+var sj = new sjc(
+  "https://fuse.shooju.com",
+  "api.test",
+  "tMAFDsRVm1ONRAaCzCzAZFFkvwmsf4vUBIfo6DntokOFSlBWWaJjMwAqUZwe9DZZH"
+);
+
 class Dashboard extends React.Component {
-  state = {
-    value: 0
-  };
+  constructor() {
+    super();
+    this.state = {
+      value: 0,
+      site_title: "",
+      site_desc: ""
+    };
+    this.pageData = this.pageData.bind(this);
+  }
+
   handleChange = (event, value) => {
-    this.setState({ value });
+    this.setState({ value, site_title: "sdfsdfsd" });
   };
 
   handleChangeIndex = index => {
-    this.setState({ value: index });
+    this.setState({ value: index, site_title: "sdfsdfsd" });
   };
+
   createMarkup() {
     return { __html: html };
   }
+
+  pageData(e) {
+    this.setState({
+      site_title: e.series[0].fields.sites_map_obj[0].site_map,
+      site_desc: e.series[0].fields.sites_map_obj[0].site_desc
+    });
+  }
+
+  componentDidMount() {
+    //read all the series inside 'sid:test'
+    sj.raw.get(
+      "/series",
+      {
+        query: "sid:test\\FuseParent",
+        fields: ["sites_map_obj", "meta.updated_at"]
+      },
+      response => {
+        console.log(response.series[0].fields.sites_map_obj[0].site_map);
+        console.log(response.series[0].fields.sites_map_obj[0].site_desc);
+        this.pageData(response);
+        //console.log("read!", response);
+        //console.log("fields for first series!", response); //response.series[0].fields
+      },
+      function(error) {
+        // error callback
+        console.log(error);
+      }
+    );
+  }
+
   render() {
     const { classes, ...rest } = this.props;
     return (
@@ -135,144 +173,23 @@ class Dashboard extends React.Component {
           </GridItem>
         </GridContainer>
         <GridContainer>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="success">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={dailySalesChart.data}
-                  type="Line"
-                  options={dailySalesChart.options}
-                  listener={dailySalesChart.animation}
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Daily Sales</h4>
-                <p className={classes.cardCategory}>
-                  <span className={classes.successText}>
-                    <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                  </span>{" "}
-                  increase in today sales.
-                </p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> updated 4 minutes ago
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="warning">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={emailsSubscriptionChart.data}
-                  type="Bar"
-                  options={emailsSubscriptionChart.options}
-                  responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                  listener={emailsSubscriptionChart.animation}
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Email Subscriptions</h4>
-                <p className={classes.cardCategory}>
-                  Last Campaign Performance
-                </p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> campaign sent 2 days ago
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="danger">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={completedTasksChart.data}
-                  type="Line"
-                  options={completedTasksChart.options}
-                  listener={completedTasksChart.animation}
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Completed Tasks</h4>
-                <p className={classes.cardCategory}>
-                  Last Campaign Performance
-                </p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> campaign sent 2 days ago
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-        </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={6}>
-            <CustomTabs
-              title="Tasks:"
-              headerColor="primary"
-              tabs={[
-                {
-                  tabName: "Bugs",
-                  tabIcon: BugReport,
-                  tabContent: (
-                    <Tasks
-                      checkedIndexes={[0, 3]}
-                      tasksIndexes={[0, 1, 2, 3]}
-                      tasks={bugs}
-                    />
-                  )
-                },
-                {
-                  tabName: "Website",
-                  tabIcon: Code,
-                  tabContent: (
-                    <Tasks
-                      checkedIndexes={[0]}
-                      tasksIndexes={[0, 1]}
-                      tasks={website}
-                    />
-                  )
-                },
-                {
-                  tabName: "Server",
-                  tabIcon: Cloud,
-                  tabContent: (
-                    <Tasks
-                      checkedIndexes={[1]}
-                      tasksIndexes={[0, 1, 2]}
-                      tasks={server}
-                    />
-                  )
-                }
-              ]}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
+          <GridItem xs={12} sm={12} md={12}>
             <Card>
-              <CardHeader color="warning">
-                <h4 className={classes.cardTitleWhite}>Employees Stats</h4>
-                <p className={classes.cardCategoryWhite}>
-                  New employees on 15th September, 2016
+              <CardHeader color="success">
+                <p style={{ color: "#fff", fontWeight: "bold" }}>
+                  {this.state.site_title}
                 </p>
               </CardHeader>
               <CardBody>
-                <Table
-                  tableHeaderColor="warning"
-                  tableHead={["ID", "Name", "Salary", "Country"]}
-                  tableData={[
-                    ["1", "Dakota Rice", "$36,738", "Niger"],
-                    ["2", "Minerva Hooper", "$23,789", "Curaçao"],
-                    ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
-                    ["4", "Philip Chaney", "$38,735", "Korea, South"]
-                  ]}
-                />
+                <h3
+                  style={{
+                    color: "#000",
+                    fontWeight: "300",
+                    marginTop: "0px"
+                  }}
+                >
+                  {this.state.site_desc}
+                </h3>
               </CardBody>
             </Card>
           </GridItem>

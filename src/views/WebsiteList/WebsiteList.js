@@ -62,48 +62,7 @@ function WebsiteList(props) {
                 "Status",
                 "Last updated"
               ]}
-              tableData={[
-                [
-                  "abc@localhost.com",
-                  "+1 78945623",
-                  "Oud-Turnhout",
-                  "http://abc.localhost.com",
-                  "Active",
-                  "2 weeks ago"
-                ],
-                [
-                  "def@localhost.com",
-                  "+1 78945623",
-                  "Sinaai-Waas",
-                  "http://def.localhost.com",
-                  "Active",
-                  "2 weeks ago"
-                ],
-                [
-                  "ghi@localhost.com",
-                  "+1 78945623",
-                  "Baileux",
-                  "http://ghi.localhost.com",
-                  "Active",
-                  "2 weeks ago"
-                ],
-                [
-                  "jkl@localhost.com",
-                  "+1 78945623",
-                  "Overland Park",
-                  "http://jkl.localhost.com",
-                  "Active",
-                  "2 weeks ago"
-                ],
-                [
-                  "mnop@localhost.com",
-                  "+1 78945623",
-                  "Feldkirchen in Kärnten",
-                  "http://mnop.localhost.com",
-                  "Active",
-                  "2 weeks ago"
-                ]
-              ]}
+              tableData={[]}
             />
           </CardBody>
         </Card>

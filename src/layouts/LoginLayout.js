@@ -1,17 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardGroup,
-  Col,
-  Container,
-  Form,
-  Input,
-  InputGroup,
-  Row
-} from "reactstrap";
 
 class LoginLayout extends Component {
   constructor() {
@@ -21,12 +9,13 @@ class LoginLayout extends Component {
       email: "",
       password: ""
     };
+    this.Login = this.Login.bind(this);
   }
 
   handleChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
+    // this.setState({
+    //   [e.target.name]: e.target.value
+    // });
   }
 
   handleSubmit(e) {
@@ -35,89 +24,86 @@ class LoginLayout extends Component {
 
   Login(e) {
     e.preventDefault();
+    console.log("checl");
     this.props.history.push("/admin/dashboard");
   }
 
   render() {
     return (
-      <div className="app flex-row align-items-center">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md="8">
-              <CardGroup>
-                <Card className="p-4">
-                  <CardBody>
-                    <Form method="POST" onSubmit={e => this.handleSubmit(e)}>
-                      <h1>Login</h1>
-                      <p className="text-muted">Sign In to your account</p>
-                      <InputGroup className="mb-3">
-                        <Input
-                          type="text"
-                          name="email"
-                          placeholder="Email"
-                          autoComplete="email"
-                          onChange={e => this.handleChange(e)}
-                        />
-                      </InputGroup>
-                      <InputGroup className="mb-4">
-                        <Input
-                          type="password"
-                          name="password"
-                          placeholder="Password"
-                          autoComplete="current-password"
-                          onChange={e => this.handleChange(e)}
-                        />
-                      </InputGroup>
-                      <Row>
-                        <Col xs="6">
-                          <Button
-                            color="primary"
-                            className="px-4"
-                            onClick={e => this.Login(e)}
-                          >
-                            Login
-                          </Button>
-                        </Col>
-                        <Col xs="6" className="text-right">
-                          <Link to="#">
-                            <Button color="link" className="px-0">
-                              Forgot password?
-                            </Button>
-                          </Link>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </CardBody>
-                </Card>
-                <Card
-                  className="text-white bg-primary py-5 d-md-down-none"
-                  style={{ width: "44%" }}
-                >
-                  <CardBody className="text-center">
-                    <div>
-                      <h2>Sign up</h2>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit, sed do eiusmod tempor incididunt ut labore et
-                        dolore magna aliqua.
-                      </p>
-                      <Link to="#">
-                        <Button
-                          color="primary"
-                          className="mt-3"
-                          active
-                          tabIndex={-1}
-                        >
-                          Register Now!
-                        </Button>
-                      </Link>
+      <div className="container main form-middle-main">
+        <div className="justify-content-center row">
+          <div className="col-md-8">
+            <div className="card-group">
+              <div className="p-4 card">
+                <div className="card-body">
+                  <form className="all">
+                    <h1>Login</h1>
+                    <p className="text-muted">Sign In to your account</p>
+                    <div className="mb-3 input-group">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text">
+                          <i className="fa fa-user-o" aria-hidden="true" />
+                        </span>
+                      </div>
+                      <input
+                        placeholder="Username"
+                        autoComplete="username"
+                        type="text"
+                        className="form-control"
+                      />
                     </div>
-                  </CardBody>
-                </Card>
-              </CardGroup>
-            </Col>
-          </Row>
-        </Container>
+                    <div className="mb-4 input-group">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text">
+                          <i className="fa fa-lock" aria-hidden="true" />
+                        </span>
+                      </div>
+                      <input
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        type="password"
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="row">
+                      <div className="col-6">
+                        <button
+                          className="px-4 btn btn-primary"
+                          onClick={this.Login}
+                        >
+                          Login
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div
+                className="text-white bg-primary py-5 d-md-down-none card right-bg"
+                style={{ width: "44%" }}
+              >
+                <div className="text-center card-body">
+                  <div>
+                    <h2>Sign up</h2>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua.
+                    </p>
+                    <a href="#/register">
+                      <button
+                        tabIndex="-1"
+                        className="mt-3 btn btn-primary active"
+                      >
+                        Register Now!
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

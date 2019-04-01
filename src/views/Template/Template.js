@@ -1,17 +1,21 @@
 import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Template1 from "../TemplateView/template1";
+import Dialog from "@material-ui/core/Dialog";
+import Slide from "@material-ui/core/Slide";
+import CloseIcon from "@material-ui/icons/Close";
+import Fab from "@material-ui/core/Fab";
 // core components
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 
 const styles = {
   cardCategoryWhite: {
@@ -43,214 +47,246 @@ const styles = {
   }
 };
 
-function Template(props) {
-  const { classes } = props;
-  const [values, setValues] = React.useState({
-    currency: ""
-  });
-  // <div dangerouslySetInnerHTML={this.createMarkup()} />
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
-  };
-  return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Template</h4>
-          </CardHeader>
-          <CardBody>
-            <TextField
-              id="standard-select-currency"
-              select
-              label="Select Chapter"
-              style={{ width: "300px" }}
-              value={values.currency}
-              onChange={handleChange("currency")}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
-            >
-              <MenuItem value="Alabama">Alabama</MenuItem>
-              <MenuItem value="Illinois">Illinois</MenuItem>
-              <MenuItem value="California">California</MenuItem>
-              <MenuItem value="Colorado">Colorado</MenuItem>
-              <MenuItem value="Mississippi">Mississippi</MenuItem>
-            </TextField>
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
-            <Grid container spacing={24} style={{ marginTop: "20px" }}>
-              <Grid item xs={12} sm={4}>
-                <Card>
-                  <img
-                    className={classes.media}
-                    style={{ height: "200px" }}
-                    src="https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png"
-                    alt="Paella dish"
-                  />
-                </Card>
-                <Link to="/template1" target="_blank">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    style={{ marginRight: "10px" }}
-                  >
-                    Preview
-                  </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Select
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Card>
-                  <img
-                    className={classes.media}
-                    style={{ height: "200px" }}
-                    src="https://adminlte.io/uploads/images/themequarry/material-pro.png"
-                    alt="Paella dish"
-                  />
-                </Card>
-                <Link to="/template1" target="_blank">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    style={{ marginRight: "10px" }}
-                  >
-                    Preview
-                  </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Select
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Card>
-                  <img
-                    className={classes.media}
-                    style={{ height: "200px" }}
-                    src="https://adminlte.io/uploads/images/themequarry/ample-admin.png"
-                    alt="Paella dish"
-                  />
-                </Card>
-                <Link to="/template1" target="_blank">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    style={{ marginRight: "10px" }}
-                  >
-                    Preview
-                  </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Select
-                </Button>
-              </Grid>
+class Template extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      Chapter: "",
+      open: false
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+  handleChange(e) {
+    this.setState({ Chapter: e.target.value });
+  }
+  handleClickOpen() {
+    this.setState({ open: true });
+  }
+  handleClose() {
+    this.setState({ open: false });
+  }
+  render() {
+    const { classes } = this.props;
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Template</h4>
+            </CardHeader>
+            <CardBody>
+              <TextField
+                id="standard-select-currency"
+                select
+                label="Select Chapter"
+                style={{ width: "300px" }}
+                value={this.state.Chapter}
+                onChange={e => {
+                  this.handleChange(e);
+                }}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu
+                  }
+                }}
+              >
+                <MenuItem value="Alabama">Alabama</MenuItem>
+                <MenuItem value="Illinois">Illinois</MenuItem>
+                <MenuItem value="California">California</MenuItem>
+                <MenuItem value="Colorado">Colorado</MenuItem>
+                <MenuItem value="Mississippi">Mississippi</MenuItem>
+              </TextField>
 
-              <Grid item xs={12} sm={4}>
-                <Card>
-                  <img
-                    className={classes.media}
-                    style={{ height: "200px" }}
-                    src="https://adminlte.io/uploads/images/themequarry/material-pro.png"
-                    alt="Paella dish"
-                  />
-                </Card>
-                <Link to="/template1" target="_blank">
+              <Grid container spacing={24} style={{ marginTop: "20px" }}>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <img
+                      className={classes.media}
+                      style={{ height: "200px" }}
+                      src="https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png"
+                      alt="Paella dish"
+                    />
+                  </Card>
                   <Button
                     variant="contained"
                     color="primary"
                     className={classes.button}
                     style={{ marginRight: "10px" }}
+                    onClick={this.handleClickOpen}
                   >
                     Preview
                   </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Select
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Card>
-                  <img
-                    className={classes.media}
-                    style={{ height: "200px" }}
-                    src="https://adminlte.io/uploads/images/themequarry/ample-admin.png"
-                    alt="Paella dish"
-                  />
-                </Card>
-                <Link to="/template1" target="_blank">
+                  <Dialog
+                    fullScreen
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    TransitionComponent={Transition}
+                  >
+                    <Fab
+                      color="secondary"
+                      aria-label="Add"
+                      className={classes.fab}
+                      style={{ zIndex: "111111", position: "fixed" }}
+                      onClick={this.handleClose}
+                    >
+                      <CloseIcon />
+                    </Fab>
+                    <Template1 />
+                  </Dialog>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Select
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <img
+                      className={classes.media}
+                      style={{ height: "200px" }}
+                      src="https://adminlte.io/uploads/images/themequarry/material-pro.png"
+                      alt="Paella dish"
+                    />
+                  </Card>
                   <Button
                     variant="contained"
                     color="primary"
                     className={classes.button}
                     style={{ marginRight: "10px" }}
+                    onClick={this.handleClickOpen}
                   >
                     Preview
                   </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Select
-                </Button>
-              </Grid>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Select
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <img
+                      className={classes.media}
+                      style={{ height: "200px" }}
+                      src="https://adminlte.io/uploads/images/themequarry/ample-admin.png"
+                      alt="Paella dish"
+                    />
+                  </Card>
 
-              <Grid item xs={12} sm={4}>
-                <Card>
-                  <img
-                    className={classes.media}
-                    style={{ height: "200px" }}
-                    src="https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png"
-                    alt="Paella dish"
-                  />
-                </Card>
-                <Link to="/template1" target="_blank">
                   <Button
                     variant="contained"
                     color="primary"
                     className={classes.button}
                     style={{ marginRight: "10px" }}
+                    onClick={this.handleClickOpen}
                   >
                     Preview
                   </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Select
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Select
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <img
+                      className={classes.media}
+                      style={{ height: "200px" }}
+                      src="https://adminlte.io/uploads/images/themequarry/material-pro.png"
+                      alt="Paella dish"
+                    />
+                  </Card>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    style={{ marginRight: "10px" }}
+                    onClick={this.handleClickOpen}
+                  >
+                    Preview
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Select
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <img
+                      className={classes.media}
+                      style={{ height: "200px" }}
+                      src="https://adminlte.io/uploads/images/themequarry/ample-admin.png"
+                      alt="Paella dish"
+                    />
+                  </Card>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    style={{ marginRight: "10px" }}
+                    onClick={this.handleClickOpen}
+                  >
+                    Preview
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Select
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <img
+                      className={classes.media}
+                      style={{ height: "200px" }}
+                      src="https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png"
+                      alt="Paella dish"
+                    />
+                  </Card>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    style={{ marginRight: "10px" }}
+                    onClick={this.handleClickOpen}
+                  >
+                    Preview
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Select
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-  );
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
 }
 
 export default withStyles(styles)(Template);

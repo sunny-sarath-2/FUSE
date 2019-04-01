@@ -7,7 +7,6 @@ import Template1 from "./views/TemplateView/template1";
 import Admin from "./layouts/Admin";
 import LoginLayout from "./layouts/LoginLayout";
 // import RTL from "layouts/RTL.jsx";
-import "./App.scss";
 import "./assets/css/material-dashboard-react.css?v=1.6.0";
 
 const hist = createBrowserHistory();

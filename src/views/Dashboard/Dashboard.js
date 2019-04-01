@@ -29,7 +29,6 @@ import CardHeader from "../../components/Card/CardHeader";
 import CardIcon from "../../components/Card/CardIcon";
 import CardBody from "../../components/Card/CardBody";
 import CardFooter from "../../components/Card/CardFooter";
-
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle";
 import html from "../../../public/template/index.html";
 
@@ -46,7 +45,9 @@ class Dashboard extends React.Component {
     this.state = {
       value: 0,
       site_title: "",
-      site_desc: ""
+      site_desc: "",
+      site_inc: "",
+      loading: false
     };
     this.pageData = this.pageData.bind(this);
   }
@@ -63,15 +64,21 @@ class Dashboard extends React.Component {
     return { __html: html };
   }
 
-  pageData(e) {
-    this.setState({
-      site_title: e.series[0].fields.sites_map_obj[0].site_map,
-      site_desc: e.series[0].fields.sites_map_obj[0].site_desc
+  pageData = e =>
+    new Promise((resolve, rejects) => {
+      this.setState({
+        site_title: e.series[0].fields.sites_map_obj[0].site_map,
+        site_desc: e.series[0].fields.sites_map_obj[0].site_desc,
+        site_inc: e.series[0].fields.sites_map_obj[0].site_inc,
+        loading: false
+      });
+      resolve(e.series[0].fields.sites_map_obj[0].site_inc);
     });
-  }
 
   componentDidMount() {
     //read all the series inside 'sid:test'
+    this.setState({ loading: true });
+
     sj.raw.get(
       "/series",
       {
@@ -79,9 +86,49 @@ class Dashboard extends React.Component {
         fields: ["sites_map_obj", "meta.updated_at"]
       },
       response => {
-        console.log(response.series[0].fields.sites_map_obj[0].site_map);
-        console.log(response.series[0].fields.sites_map_obj[0].site_desc);
-        this.pageData(response);
+        this.pageData(response).then(site_inc => {
+          if (site_inc == undefined) site_inc = 12;
+          sj.raw.post(
+            "/jobs",
+            {},
+            { description: "my test job", source: "api", notes: "" },
+            function(job) {
+              //we started a job and can write as much as we want now
+              sj.raw.post(
+                "/series/write",
+                { job_id: job.job_id },
+                {
+                  series: [
+                    {
+                      //series_id: "test\\clientA\\docTypeX\\docId128",
+                      series_id: "test\\FuseParent",
+                      fields: {
+                        sites_map_obj: [
+                          {
+                            site_id: "003",
+                            site_inc: parseInt(site_inc) + parseInt(1),
+                            site_map: "Welcome to Parent site.",
+                            site_desc:
+                              "This is Parent site description from Shooju DB" +
+                              " "
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                function(response) {
+                  sj.raw.post(
+                    "/jobs/" + job.job_id + "/finish",
+                    {},
+                    {},
+                    function(jobCompleteResponse) {}
+                  );
+                }
+              );
+            }
+          );
+        });
         //console.log("read!", response);
         //console.log("fields for first series!", response); //response.series[0].fields
       },
@@ -176,20 +223,41 @@ class Dashboard extends React.Component {
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="success">
-                <p style={{ color: "#fff", fontWeight: "bold" }}>
-                  {this.state.site_title}
-                </p>
+                <h4 style={{ color: "#fff", fontWeight: "bold" }}>
+                  {this.state.loading ? (
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  ) : (
+                    this.state.site_title
+                  )}
+                </h4>
               </CardHeader>
               <CardBody>
-                <h3
+                <h5
                   style={{
                     color: "#000",
                     fontWeight: "300",
                     marginTop: "0px"
                   }}
                 >
-                  {this.state.site_desc}
-                </h3>
+                  {this.state.loading ? (
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  ) : (
+                    this.state.site_desc
+                  )}
+                </h5>
+                <h5>
+                  {this.state.loading ? (
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  ) : (
+                    "Site Increment:" + this.state.site_inc
+                  )}
+                </h5>
               </CardBody>
             </Card>
           </GridItem>

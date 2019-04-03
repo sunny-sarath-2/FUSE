@@ -8,6 +8,7 @@ import Table from "../../components/Table/Table";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
+import appController from "../../controller/controller";
 
 const styles = {
   cardCategoryWhite: {
@@ -39,36 +40,50 @@ const styles = {
   }
 };
 
-function WebsiteList(props) {
-  const { classes } = props;
-  return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Site Meta</h4>
-            <p className={classes.cardCategoryWhite} style={{ float: "left" }}>
-              List of Sites.
-            </p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={[
-                "Email",
-                "Contact No",
-                "Chapter",
-                "URL",
-                "Status",
-                "Last updated"
-              ]}
-              tableData={[]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-  );
+class WebsiteList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  componentDidMount() {
+    let access = appController.checkAccess();
+    if (!access) {
+      this.props.history.push("/login");
+    }
+  }
+  render() {
+    const { classes } = this.props;
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Site Meta</h4>
+              <p
+                className={classes.cardCategoryWhite}
+                style={{ float: "left" }}
+              >
+                List of Sites.
+              </p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={[
+                  "Email",
+                  "Contact No",
+                  "Chapter",
+                  "URL",
+                  "Status",
+                  "Last updated"
+                ]}
+                tableData={[]}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
 }
 
 export default withStyles(styles)(WebsiteList);

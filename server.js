@@ -4,6 +4,8 @@ var bodyParser = require("body-parser");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
+var https = require("https");
+var fs = require("fs");
 
 const router = express.Router();
 const app = express();
@@ -28,4 +30,12 @@ app.get("*", function(req, res, next) {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+https
+  .createServer(
+    {
+      key: fs.readFileSync("server.key"),
+      cert: fs.readFileSync("server.cert")
+    },
+    app
+  )
+  .listen(port, () => console.log(`Listening on port ${port}`));

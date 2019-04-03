@@ -30,7 +30,8 @@ import CardIcon from "../../components/Card/CardIcon";
 import CardBody from "../../components/Card/CardBody";
 import CardFooter from "../../components/Card/CardFooter";
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle";
-import html from "../../../public/template/index.html";
+import qs from "query-string";
+import appController from "../../controller/controller";
 
 var sjc = require("shooju-client");
 var sj = new sjc(
@@ -40,8 +41,36 @@ var sj = new sjc(
 );
 
 class Dashboard extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    let access = appController.checkAccess();
+    if (!access) {
+      var Q = qs.parse(this.props.location.hash);
+      var setupTime = localStorage.getItem("setupTime");
+      var now = new Date().getTime();
+      var hours = Q.expires_in;
+      console.log(Q);
+      if (setupTime == null) {
+        localStorage.setItem("setupTime", now);
+        if (Q.access_token == undefined) {
+        } else {
+          localStorage.setItem("loginToken", Q.access_token);
+          localStorage.setItem("expires_in", Q.expires_in);
+        }
+      } else {
+        if (now - setupTime > (hours / 60 / 60) * 60 * 60 * 1000) {
+          localStorage.clear();
+        } else {
+          if (Q.access_token == undefined) {
+          } else {
+            localStorage.setItem("loginToken", Q.access_token);
+            localStorage.setItem("expires_in", Q.expires_in);
+          }
+        }
+      }
+    }
+
+    // this.props.history.push("/login");
     this.state = {
       value: 0,
       site_title: "",
@@ -60,10 +89,6 @@ class Dashboard extends React.Component {
     this.setState({ value: index, site_title: "sdfsdfsd" });
   };
 
-  createMarkup() {
-    return { __html: html };
-  }
-
   pageData = e =>
     new Promise((resolve, rejects) => {
       this.setState({
@@ -77,6 +102,11 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     //read all the series inside 'sid:test'
+    var token = localStorage.getItem("loginToken");
+    console.log(token);
+    if (token == null || token == undefined) {
+      this.props.history.push("/login");
+    }
     this.setState({ loading: true });
 
     sj.raw.get(

@@ -16,6 +16,7 @@ import GridContainer from "../../components/Grid/GridContainer";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
+import appController from "../../controller/controller";
 
 const styles = {
   cardCategoryWhite: {
@@ -61,6 +62,12 @@ class Template extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+  }
+  componentDidMount() {
+    let access = appController.checkAccess();
+    if (!access) {
+      this.props.history.push("/login");
+    }
   }
   handleChange(e) {
     this.setState({ Chapter: e.target.value });

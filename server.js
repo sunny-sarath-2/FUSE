@@ -1,5 +1,4 @@
 var express = require("express");
-var session = require("express-session");
 var bodyParser = require("body-parser");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -7,7 +6,6 @@ var cors = require("cors");
 var https = require("https");
 var fs = require("fs");
 
-const router = express.Router();
 const app = express();
 
 app.use(cors());
@@ -29,7 +27,7 @@ app.get("*", function(req, res, next) {
   res.sendFile(path.resolve(__dirname + "/public", "", "index.html"));
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 https
   .createServer(
     {

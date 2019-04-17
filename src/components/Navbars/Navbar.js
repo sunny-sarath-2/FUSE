@@ -10,7 +10,7 @@ import Hidden from "@material-ui/core/Hidden";
 // @material-ui/icons
 import Menu from "@material-ui/icons/Menu";
 // core components
-import AdminNavbarLinks from "./AdminNavbarLinks";
+import AdminNavbarLinks from "./AdminNavbarLinks"; //AdminNavbarLinks
 import RTLNavbarLinks from "./RTLNavbarLinks";
 import Button from "../CustomButtons/Button";
 
@@ -36,12 +36,18 @@ function Header({ ...props }) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
+          <Button
+            style={{ float: "right", backgroundColor: "#00acc1" }}
+            onClick={props.signout}
+          >
+            signout
+          </Button>
           <Button color="transparent" href="#" className={classes.title}>
             {makeBrand()}
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
+          {props.rtlActive ? <RTLNavbarLinks /> : ""}
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

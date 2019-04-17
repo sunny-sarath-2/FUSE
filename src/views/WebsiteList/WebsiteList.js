@@ -45,10 +45,13 @@ class WebsiteList extends React.Component {
     super(props);
   }
   componentDidMount() {
-    let access = appController.checkAccess();
-    if (!access) {
-      this.props.history.push("/login");
-    }
+    // appController.checkAccess((value, userdetails) => {
+    //   if (value) {
+    //     console.log(value, userdetails);
+    //   } else {
+    //     this.props.history.push("/login");
+    //   }
+    // });
   }
   render() {
     const { classes } = this.props;

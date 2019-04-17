@@ -64,10 +64,13 @@ class Template extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
   componentDidMount() {
-    let access = appController.checkAccess();
-    if (!access) {
-      this.props.history.push("/login");
-    }
+    // appController.checkAccess((value, userdetails) => {
+    //   if (value) {
+    //     console.log(value, userdetails);
+    //   } else {
+    //     this.props.history.push("/login");
+    //   }
+    // });
   }
   handleChange(e) {
     this.setState({ Chapter: e.target.value });
@@ -154,7 +157,19 @@ class Template extends React.Component {
                     Select
                   </Button>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+              </Grid>
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
+}
+
+export default withStyles(styles)(Template);
+
+{
+  /* <Grid item xs={12} sm={4}>
                   <Card>
                     <img
                       className={classes.media}
@@ -287,13 +302,5 @@ class Template extends React.Component {
                     Select
                   </Button>
                 </Grid>
-              </Grid>
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
-    );
-  }
+              </Grid> */
 }
-
-export default withStyles(styles)(Template);

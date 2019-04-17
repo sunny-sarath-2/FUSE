@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
+
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
 import Icon from "@material-ui/core/Icon";
@@ -11,18 +10,11 @@ import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
 import LocalOffer from "@material-ui/icons/LocalOffer";
 import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import AccessTime from "@material-ui/icons/AccessTime";
 import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
+
 // core components
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
-import Table from "../../components/Table/Table";
-import Tasks from "../../components/Tasks/Tasks";
-import CustomTabs from "../../components/CustomTabs/CustomTabs";
 import Danger from "../../components/Typography/Danger";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
@@ -32,6 +24,9 @@ import CardFooter from "../../components/Card/CardFooter";
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle";
 import qs from "query-string";
 import appController from "../../controller/controller";
+// models
+import Authenticate from "../../model/authenticate.model";
+import { card } from "../../assets/jss/material-dashboard-react";
 
 var sjc = require("shooju-client");
 var sj = new sjc(
@@ -43,51 +38,67 @@ var sj = new sjc(
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    let access = appController.checkAccess();
-    if (!access) {
-      var Q = qs.parse(this.props.location.hash);
-      var setupTime = localStorage.getItem("setupTime");
-      var now = new Date().getTime();
-      var hours = Q.expires_in;
-      console.log(Q);
-      if (setupTime == null) {
-        localStorage.setItem("setupTime", now);
-        if (Q.access_token == undefined) {
-        } else {
-          localStorage.setItem("loginToken", Q.access_token);
-          localStorage.setItem("expires_in", Q.expires_in);
-        }
-      } else {
-        if (now - setupTime > (hours / 60 / 60) * 60 * 60 * 1000) {
-          localStorage.clear();
-        } else {
-          if (Q.access_token == undefined) {
-          } else {
-            localStorage.setItem("loginToken", Q.access_token);
-            localStorage.setItem("expires_in", Q.expires_in);
-          }
-        }
-      }
-    }
 
-    // this.props.history.push("/login");
+    // var returned = appController.checkAccess((value, userdetails) => {
+    //   if (value) {
+    //     // console.log(value, userdetails);
+    //   } else {
+    //     var urlContent = qs.parse(this.props.location.hash);
+    //     console.log(urlContent);
+    //     if (
+    //       urlContent.access_token == undefined ||
+    //       urlContent.access_token == null
+    //     ) {
+    //       this.props.history.push("/login");
+    //     } else {
+    //       var auth = new Authenticate();
+    //       auth.access_token = urlContent.access_token;
+    //       auth.id_token = urlContent.id_token;
+    //       auth.expires_in = urlContent.expires_in;
+    //       auth.token_type = urlContent.token_type;
+    //       appController.createAccess(
+    //         auth,
+    //         (access_token_verification, userdetails) => {
+    //           if (access_token_verification) {
+    //             console.log(userdetails);
+    //           } else {
+    //             this.props.history.push("/login");
+    //           }
+    //         }
+    //       );
+    //     }
+    //   }
+    // });
+    // console.log(returned,"---------------------------------------------------------------")
+    // var cognitoUser = appController.getCognitoUser();
+    // cognitoUser.getUserAttributes(function(err, result) {
+    //   if (err) {
+    //     console.log(err);
+    //     alert(err);
+    //     return;
+    //   }
+    //   for (i = 0; i < result.length; i++) {
+    //     console.log(
+    //       "attribute " +
+    //         result[i].getName() +
+    //         " has value " +
+    //         result[i].getValue()
+    //     );
+    //   }
+    // });
+
     this.state = {
       value: 0,
       site_title: "",
       site_desc: "",
       site_inc: "",
-      loading: false
+      loading: false,
+      userdetails: {
+        username: localStorage.getItem("username")
+      }
     };
     this.pageData = this.pageData.bind(this);
   }
-
-  handleChange = (event, value) => {
-    this.setState({ value, site_title: "sdfsdfsd" });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index, site_title: "sdfsdfsd" });
-  };
 
   pageData = e =>
     new Promise((resolve, rejects) => {
@@ -101,13 +112,14 @@ class Dashboard extends React.Component {
     });
 
   componentDidMount() {
+    // appController.checkAccess((value, userdetails) => {
+    //   if (value) {
+    //     this.setState({ userdetails: userdetails, loading: true });
+    //   } else {
+    //     this.props.history.push("/login");
+    //   }
+    // });
     //read all the series inside 'sid:test'
-    var token = localStorage.getItem("loginToken");
-    console.log(token);
-    if (token == null || token == undefined) {
-      this.props.history.push("/login");
-    }
-    this.setState({ loading: true });
 
     sj.raw.get(
       "/series",
@@ -118,52 +130,49 @@ class Dashboard extends React.Component {
       response => {
         this.pageData(response).then(site_inc => {
           if (site_inc == undefined) site_inc = 12;
-          sj.raw.post(
-            "/jobs",
-            {},
-            { description: "my test job", source: "api", notes: "" },
-            function(job) {
-              //we started a job and can write as much as we want now
-              sj.raw.post(
-                "/series/write",
-                { job_id: job.job_id },
-                {
-                  series: [
-                    {
-                      //series_id: "test\\clientA\\docTypeX\\docId128",
-                      series_id: "test\\FuseParent",
-                      fields: {
-                        sites_map_obj: [
-                          {
-                            site_id: "003",
-                            site_inc: parseInt(site_inc) + parseInt(1),
-                            site_map: "Welcome to Parent site.",
-                            site_desc:
-                              "This is Parent site description from Shooju DB" +
-                              " "
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                },
-                function(response) {
-                  sj.raw.post(
-                    "/jobs/" + job.job_id + "/finish",
-                    {},
-                    {},
-                    function(jobCompleteResponse) {}
-                  );
-                }
-              );
-            }
-          );
+          // sj.raw.post(
+          //   "/jobs",
+          //   {},
+          //   { description: "my test job", source: "api", notes: "" },
+          //   function(job) {
+          //     //we started a job and can write as much as we want now
+          //     sj.raw.post(
+          //       "/series/write",
+          //       { job_id: job.job_id },
+          //       {
+          //         series: [
+          //           {
+          //             //series_id: "test\\clientA\\docTypeX\\docId128",
+          //             series_id: "test\\FuseParent",
+          //             fields: {
+          //               sites_map_obj: [
+          //                 {
+          //                   site_id: "003",
+          //                   site_inc: parseInt(site_inc) + parseInt(1),
+          //                   site_map: "Welcome to Parent site.",
+          //                   site_desc:
+          //                     "This is Parent site description from Shooju DB" +
+          //                     " "
+          //                 }
+          //               ]
+          //             }
+          //           }
+          //         ]
+          //       },
+          //       function(response) {
+          //         sj.raw.post(
+          //           "/jobs/" + job.job_id + "/finish",
+          //           {},
+          //           {},
+          //           function(jobCompleteResponse) {}
+          //         );
+          //       }
+          //     );
+          //   }
+          // );
         });
-        //console.log("read!", response);
-        //console.log("fields for first series!", response); //response.series[0].fields
       },
       function(error) {
-        // error callback
         console.log(error);
       }
     );
@@ -173,6 +182,17 @@ class Dashboard extends React.Component {
     const { classes, ...rest } = this.props;
     return (
       <div>
+        <GridItem xs={12} sm={12} md={12}>
+          <CardHeader>
+            <p style={{ color: "#17a2b8" }}>
+              welcome{" "}
+              <b style={{ fontSize: "larger" }}>
+                {this.state.userdetails.username} !!
+              </b>
+            </p>
+          </CardHeader>
+        </GridItem>
+
         <GridContainer>
           <GridItem xs={12} sm={6} md={3}>
             <Card>
@@ -182,7 +202,7 @@ class Dashboard extends React.Component {
                 </CardIcon>
                 <p className={classes.cardCategory}>Used Space</p>
                 <h3 className={classes.cardTitle}>
-                  49/50 <small>GB</small>
+                  99% <small>GB</small>
                 </h3>
               </CardHeader>
               <CardFooter stats>
@@ -204,7 +224,7 @@ class Dashboard extends React.Component {
                   <Store />
                 </CardIcon>
                 <p className={classes.cardCategory}>Revenue</p>
-                <h3 className={classes.cardTitle}>$34,245</h3>
+                <h3 className={classes.cardTitle}>$34,24</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>

@@ -2,6 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
+var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -12,15 +13,12 @@ import Navbar from "../components/Navbars/Navbar";
 import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin";
-
 import routes from "../routes";
-
 import dashboardStyle from "../assets/jss/material-dashboard-react/layouts/dashboardStyle";
-
 import image from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
 
-const switchRoutes = (
+const SwitchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -36,16 +34,29 @@ const switchRoutes = (
   </Switch>
 );
 
-class Dashboard extends React.Component {
+class Admin extends React.Component {
   constructor(props) {
     super(props);
+    let reload = localStorage.getItem("reload");
+    if (reload == null || reload == undefined) {
+      localStorage.setItem("reload", false);
+      window.location.reload();
+    }
+
     this.state = {
       image: image,
       color: "blue",
       hasImage: true,
       fixedClasses: "dropdown show",
-      mobileOpen: false
+      mobileOpen: false,
+      username: localStorage.getItem("username"),
+      loading: true
     };
+    this.signout = this.signout.bind(this);
+  }
+  componentWillMount() {
+    // console.log("check");
+    this.setState({ loading: false });
   }
   handleImageClick(image) {
     this.setState({ image: image });
@@ -88,6 +99,23 @@ class Dashboard extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.resizeFunction);
   }
+  signout() {
+    // console.log("signout");
+    var poolData = {
+      UserPoolId: "us-east-1_9FuCrBs4V",
+      ClientId: "ststc11lqm7tdv8b8hgalvbgi"
+    };
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    var userData = {
+      Username: this.state.username,
+      Pool: userPool
+    };
+    var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    cognitoUser.signOut();
+    // console.log(userDetails);
+    localStorage.clear();
+    this.props.history.push("/login");
+  }
   render() {
     const { classes, ...rest } = this.props;
     return (
@@ -102,19 +130,22 @@ class Dashboard extends React.Component {
           color={this.state.color}
           {...rest}
         />
+
         <div className={classes.mainPanel} ref="mainPanel">
           <Navbar
             routes={routes}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
+            signout={this.signout}
           />
+
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
           {this.getRoute() ? (
             <div className={classes.content}>
-              <div className={classes.container}>{switchRoutes}</div>
+              <div className={classes.container}>{SwitchRoutes}</div>
             </div>
           ) : (
-            <div className={classes.map}>{switchRoutes}</div>
+            <div className={classes.map}>{SwitchRoutes}</div>
           )}
           {this.getRoute() ? <Footer /> : null}
           <FixedPlugin
@@ -131,8 +162,8 @@ class Dashboard extends React.Component {
   }
 }
 
-Dashboard.propTypes = {
+Admin.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(Dashboard);
+export default withStyles(dashboardStyle)(Admin);

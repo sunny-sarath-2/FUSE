@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import Button from "@material-ui/core/Button";
 // core components
 import tableStyle from "../../assets/jss/material-dashboard-react/components/tableStyle";
 
@@ -36,9 +37,14 @@ function CustomTable({ ...props }) {
             return (
               <TableRow key={key}>
                 {prop.map((prop, key) => {
+                  console.log("prop", prop);
                   return (
                     <TableCell className={classes.tableCell} key={key}>
-                      {prop}
+                      {prop == "View" ? (
+                        <Button color="primary">Delete</Button>
+                      ) : (
+                        prop
+                      )}
                     </TableCell>
                   );
                 })}

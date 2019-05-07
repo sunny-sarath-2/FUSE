@@ -3,20 +3,22 @@ import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 // core components
-// import Template1 from "./views/TemplateView/template1";
+import Template1 from "./views/TemplateView/template1";
 import appController from "./controller/controller";
 import Admin from "./layouts/Admin";
 import LoginLayout from "./layouts/LoginLayout";
 import Registration from "./views/Registration/registration";
 import "./assets/css/material-dashboard-react.css?v=1.6.0";
+// import Template from "./template/bundle";
+// require("../public/template/css/style.css");
 
 const hist = createBrowserHistory();
 
 function decide() {
   var c = appController.checkNewAccess();
-  // console.log(c);
   if (c != undefined) {
     c.getSession((err, session) => {
+      // console.log(session.isValid(), err);
       if (err) {
         // console.log(err, "asdfadsfasdf");
         localStorage.setItem("session", false);
@@ -27,11 +29,9 @@ function decide() {
         localStorage.setItem("session", true);
       }
       return true;
-      // console.log("session validity: " + session.isValid());
     });
     return true;
   } else {
-    // console.log("else case");
     localStorage.setItem("session", false);
     return false;
   }
@@ -68,7 +68,6 @@ ReactDOM.render(
               ) : (
                 <div>
                   <LoginLayout {...data} />
-                  <Warningprompts />
                 </div>
               )}
             </div>
@@ -79,12 +78,9 @@ ReactDOM.render(
         // component={LoginLayout}
       />
       <Route path="/register" component={Registration} />
+      <Route path="/template1" component={Template1} />
       <Redirect from="/" to="/login" />
     </Switch>
   </Router>,
   document.getElementById("root")
 );
-
-{
-  /* <Route path="/template1" component={Template1} /> */
-}

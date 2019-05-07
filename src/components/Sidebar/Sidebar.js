@@ -27,11 +27,19 @@ const Sidebar = ({ ...props }) => {
       {routes.map((prop, key) => {
         var activePro = " ";
         var listItemClasses;
+        if (
+          prop.path === "/content/view/:model" ||
+          prop.path === "/content/add/:model"
+        ) {
+          return null;
+        }
         if (prop.path === "/upgrade-to-pro") {
           activePro = classes.activePro + " ";
           listItemClasses = classNames({
             [" " + classes[color]]: true
           });
+        } else if (prop.path === "/reg_affiliate") {
+          return null;
         } else {
           listItemClasses = classNames({
             [" " + classes[color]]: activeRoute(prop.layout + prop.path)

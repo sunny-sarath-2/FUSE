@@ -36,18 +36,22 @@ function Header({ ...props }) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
-          <Button
-            style={{ float: "right", backgroundColor: "#00acc1" }}
+          {/* <Button
+            style={{ backgroundColor: "#00acc1" }}
             onClick={props.signout}
           >
             signout
-          </Button>
+          </Button> */}
           <Button color="transparent" href="#" className={classes.title}>
-            {makeBrand()}
+            {makeBrand() ? makeBrand() : "Form"}
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          {props.rtlActive ? <RTLNavbarLinks /> : ""}
+          {props.rtlActive ? (
+            <RTLNavbarLinks />
+          ) : (
+            <AdminNavbarLinks handleSignoutClick={props.signout} />
+          )}
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

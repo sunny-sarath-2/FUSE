@@ -2,9 +2,10 @@ import jose from "node-jose";
 import jwt from "jsonwebtoken";
 import jwkToPem from "jwk-to-pem";
 import jwk from "../assets/utils/public.json";
-import userLogin from "../model/userLogin.model";
+import User from "../model/user.model";
 var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 let username = "";
+let StrapiJwtToken = "";
 var algoritham;
 const appController = {
   checkAccess(callBack) {
@@ -135,10 +136,10 @@ const appController = {
     var payload = jose.util.base64url.decode(sections[1]);
     payload = JSON.parse(payload);
     header = JSON.parse(header);
-
-    var userdetails = new userLogin();
+    var userdetails = new User();
     // console.log(payload);
     userdetails.userType = payload["custom:Tier"];
+    userdetails.userOrganisation = payload["custom:Organisation"];
     userdetails.userEmail = payload.email;
     userdetails.userName = payload.name;
     userdetails.userPhoneNumber = payload.phone_number;
@@ -188,6 +189,15 @@ const appController = {
       }
     });
     return { error: error, errorfileds: errorfileds };
+  },
+  getUserName() {
+    return username;
+  },
+  setStrapiJwtToken(token) {
+    StrapiJwtToken = token;
+  },
+  getStrapiJwtToken() {
+    return StrapiJwtToken;
   }
 };
 export default appController;

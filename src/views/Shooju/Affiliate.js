@@ -1,15 +1,8 @@
 import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Template1 from "../TemplateView/template1";
-import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
-import CloseIcon from "@material-ui/icons/Close";
-import Fab from "@material-ui/core/Fab";
 // core components
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
@@ -17,7 +10,6 @@ import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import appController from "../../controller/controller";
-import { Link } from "react-router-dom";
 
 const styles = {
   cardCategoryWhite: {
@@ -67,10 +59,10 @@ class Affiliate extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
   componentDidMount() {
-    let access = appController.checkAccess();
-    if (!access) {
-      //this.props.history.push("/login");
-    }
+    // let access = appController.checkAccess();
+    // if (!access) {
+    //   //this.props.history.push("/login");
+    // }
     let token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTU0Mzc5Nzk2LCJleHAiOjE1NTY5NzE3OTZ9.DWbt_gL_qQLnpv97bmsUA-2jUshXdVRDQRFTy7NZvt0";
     fetch("https://183.83.216.197:5432/shoojus/affiliate", {

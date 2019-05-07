@@ -1,0 +1,367 @@
+{
+  "fields": {
+    "meta.updated_at": 1556090847898,
+    "meta.updated_by": "api.test",
+    "sites_map_obj": [
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Alabama School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Alaska School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Arizona School Counselors Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Arkansas School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "California&nbsp;Association of School Counselors",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Colorado School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Connecticut School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Delaware School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Florida School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Georgia School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Hawaii School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Idaho School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Illinois School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Indiana School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Iowa School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Kansas School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Kentucky School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Louisiana School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Maine School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Maryland School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Massachusetts School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Michigan School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Minnesota School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Mississippi School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Missouri School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Montana School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Nebraska School Coujnselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Nevada School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "New Hampshire School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "New Jersey School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "New Mexico School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "4",
+        "affiliates_count": "33",
+        "chapter": "New York School Counselor Association",
+        "series_id": "sid=test\\NYSSCA AFFILIATES",
+        "url": "http://nyssca.org/?page id=2065"
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "North Carolina School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "North Dakota School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Ohio School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Oklahoma School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Oregon School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Pennsylvania School Counselors Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Rhode Island School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "South Carolina:&nbsp;Palmetto State School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "South Dakota School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Tennessee School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Texas:&nbsp;Lone Star State School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Utah School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Vermont School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Virginia School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Washington School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "West Virginia School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Wisconsin School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Wyoming School Counselor Association",
+        "series_id": "null",
+        "url": ""
+      },
+      {
+        "admin_count": "0",
+        "affiliates_count": "0",
+        "chapter": "Guam Associaton of School Counselors",
+        "series_id": "null",
+        "url": ""
+      }
+    ]
+  },
+  "series_id": "test\\CHAPTERS_AFFILIATES",
+  "points": []
+}

@@ -17,6 +17,7 @@ import routes from "../routes";
 import dashboardStyle from "../assets/jss/material-dashboard-react/layouts/dashboardStyle";
 import image from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
+import API from "../../services/API";
 
 const SwitchRoutes = (
   <Switch>
@@ -54,8 +55,9 @@ class Admin extends React.Component {
     };
     this.signout = this.signout.bind(this);
   }
-  componentWillMount() {
-    // console.log("check");
+  async componentDidMount() {
+    var a = await API.getAffiliates();
+    console.log(a);
     this.setState({ loading: false });
   }
   handleImageClick(image) {
@@ -100,7 +102,6 @@ class Admin extends React.Component {
     window.removeEventListener("resize", this.resizeFunction);
   }
   signout() {
-    // console.log("signout");
     var poolData = {
       UserPoolId: "us-east-1_9FuCrBs4V",
       ClientId: "ststc11lqm7tdv8b8hgalvbgi"

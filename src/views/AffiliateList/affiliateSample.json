@@ -1,0 +1,186 @@
+{
+  "request_id": "cKhoq054kkv3cOA",
+  "series": [
+    {
+      "fields": {
+        "meta.updated_at": 1556015589674,
+        "meta.updated_by": "api.test",
+        "sites_map_obj": [
+          {
+            "admin_information": "John.Doe",
+            "association_name": "Adirondack School Counselors Association (ASCA)",
+            "contact_information": "Lynne Jenkins, President, Corinth HS, 105 Oak St, Corinth, NY 12822, jenkinsl@corinthcsd.com, 518.654.9005 x 3449",
+            "region": "4 &amp; 5"
+          },
+          {
+            "admin_information": "John.Doe",
+            "association_name": "Allegheny County Counselors Association",
+            "contact_information": "-",
+            "region": "-"
+          },
+          {
+            "association_name": "Broome-Tioga Counselors Association (BTCA)",
+            "contact_information": "Christi Smith, President,  Vestal HS, 205 Woodlawn Dr, Vestal, NY 13850, <a href=\"mailto:chsmith@vestal.k12.ny.us\">chsmith@vestal.k12.ny.us</a>, 607.757.2214, <a href=\"http://www.btboces.org/btca\">www.btboces.org/btca</a>",
+            "region": "7"
+          },
+          {
+            "association_name": "BOCES Regional Association of Counseling Educators (BRACE)",
+            "contact_information": "Margie Killip, We-MO-CO Monroe 2 BOCES, 3589 Ridge Rd, Spencerport, NY 14559, 585.852.210%4, <a href=\"mailto:mkillip@monroe2boces.org\">mkillip@monroe2boces.org</a>",
+            "region": "1-9"
+          },
+          {
+            "admin_information": "John.Doe",
+            "association_name": "Capital District Counseling Association (CDCA)",
+            "contact_information": "Dan Fogarty, President,  CDCA, PO Box 13174, Albany, New York 12212, <a href=\"mailto:President@CDCANY.org\">President@CDCANY.org</a>, <a href=\"http://www.cdcany.org\">www.cdcany.org</a>",
+            "region": "4"
+          },
+          {
+            "admin_information": "John.Doe",
+            "association_name": "Catholic Secondary School Counselors of New York City (CSSC/NYC)",
+            "contact_information": "Ms. Sandra Sanchez, President, 212-475-8940, <a href=\"mailto:ssanchez@lasalleacademy.org\">ssanchez@lasalleacademy.org</a>, <a href=\"http://www.cscnyc.com\">www.cscnyc.com</a>",
+            "region": "10"
+          },
+          {
+            "association_name": "Cattaraugus County Counselors Association",
+            "contact_information": "Nate Farnum, Pres, 208 N. 24<sup>th</sup> St, Olean, NY 14760,716.372.8122 x2, <a href=\"mailto:nate.farnum@walshstcs.org\">nate.farnum@walshstcs.org</a>",
+            "region": "9"
+          },
+          {
+            "association_name": "Cayuga Counselorâs Association (CCA)",
+            "contact_information": "Dr. Christine Hoskins-Tardibone, 250 Lake Ave, Auburn, NY 13021, 315.255.8317, <a href=\"mailto:Christine_hoskinstardibone@auburn.cnyric.org\">Christine_hoskinstardibone@auburn.cnyric.org</a>",
+            "region": "6"
+          },
+          {
+            "association_name": "Chautauqua County Counselors Association",
+            "contact_information": "Aaron Taylor, Pres. 716.763.1801 x3091, 7 Fairmount Ave, Jamestown, NY 14701,  <a href=\"mailto:ataylor@e2ccb.org\">ataylor@e2ccb.org</a>,  Theccca.webs.com",
+            "region": "9"
+          },
+          {
+            "association_name": "Chenango County School Counselorâs Association (CCSCA)",
+            "contact_information": "Lacey Eaves, President, <a href=\"mailto:leaves@ovcs.org\">leaves@ovcs.org</a>, 315.837.9907, <a href=\"http://www.chenangocounselors.org\">www.chenangocounselors.org</a>",
+            "region": "7"
+          },
+          {
+            "association_name": "CNY School Counselor Association",
+            "contact_information": "Penny Williams, <a href=\"mailto:pwilliams@ocmboces.org\">pwilliams@ocmboces.org</a>, 315.431.8560",
+            "region": "6"
+          },
+          {
+            "association_name": "Cortland County Counselors Association",
+            "contact_information": "-",
+            "region": "-"
+          },
+          {
+            "association_name": "Delaware County Counselors Association",
+            "contact_information": "-",
+            "region": "-"
+          },
+          {
+            "association_name": "East End Counselors Association, Inc.",
+            "contact_information": "Laurie O’Halloran, President Elect, P.O. Box 1357, Riverhead, NY 11901, <a href=\"mailto:lohalloran@hbschools.us\">lohalloran@hbschools.us</a>, 631.723.4700 x2115, <a href=\"http://eastendcounselors.org\">eastendcounselors.org</a>",
+            "region": "-"
+          },
+          {
+            "association_name": "Genesee Valley Counselors Association",
+            "contact_information": "-",
+            "region": "-"
+          },
+          {
+            "association_name": "Herkimer County Counselors Association",
+            "contact_information": "Sally McCann-Kramas, 352 Gros Blvd, Herkimer, NY 13350, 315.867.2014, <a href=\"mailto:skramas@herkimer-boces.org\">skramas@herkimer-boces.org</a>",
+            "region": "-"
+          },
+          {
+            "association_name": "High School Counselors of Western New York",
+            "contact_information": "Patrick Mandia, President, 2925 Pearl Street Road, Batavia, NY 14020, <a href=\"mailto:pmandia@rochester.rr.com\">pmandia@rochester.rr.com</a>, 716.474.1456, <a href=\"http://www.wnyschoolcounselor.org\">www.wnyschoolcounselor.org</a>",
+            "region": "8-9"
+          },
+          {
+            "association_name": "Jefferson Lewis Association of Counseling and Development",
+            "contact_information": "Matt Lambert, VP, Advising, Career, &amp; Transfer Center, Jefferson Community College, 1220 Coffeen St, Watertown, NY 13601, <a href=\"mailto:mlambert@sunyjefferson.edu\">mlambert@sunyjefferson.edu</a>, 315.786.2358",
+            "region": "5"
+          },
+          {
+            "association_name": "Mohawk Valley Counselors Association",
+            "contact_information": "Debra Ellis, Co-President, 1 Marauder Blvd, New York Mills, NY 13411, <a href=\"mailto:dellis@newyorkmills.org\">dellis@newyorkmills.org</a>, 315.768.3395",
+            "region": "5"
+          },
+          {
+            "association_name": "Nassau Counselors Association",
+            "contact_information": " Christine Murphy, Pres., Christine Krut, webmaster, Nassau Counselorsâ Association Executive Office, 708 Pease Lane, West Islip, NY  11795",
+            "region": "-"
+          },
+          {
+            "association_name": "Northern Zone Association for Counselors and Development",
+            "contact_information": "Christine Winston, President, P.O. Box 404, Canton, NY 13617, <a href=\"mailto:cwinston@mcs.k12.ny.us\">cwinston@mcs.k12.ny.us</a>, 315.854.4350",
+            "region": "-"
+          },
+          {
+            "association_name": "Niagara-Orleans Counseling Association",
+            "contact_information": "Laurie Ryan, 3111 Saunder Settlement Rd, Sanborn, NY 14132, <a href=\"mailto:ryanl@niargaracc.suny.edu\">ryanl@niargaracc.suny.edu</a>, 716.614.6282",
+            "region": "9"
+          },
+          {
+            "association_name": "Orange County Counselors Association",
+            "contact_information": "Millie Gutierrez-Colon, Newburgh Free Academy, 201 Fullerton Ave, Newburgh, NY 12550 <a href=\"mailto:mgutierr@necsd.net\">mgutierr@necsd.net</a>, 845.563.5508, <a href=\"mailto:Orangecountycounselorsassociation@wordpress.com\">Orangecountycounselorsassociation@wordpress.com</a>",
+            "region": "3"
+          },
+          {
+            "association_name": "Oswego County Counselors Association (OsCCA)",
+            "contact_information": "Lisa Roman, President, 2 Buccaneer Blvd, Oswego, NY 13126, <a href=\"mailto:lroman@oswego.org\">lroman@oswego.org,</a>  315.341.2221, <a href=\"http://www.oswego.org/highschool.cfm?subpage=970\">http://www.oswego.org/highschool.cfm?subpage=970</a>",
+            "region": "6"
+          },
+          {
+            "association_name": "Otsego County Counselors Association",
+            "contact_information": "Kristen Shearer, President, 159 Main St., Schenevus, NY 12155, <a href=\"mailto:kmshearer@schenevuscsd.org\">kmshearer@schenevuscsd.org</a>, 607.638.9329",
+            "region": "7"
+          },
+          {
+            "association_name": "Schoharie County Counselors",
+            "contact_information": "Stephanie Weinlein,  PO Box 430, Schoharie, NY 12157, 518.295.6611, <a href=\"mailto:sweinlein@schoharie.k12.ny.us\">sweinlein@schoharie.k12.ny.us</a>",
+            "region": "4"
+          },
+          {
+            "association_name": "Schuyler/Chemung/Tioga Counselors and Student Services Association (SCT CASA)",
+            "contact_information": "Daniel Hundycz, <a href=\"mailto:dhundycz@svecsd.org\">dhundycz@svecsd.org</a>, 607.589.7144",
+            "region": "7"
+          },
+          {
+            "association_name": "Steuben County Counselors Association",
+            "contact_information": "Matt Ford, <a href=\"mailto:mford@bathcsd.org\">mford@bathcsd.org</a>, 607.776.3301 x4606",
+            "region": "-"
+          },
+          {
+            "association_name": "Tompkins Area Counselors Association (TACA)",
+            "contact_information": "Nancy Fish, TST BOCES Career &amp; Tech Center, 555 Warren Rd, Ithaca, NY 110%50, <a href=\"mailto:nfish@tstboces.org\">nfish@tstboces.org</a>, 607.257.1551 x 2018",
+            "region": "6"
+          },
+          {
+            "association_name": "Tri-County Elementary Counselors",
+            "contact_information": "-",
+            "region": "-"
+          },
+          {
+            "association_name": "Westchester-Putnam-Rockland Counseling Association (WPRCA)",
+            "contact_information": "Mary Lou Baird, <a href=\"mailto:glidder919@aol.com\">glidder919@aol.com</a>, 914.584.7181",
+            "region": "2"
+          },
+          {
+            "association_name": "Western New York School Counselors Consortium",
+            "contact_information": "-",
+            "region": "8 &amp; 9"
+          },
+          {
+            "association_name": "Western Suffolk Counselors Association (WSCA)",
+            "contact_information": "Ken Grotell, President, 595 Rt 25A, Suite 18, Miller Place, NY 11764, <a href=\"mailto:kgrotell@gmail.com\">kgrotell@gmail.com</a>, 631.793.2085, <a href=\"http://www.wsuffolkcounselors.org\">www.wsuffolkcounselors.org</a>",
+            "region": "1"
+          }
+        ]
+      },
+      "series_id": "test\\NYSSCA_AFFILIATES",
+      "points": []
+    }
+  ],
+  "success": true,
+  "total": 1
+}

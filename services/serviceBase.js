@@ -1,6 +1,7 @@
 "use strict";
 
 //import appController from '../core/appController'
+import appController from "../src/controller/controller";
 
 const credentials = {
   credentials: "same-origin"
@@ -23,8 +24,13 @@ function getJwtToken() {
   //return appController.jwtToken
 }
 
+function StrapiJwtToken() {
+  //console.log("jwt", appController.getStrapiJwtToken());
+  return localStorage.getItem("strapiJwtToken");
+}
+
 function getHeaders(url) {
-  return url.includes("login")
+  var header = url.includes("register")
     ? {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -32,16 +38,21 @@ function getHeaders(url) {
     : {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "x-access-token": getJwtToken()
+        Authorization: "Bearer " + StrapiJwtToken()
+        // "x-access-token": getJwtToken()
       };
+  return header;
 }
 
 function getUrl(url) {
   const timestamp = new Date().getTime();
   const separator = url.includes("?") ? "&" : "?";
   //noinspection JSUnresolvedVariable
-
-  return `${url}${separator}t=${timestamp}`;
+  // console.log(url);
+  //return "http://18.212.235.172:1337" + url;
+  //return "https://localhost:1337" + url;
+  return "https://183.83.216.197:5432" + url;
+  // return `${url}${separator}t=${timestamp}`;
 }
 
 /**
@@ -53,21 +64,17 @@ const serviceBase = {
     credentials.headers = getHeaders(url);
     let response = await fetch(getUrl(url), credentials);
     response = await checkStatus(response);
-
     return response.json();
   },
 
   postPutDelete: async (url, method, request) => {
     const options = {
-      headers: getHeaders(url),
+      headers: await getHeaders(url),
       method: method,
       body: JSON.stringify(request)
     };
 
-    let response = await fetch(
-      getUrl(url),
-      Object.assign(options, credentials)
-    );
+    let response = await fetch(getUrl(url), Object.assign(options));
     response = await checkStatus(response);
 
     return response.json();

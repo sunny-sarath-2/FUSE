@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import appController from "../controller/controller";
 import Warningprompts from "../modelPopups/warningprompts";
-// import AmazonCognitoIdentity from "amazon-cognito-identity-js";
-global.fetch = require("node-fetch");
-var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
+import Restpasswordprompts from "../modelPopups/restpasswordprompts";
+import API from "../../services/API";
 
-// var poolData = {
-//   UserPoolId: "us-east-1_9FuCrBs4V",
-//   ClientId: "ststc11lqm7tdv8b8hgalvbgi" //74b566o357ju94ej02sl6b85p
-// };
-// var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
+require("../../public/style.css");
 
 class LoginLayout extends Component {
   constructor(props) {
@@ -23,62 +19,43 @@ class LoginLayout extends Component {
       loading: false,
       showModel: false,
       modelError: "",
-      modelHeader: ""
+      modelHeader: "",
+      showModeForgetPassword: false,
+      verificationCode: "",
+      restPassword: "",
+      submited: false
     };
     this.Login = this.Login.bind(this);
     this.Register = this.Register.bind(this);
-    this.signout = this.signout.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.closeModel = this.closeModel.bind(this);
-    // this.getCognitoUser = this.getCognitoUser.bind(this);
+    this.ForgetPassword = this.ForgetPassword.bind(this);
+    this.getNewPassword = this.getNewPassword.bind(this);
+    this.sendNewPassword = this.sendNewPassword.bind(this);
   }
-  componentDidMount() {}
-  // getCognitoUser() {
-  //   var userData = {
-  //     Username: this.state.userName,
-  //     Pool: userPool
-  //   };
-  //   var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-  //   return cognitoUser;
-  // }
   Register() {
     this.props.history.push("/register");
   }
-  signout() {
-    var cognitoUser = appController.getCognitoUser();
-    cognitoUser.getUserAttributes(function(err, result) {
-      if (err) {
-        alert(err);
-        return;
-      }
-      for (i = 0; i < result.length; i++) {
-        console.log(
-          "attribute " +
-            result[i].getName() +
-            " has value " +
-            result[i].getValue()
-        );
-      }
+
+  async setStrapiUser(user) {
+    let registerStrapiUser = await API.registerStrapiUser({
+      username: user.userName,
+      email: user.userEmail,
+      password: user.userName,
+      provider: "cognito",
+      Tier: user.userType,
+      Organisation: user.userOrganisation
     });
-    // cognitoUser.forgotPassword({
-    //   onSuccess: function(result) {
-    //     console.log("call result: " + result);
-    //   },
-    //   onFailure: function(err) {
-    //     console.log(err);
-    //     alert(err);
-    //   },
-    //   inputVerificationCode() {
-    //     var verificationCode = prompt("Please input verification code ", "");
-    //     var newPassword = prompt("Enter new password ", "");
-    //     cognitoUser.confirmPassword(verificationCode, newPassword, this);
-    //   }
-    // });
+    if (registerStrapiUser.jwt) {
+      await appController.setStrapiJwtToken(registerStrapiUser.jwt);
+      await localStorage.setItem("strapiJwtToken", registerStrapiUser.jwt);
+      this.props.history.push("/admin/dashboard");
+    }
   }
+
   Login(e) {
     e.preventDefault();
     let _state = this.state;
-    // console.log(appController.validation([_state.userName, _state.password]));
     let validationCheck = appController.validation([
       _state.userName,
       _state.password
@@ -100,35 +77,25 @@ class LoginLayout extends Component {
           var idToken = result.idToken.jwtToken;
           localStorage.setItem("idToken", idToken);
           localStorage.setItem("accessToken", accessToken);
+          var userDetails = appController.getUser(idToken);
+          this.setStrapiUser(userDetails);
           // console.log(result, "loged in user details");
           /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer*/
-          this.props.history.push("/admin/dashboard");
+          //this.props.history.push("/admin/dashboard");
         },
 
         onFailure: err => {
-          // this.setState({ showModel: true });
-          // console.log(err);
           this.setState({
             showModel: true,
             loading: false,
             modelError: err.message,
             modelHeader: "Error"
           });
-          // alert(err);
         },
         newPasswordRequired: () => {
           alert("user haven't confirmed by admin");
           console.log("called new password");
           return;
-          // var attributesData = {
-          //   name: "SunnySarath",
-          //   phone_number: "+911234567890"
-          // };
-          // cognitoUser.completeNewPasswordChallenge(
-          //   "Welcome@1234$",
-          //   attributesData,
-          //   this
-          // );
         }
       });
     } else {
@@ -153,7 +120,72 @@ class LoginLayout extends Component {
 
   closeModel() {
     // console.log("close");
-    this.setState({ showModel: false });
+    this.setState({
+      showModel: false,
+      showModeForgetPassword: false,
+      verificationCode: "",
+      restPassword: ""
+    });
+  }
+  async ForgetPassword() {
+    var _state = this.state;
+    let validationCheck = appController.validation([_state.userName]);
+    if (validationCheck.error == 0) {
+      this.setState({
+        modelHeader: "reset password",
+        showModeForgetPassword: true
+      });
+      var getNewPassword = this.getNewPassword;
+      this.setState({
+        showModeForgetPassword: true
+      });
+      var cognitoUser = appController.getCognitoUser();
+      cognitoUser.forgotPassword({
+        onSuccess: function(result) {
+          console.log("call result: " + result);
+        },
+        onFailure: err => {
+          console.log(err);
+          this.setState({
+            loading: false,
+            modelError: err.message,
+            modelHeader: "Error"
+          });
+        },
+        async inputVerificationCode() {
+          let a = await getNewPassword();
+          console.log(a);
+          // cognitoUser.confirmPassword(verificationCode, newPassword, this);
+          // var verificationCode =  prompt("Enter verification code ", ""); //getNewPassword
+          // var newPassword = prompt("Enter new password ", "");
+          // cognitoUser.confirmPassword(verificationCode, newPassword, this);
+        }
+      });
+    } else {
+      this.setState({
+        error: true,
+        errorfileds: validationCheck.errorfileds,
+        errorMessage: "To reset password username is required"
+      });
+    }
+  }
+  async getNewPassword() {
+    console.log(this.state.restPassword, this.state.verificationCode);
+    if (this.state.submited) {
+      return {
+        restPassword: this.state.restPassword,
+        verificationCode: this.state.verificationCode
+      };
+    } else {
+      // await this.getNewPassword();
+    }
+
+    // await callback(this.state.verificationCode, this.state.restPassword);
+  }
+  sendNewPassword() {
+    this.setState({
+      submited: true
+    });
   }
   render() {
     return (
@@ -163,6 +195,17 @@ class LoginLayout extends Component {
           header={this.state.modelHeader}
           show={this.state.showModel}
           close={this.closeModel}
+        />
+        <Restpasswordprompts
+          errormessage={this.state.modelError}
+          header={this.state.modelHeader}
+          show={this.state.showModeForgetPassword}
+          close={this.closeModel}
+          errorfileds={[false, false]}
+          inputChange={this.inputChange}
+          verificationCode={this.state.verificationCode}
+          password={this.state.restPassword}
+          ResetPassword={this.sendNewPassword}
         />
         <div className="justify-content-center row">
           <div className="col-md-8">
@@ -184,7 +227,7 @@ class LoginLayout extends Component {
                         autoComplete="username"
                         type="text"
                         className={
-                          this.state.errorfileds[2] && this.state.error
+                          this.state.errorfileds[1] && this.state.error
                             ? "form-control error-border-color"
                             : "form-control"
                         }
@@ -214,17 +257,28 @@ class LoginLayout extends Component {
                         }}
                       />
                     </div>
-                    <div className="row">
-                      <div className="col-6">
-                        <button
-                          data-toggle="modal"
-                          data-target="#myModal"
-                          className="px-4 btn btn-primary"
-                          onClick={this.Login}
-                        >
-                          Login
-                        </button>
-                      </div>
+                    <div className="col-12">
+                      <button
+                        data-toggle="modal"
+                        data-target="#myModal"
+                        className="px-4 btn btn-primary"
+                        onClick={this.Login}
+                      >
+                        Login
+                      </button>
+                    </div>
+                    <div className="col-12" style={{ overflow: "hidden" }}>
+                      <a
+                        data-toggle="modal"
+                        data-target="#myModal"
+                        className=""
+                        style={{ float: "right", cursor: "pointer" }}
+                        onClick={() => {
+                          this.ForgetPassword();
+                        }}
+                      >
+                        Forget Password
+                      </a>
                     </div>
                   </form>
                 </div>
@@ -236,11 +290,7 @@ class LoginLayout extends Component {
                 <div className="text-center card-body">
                   <div>
                     <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
+                    <p>Sign up your account to get access.</p>
                     <a>
                       <button
                         tabIndex="-1"
@@ -250,13 +300,6 @@ class LoginLayout extends Component {
                         Register Now!
                       </button>
                     </a>
-                    {/* <button
-                      tabIndex="-1"
-                      className="mt-3 btn btn-primary active"
-                      onClick={this.signout}
-                    >
-                      signout
-                    </button> */}
                   </div>
                 </div>
               </div>
@@ -298,3 +341,34 @@ export default LoginLayout;
 //   }
 //   console.log("session validity: " + session.isValid());
 // });
+// signout() {
+//   var cognitoUser = appController.getCognitoUser();
+//   // cognitoUser.getUserAttributes(function(err, result) {
+//   //   if (err) {
+//   //     alert(err);
+//   //     return;
+//   //   }
+//   //   for (i = 0; i < result.length; i++) {
+//   //     console.log(
+//   //       "attribute " +
+//   //         result[i].getName() +
+//   //         " has value " +
+//   //         result[i].getValue()
+//   //     );
+//   //   }
+//   // });
+//   cognitoUser.forgotPassword({
+//     onSuccess: function(result) {
+//       console.log("call result: " + result);
+//     },
+//     onFailure: function(err) {
+//       console.log(err);
+//       alert(err);
+//     },
+//     inputVerificationCode() {
+//       var verificationCode = prompt("Please input verification code ", "");
+//       var newPassword = prompt("Enter new password ", "");
+//       cognitoUser.confirmPassword(verificationCode, newPassword, this);
+//     }
+//   });
+// }

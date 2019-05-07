@@ -27,13 +27,7 @@ import appController from "../../controller/controller";
 // models
 import Authenticate from "../../model/authenticate.model";
 import { card } from "../../assets/jss/material-dashboard-react";
-
-var sjc = require("shooju-client");
-var sj = new sjc(
-  "https://fuse.shooju.com",
-  "api.test",
-  "tMAFDsRVm1ONRAaCzCzAZFFkvwmsf4vUBIfo6DntokOFSlBWWaJjMwAqUZwe9DZZH"
-);
+import API from "../../../services/API";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -93,6 +87,7 @@ class Dashboard extends React.Component {
       site_desc: "",
       site_inc: "",
       loading: false,
+      title: "",
       userdetails: {
         username: localStorage.getItem("username")
       }
@@ -102,87 +97,48 @@ class Dashboard extends React.Component {
 
   pageData = e =>
     new Promise((resolve, rejects) => {
+      // console.log(e);
       this.setState({
-        site_title: e.series[0].fields.sites_map_obj[0].site_map,
-        site_desc: e.series[0].fields.sites_map_obj[0].site_desc,
-        site_inc: e.series[0].fields.sites_map_obj[0].site_inc,
+        site_title: e.sites_map_obj[0].site_map,
+        site_desc: e.sites_map_obj[0].site_desc,
+        site_inc: e.sites_map_obj[0].site_inc,
         loading: false
       });
-      resolve(e.series[0].fields.sites_map_obj[0].site_inc);
+      resolve(e.sites_map_obj[0].site_inc);
     });
 
-  componentDidMount() {
-    // appController.checkAccess((value, userdetails) => {
-    //   if (value) {
-    //     this.setState({ userdetails: userdetails, loading: true });
-    //   } else {
-    //     this.props.history.push("/login");
-    //   }
-    // });
-    //read all the series inside 'sid:test'
-
-    sj.raw.get(
-      "/series",
-      {
-        query: "sid:test\\FuseParent",
-        fields: ["sites_map_obj", "meta.updated_at"]
-      },
-      response => {
-        this.pageData(response).then(site_inc => {
-          if (site_inc == undefined) site_inc = 12;
-          // sj.raw.post(
-          //   "/jobs",
-          //   {},
-          //   { description: "my test job", source: "api", notes: "" },
-          //   function(job) {
-          //     //we started a job and can write as much as we want now
-          //     sj.raw.post(
-          //       "/series/write",
-          //       { job_id: job.job_id },
-          //       {
-          //         series: [
-          //           {
-          //             //series_id: "test\\clientA\\docTypeX\\docId128",
-          //             series_id: "test\\FuseParent",
-          //             fields: {
-          //               sites_map_obj: [
-          //                 {
-          //                   site_id: "003",
-          //                   site_inc: parseInt(site_inc) + parseInt(1),
-          //                   site_map: "Welcome to Parent site.",
-          //                   site_desc:
-          //                     "This is Parent site description from Shooju DB" +
-          //                     " "
-          //                 }
-          //               ]
-          //             }
-          //           }
-          //         ]
-          //       },
-          //       function(response) {
-          //         sj.raw.post(
-          //           "/jobs/" + job.job_id + "/finish",
-          //           {},
-          //           {},
-          //           function(jobCompleteResponse) {}
-          //         );
-          //       }
-          //     );
-          //   }
-          // );
-        });
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
+  async componentDidMount() {
+    this.setState({ loading: true });
+    let token = localStorage.getItem("idToken");
+    let userDetails = await appController.getUser(token);
+    if (userDetails.userType === "parent") {
+      this.setState({
+        title: "Welcome to Parent site."
+      });
+    } else {
+      this.setState({
+        title: "Welcome to Affiliate site."
+      });
+    }
+    let response = await API.getSiteIncrement();
+    //console.log(response);
+    this.pageData(response.fields).then(async site_inc => {
+      // let postresponse = await API.siteIncrement({
+      //   site_id: "003",
+      //   site_inc: parseInt(site_inc) + parseInt(1),
+      //   site_map: "Welcome to Parent site.",
+      //   site_desc: "This is site description from Shooju DB" + " "
+      // });
+      //console.log(site_inc);
+      //console.log(postresponse);
+    });
   }
 
   render() {
     const { classes, ...rest } = this.props;
     return (
       <div>
-        <GridItem xs={12} sm={12} md={12}>
+        {/* <GridItem xs={12} sm={12} md={12}>
           <CardHeader>
             <p style={{ color: "#17a2b8" }}>
               welcome{" "}
@@ -191,7 +147,7 @@ class Dashboard extends React.Component {
               </b>
             </p>
           </CardHeader>
-        </GridItem>
+        </GridItem> */}
 
         <GridContainer>
           <GridItem xs={12} sm={6} md={3}>
@@ -200,19 +156,17 @@ class Dashboard extends React.Component {
                 <CardIcon color="warning">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                <p className={classes.cardCategory}>Used Space</p>
-                <h3 className={classes.cardTitle}>
-                  99% <small>GB</small>
-                </h3>
+                <p className={classes.cardCategory}>Chapters Live</p>
+                <h3 className={classes.cardTitle}>31</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <Danger>
+                  {/* <Danger>
                     <Warning />
                   </Danger>
                   <a href="#pablo" onClick={e => e.preventDefault()}>
                     Get more space
-                  </a>
+                  </a> */}
                 </div>
               </CardFooter>
             </Card>
@@ -223,13 +177,13 @@ class Dashboard extends React.Component {
                 <CardIcon color="success">
                   <Store />
                 </CardIcon>
-                <p className={classes.cardCategory}>Revenue</p>
-                <h3 className={classes.cardTitle}>$34,24</h3>
+                <p className={classes.cardCategory}>Affiliates</p>
+                <h3 className={classes.cardTitle}>34</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <DateRange />
-                  Last 24 Hours
+                  {/* <DateRange />
+                  Last 24 Hours */}
                 </div>
               </CardFooter>
             </Card>
@@ -240,13 +194,13 @@ class Dashboard extends React.Component {
                 <CardIcon color="danger">
                   <Icon>info_outline</Icon>
                 </CardIcon>
-                <p className={classes.cardCategory}>Fixed Issues</p>
-                <h3 className={classes.cardTitle}>75</h3>
+                <p className={classes.cardCategory}>Sites Down</p>
+                <h3 className={classes.cardTitle}>3</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <LocalOffer />
-                  Tracked from Github
+                  {/* <LocalOffer />
+                  Tracked from Github */}
                 </div>
               </CardFooter>
             </Card>
@@ -257,13 +211,13 @@ class Dashboard extends React.Component {
                 <CardIcon color="info">
                   <Accessibility />
                 </CardIcon>
-                <p className={classes.cardCategory}>Followers</p>
-                <h3 className={classes.cardTitle}>+245</h3>
+                <p className={classes.cardCategory}>visitors</p>
+                <h3 className={classes.cardTitle}>245</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <Update />
-                  Just Updated
+                  {/* <Update />    
+                  Just Updated */}
                 </div>
               </CardFooter>
             </Card>
@@ -275,11 +229,12 @@ class Dashboard extends React.Component {
               <CardHeader color="success">
                 <h4 style={{ color: "#fff", fontWeight: "bold" }}>
                   {this.state.loading ? (
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="sr-only">Loading...</span>
-                    </div>
+                    <div
+                      className="spinner-border text-primary"
+                      role="status"
+                    />
                   ) : (
-                    this.state.site_title
+                    this.state.title
                   )}
                 </h4>
               </CardHeader>
@@ -292,18 +247,20 @@ class Dashboard extends React.Component {
                   }}
                 >
                   {this.state.loading ? (
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="sr-only">Loading...</span>
-                    </div>
+                    <div
+                      className="spinner-border text-primary"
+                      role="status"
+                    />
                   ) : (
                     this.state.site_desc
                   )}
                 </h5>
                 <h5>
                   {this.state.loading ? (
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="sr-only">Loading...</span>
-                    </div>
+                    <div
+                      className="spinner-border text-primary"
+                      role="status"
+                    />
                   ) : (
                     "Site Increment:" + this.state.site_inc
                   )}

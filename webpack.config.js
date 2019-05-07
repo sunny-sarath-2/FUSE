@@ -4,7 +4,7 @@
 var path = require("path");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: ["babel-polyfill", "./src/index.js"],
   output: {
     path: path.resolve(__dirname, "public"),
     filename: "bundle.js",
@@ -41,14 +41,7 @@ module.exports = {
             loader: "style-loader"
           },
           {
-            loader: "css-loader",
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: "[name]_[local]_[hash:base64]",
-              sourceMap: true,
-              minimize: true
-            }
+            loader: "css-loader"
           }
         ]
       },

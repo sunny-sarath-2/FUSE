@@ -21,8 +21,19 @@ class Events extends Component {
       userType: "",
       events: [],
       loading: false,
-      createBlog: false
+      createBlog: false,
+      eventData: {
+        Title: "",
+        Description: "",
+        Start_Date: "2019-05-07T14:30",
+        End_Date: "2019-05-07T14:30",
+        City: "",
+        State: ""
+      },
+      error: false
     };
+    this.inputChange = this.inputChange.bind(this);
+    this.submitEvent = this.submitEvent.bind(this);
   }
   componentDidMount() {
     let strapitoken = localStorage.getItem("strapiJwtToken");
@@ -37,7 +48,7 @@ class Events extends Component {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response);
+        // console.log(response);
 
         this.setState({
           events: response.series
@@ -45,6 +56,41 @@ class Events extends Component {
         });
       });
   }
+
+  inputChange(e, field) {
+    let dummy = this.state.eventData;
+    dummy.error = false;
+    dummy[field] = e.target.value;
+    this.setState(dummy);
+  }
+  async submitEvent() {
+    if (
+      this.state.eventData.Title != "" &&
+      this.state.eventData.Description != "" &&
+      this.state.eventData.City != "" &&
+      this.state.eventData.State != ""
+    ) {
+      console.log("clicked");
+      let data = {};
+      data.title = this.state.eventData.Title;
+      data.description = this.state.eventData.Description;
+      data.start_date = this.state.eventData.Start_Date;
+      data.end_date = this.state.eventData.End_Date;
+      data.event_city = this.state.eventData.City;
+      data.event_state = this.state.eventData.State;
+      let result = await API.affilateCreateEvent(data);
+      if (result.success) {
+        let newAffiliateData = this.state.events;
+        newAffiliateData.push({ fields: data });
+        this.setState({ events: newAffiliateData, createBlog: false });
+      }
+      console.log(result);
+    } else {
+      this.setState({ error: true });
+    }
+    // console.log(this.state.eventData, "submited click");
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -77,12 +123,15 @@ class Events extends Component {
                 <CardBody>
                   <FormCreater
                     classes={classes}
-                    // submit={}
+                    inputChange={this.inputChange}
+                    data={this.state.eventData}
+                    submit={this.submitEvent}
+                    error={this.state.error}
                     fields={[
-                      ["TextField", "Tittle"],
+                      ["TextField", "Title"],
                       ["multilineText", "Description"],
-                      ["dateTimePicker", "Start Date"],
-                      ["dateTimePicker", "End Date"],
+                      ["dateTimePicker", "Start_Date"],
+                      ["dateTimePicker", "End_Date"],
                       ["TextField", "City"],
                       ["TextField", "State"]
                     ]}

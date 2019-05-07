@@ -16,8 +16,10 @@ const FormCreater = props => {
               label={fieldType[1]}
               fullWidth
               className={props.classes.textField}
-              value={props.name}
-              onChange={props.handleInput}
+              value={props.data[fieldType[1]]}
+              onChange={e => {
+                props.inputChange(e, fieldType[1]);
+              }}
               margin="normal"
               variant="outlined"
             />
@@ -35,8 +37,11 @@ const FormCreater = props => {
               }}
               fullWidth
               className={props.classes.textField}
-              value={props.name}
-              onChange={() => {}}
+              value={props.data[fieldType[1]]}
+              onChange={e => {
+                console.log(e);
+                props.inputChange(e, fieldType[1]);
+              }}
               margin="normal"
               variant="outlined"
             />
@@ -52,8 +57,10 @@ const FormCreater = props => {
               multiline
               fullWidth
               className={props.classes.textField}
-              value={props.name}
-              onChange={() => {}}
+              value={props.data[fieldType[1]]}
+              onChange={e => {
+                props.inputChange(e, fieldType[1]);
+              }}
               margin="normal"
               variant="outlined"
             />
@@ -63,10 +70,11 @@ const FormCreater = props => {
         return null;
     }
   };
-  console.log(props);
+  // console.log(props);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
+        {props.error ? <p style={{ color: "red" }}>Fill All Details</p> : null}
         <Grid container spacing={24} style={{ marginTop: "20px" }}>
           {props.fields != undefined && props.fields != null
             ? props.fields.map((prop, key) => {
@@ -80,7 +88,9 @@ const FormCreater = props => {
               style={{
                 backgroundColor: "#00acc1"
               }}
-              onClick={() => {}}
+              onClick={() => {
+                props.submit();
+              }}
             >
               Create
             </Button>
@@ -92,3 +102,17 @@ const FormCreater = props => {
 };
 
 export default FormCreater;
+
+// prop[0] == "TextField" ? (
+//   <Grid item xs={12} sm={4} key={key}>
+//     <TextField
+//       id="standard-name"
+//       label={prop[1]}
+//       type={prop[2]}
+//       fullWidth
+//       className={props.classes.textField}
+//       value={props.name}
+//       onChange={() => {}}
+//       margin="normal"
+//     />
+//   </Grid>

@@ -13,7 +13,8 @@ const productService = {
   registerStrapiUser: data => serviceBase.post("/auth/local/register", data),
   //
   addBlogs: data => serviceBase.post("/shoojus/addblogs", data),
-
+  affilateCreateBlog: data => serviceBase.post("/blogs", data),
+  affilateCreateEvent: data => serviceBase.post("/events", data),
   //get api
   getAffiliatesOnOrginasation: organisation =>
     serviceBase.get("/shoojus/affiliates/" + organisation),

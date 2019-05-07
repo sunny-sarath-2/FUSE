@@ -55,6 +55,7 @@ class Blogs extends Component {
       });
   }
   inputChange(e, field) {
+    // console.log(field);
     let dummy = this.state.blogData;
     dummy.error = false;
     dummy[field] = e.target.value;
@@ -65,6 +66,7 @@ class Blogs extends Component {
       this.state.blogData.Title != "" &&
       this.state.blogData.Description != ""
     ) {
+      console.log("clicked");
       let data = {};
       data.title = this.state.blogData.Title;
       data.description = this.state.blogData.Description;

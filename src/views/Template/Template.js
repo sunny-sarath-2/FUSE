@@ -290,7 +290,9 @@ class Template extends React.Component {
                               "&strapiToken=" +
                               localStorage.getItem("strapiJwtToken") +
                               "&affiliate=" +
-                              this.state.ChapterAdmin
+                              this.state.ChapterAdmin +
+                              "&chapter=" +
+                              this.state.Chapter
                           )
                         : alert("Select Admin");
                       return false;

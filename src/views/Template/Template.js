@@ -308,7 +308,7 @@ class Template extends React.Component {
                     onClick={() => {
                       this.state.ChapterAdmin != ""
                         ? window.open(
-                            "http://localhost:3000/admin/home?accessToken=" +
+                            "http://183.83.216.197:3000/admin/home?accessToken=" +
                               localStorage.getItem("idToken") +
                               "&strapiToken=" +
                               localStorage.getItem("strapiJwtToken") +

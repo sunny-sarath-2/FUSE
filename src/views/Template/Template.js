@@ -75,7 +75,9 @@ class Template extends React.Component {
       widgetColors: ["#9c27b0", "#00bbff", "#4caf50", "#f44336", "#ff9800"],
       widgetColorSelected: [],
       footerColors: ["#9c27b0", "#00bbff", "#4caf50", "#f44336", "#ff9800"],
-      footerColorSelected: []
+      footerColorSelected: [],
+      loadingDetails: false,
+      loading: false
     };
     // location.href = location.origin + location.pathname;
     this.handleChange = this.handleChange.bind(this);
@@ -88,20 +90,18 @@ class Template extends React.Component {
   }
 
   async componentDidMount() {
+    this.setState({ loadingDetails: true });
     var id_token = localStorage.getItem("idToken");
     var userDetails = appController.getUser(id_token);
     var responseadmins = await API.getAffiliatesOnOrginasation(
       userDetails.userOrganisation
     );
     //console.log(responseadmins.series);
-    await this.setState({
-      AffiliateAdmins: responseadmins.series,
-      loading: false
-    });
     let response = await API.getChapters();
     await this.setState({
+      AffiliateAdmins: responseadmins.series,
       AffiliateData: response.fields.sites_map_obj,
-      loading: false
+      loadingDetails: false
     });
   }
   handleChange(e) {
@@ -136,7 +136,7 @@ class Template extends React.Component {
   async onSelectClicked() {
     // console.log("clicked");
     if (this.state.Chapter != "" && this.state.ChapterAdmin) {
-      this.setState({ selected: true });
+      this.setState({ selected: true, loading: true });
       var id_token = localStorage.getItem("idToken");
       var userDetails = appController.getUser(id_token);
       var {
@@ -163,10 +163,12 @@ class Template extends React.Component {
       } else {
         alert("failed to save template to user");
       }
+      this.setState({ loading: false });
     } else {
       this.setState({ selected: false });
     }
   }
+
   addMoreColor(e) {
     if (e == "headeradd") {
       this.setState({
@@ -210,6 +212,11 @@ class Template extends React.Component {
               <h4 className={classes.cardTitleWhite}>Template</h4>
             </CardHeader>
             <CardBody>
+              {this.state.loading ? (
+                <center>
+                  <div className="spinner-border text-primary" />
+                </center>
+              ) : null}
               <Grid container spacing={24} style={{ marginTop: "20px" }}>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -228,13 +235,21 @@ class Template extends React.Component {
                       }
                     }}
                   >
-                    {this.state.AffiliateData.map((prop, key) => {
-                      return (
-                        <MenuItem value={prop.chapter} key={key}>
-                          {prop.chapter}
-                        </MenuItem>
-                      );
-                    })}
+                    {this.state.loadingDetails ? (
+                      <MenuItem>
+                        <center>
+                          <div className="spinner-border text-primary" />
+                        </center>
+                      </MenuItem>
+                    ) : (
+                      this.state.AffiliateData.map((prop, key) => {
+                        return (
+                          <MenuItem value={prop.chapter} key={key}>
+                            {prop.chapter}
+                          </MenuItem>
+                        );
+                      })
+                    )}
                   </TextField>
                   {this.state.selected ? (
                     ""
@@ -259,14 +274,22 @@ class Template extends React.Component {
                       }
                     }}
                   >
-                    {this.state.AffiliateAdmins.map((prop, key) => {
-                      //console.log(prop.fields.username);
-                      return (
-                        <MenuItem value={prop.fields.username} key={key}>
-                          {prop.fields.username}
-                        </MenuItem>
-                      );
-                    })}
+                    {this.state.loadingDetails ? (
+                      <MenuItem>
+                        <center>
+                          <div className="spinner-border text-primary" />
+                        </center>
+                      </MenuItem>
+                    ) : (
+                      this.state.AffiliateAdmins.map((prop, key) => {
+                        //console.log(prop.fields.username);
+                        return (
+                          <MenuItem value={prop.fields.username} key={key}>
+                            {prop.fields.username}
+                          </MenuItem>
+                        );
+                      })
+                    )}
                   </TextField>
                 </Grid>
               </Grid>
@@ -285,7 +308,7 @@ class Template extends React.Component {
                     onClick={() => {
                       this.state.ChapterAdmin != ""
                         ? window.open(
-                            "http://183.83.216.197:3000/admin/home?accessToken=" +
+                            "http://localhost:3000/admin/home?accessToken=" +
                               localStorage.getItem("idToken") +
                               "&strapiToken=" +
                               localStorage.getItem("strapiJwtToken") +

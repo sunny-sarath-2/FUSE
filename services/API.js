@@ -18,14 +18,13 @@ const productService = {
   //get api
   getAffiliatesOnOrginasation: organisation =>
     serviceBase.get("/shoojus/affiliates/" + organisation),
-  getEvents: () => serviceBase.get("/shoojus/event1"),
   getSiteIncrement: () => serviceBase.get("/shoojus/parent"),
   getAscaAffiliatesContent1: () => serviceBase.get("/shoojus/affiliate"),
   getAscaAffiliatesContent2: () => serviceBase.get("/shoojus/affiliate1"),
   getAscaAffiliatesContent3: () => serviceBase.get("/shoojus/affiliate2"),
   getChapters: () => serviceBase.get("/shoojus/chapters_affiliates"),
   getAffiliatesBySeries: series => serviceBase.get("/shoojus/series/" + series), //NYSSCA_AFFILIATES
-  //
-  getBlogsData: () => serviceBase.get("/blogs")
+  getBlogsData: () => serviceBase.get("/blogs"),
+  getEventsData: () => serviceBase.get("/events")
 };
 export default productService;

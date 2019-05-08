@@ -27,31 +27,23 @@ class Blogs extends Component {
         created_on: ""
       },
       error: false,
-      loading: false
+      errorMessage: ""
     };
     this.inputChange = this.inputChange.bind(this);
     this.submitBlog = this.submitBlog.bind(this);
   }
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ loading: true });
-    let strapitoken = localStorage.getItem("strapiJwtToken");
-    let url = "https://183.83.216.197:5432/blogs";
-    fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-        //Authorization: "Bearer " + strapitoken
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response.series);
-        this.setState({
-          AffiliateData: response.series,
-          loading: false
-          //models: response.models.layout.blogs
-        });
+    let response = await API.getBlogsData();
+    if (response.series != undefined)
+      this.setState({
+        AffiliateData: response.series,
+        loading: false
+        //models: response.models.layout.blogs
+      });
+    else
+      this.setState({
+        loading: false
       });
   }
   inputChange(e, field) {
@@ -62,11 +54,11 @@ class Blogs extends Component {
     this.setState(dummy);
   }
   async submitBlog() {
+    this.setState({ loading: true });
     if (
       this.state.blogData.Title != "" &&
       this.state.blogData.Description != ""
     ) {
-      console.log("clicked");
       let data = {};
       data.title = this.state.blogData.Title;
       data.description = this.state.blogData.Description;
@@ -75,11 +67,25 @@ class Blogs extends Component {
       if (result.success) {
         let newAffiliateData = this.state.AffiliateData;
         newAffiliateData.push({ fields: data });
-        this.setState({ AffiliateData: newAffiliateData, createBlog: false });
+        this.setState({
+          AffiliateData: newAffiliateData,
+          createBlog: false,
+          loading: false
+        });
+      } else {
+        this.setState({
+          loading: false,
+          error: true,
+          errorMessage: "Server is not responding"
+        });
       }
       console.log(result);
     } else {
-      this.setState({ error: true });
+      this.setState({
+        loading: false,
+        error: true,
+        errorMessage: "Fill All Details"
+      });
     }
     // console.log(this.state.blogData, "submited click");
   }
@@ -123,6 +129,8 @@ class Blogs extends Component {
                       ["TextField", "Title"],
                       ["multilineText", "Description"]
                     ]}
+                    errorMessage={this.state.errorMessage}
+                    loading={this.state.loading}
                   />
                 </CardBody>
               </Card>

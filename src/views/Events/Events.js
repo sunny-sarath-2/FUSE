@@ -30,30 +30,23 @@ class Events extends Component {
         City: "",
         State: ""
       },
-      error: false
+      error: false,
+      errorMessage: ""
     };
     this.inputChange = this.inputChange.bind(this);
     this.submitEvent = this.submitEvent.bind(this);
   }
-  componentDidMount() {
-    let strapitoken = localStorage.getItem("strapiJwtToken");
-    let url = "https://183.83.216.197:5432/events";
-    fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-        //Authorization: "Bearer " + strapitoken
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        // console.log(response);
-
-        this.setState({
-          events: response.series
-          //models: response.models.layout.blogs
-        });
+  async componentDidMount() {
+    this.setState({ loading: true });
+    let response = await API.getEventsData();
+    if (response.series != undefined)
+      this.setState({
+        events: response.series,
+        loading: false
+      });
+    else
+      this.setState({
+        loading: false
       });
   }
 
@@ -64,6 +57,7 @@ class Events extends Component {
     this.setState(dummy);
   }
   async submitEvent() {
+    this.setState({ loading: true });
     if (
       this.state.eventData.Title != "" &&
       this.state.eventData.Description != "" &&
@@ -82,11 +76,24 @@ class Events extends Component {
       if (result.success) {
         let newAffiliateData = this.state.events;
         newAffiliateData.push({ fields: data });
-        this.setState({ events: newAffiliateData, createBlog: false });
+        this.setState({
+          events: newAffiliateData,
+          createBlog: false,
+          loading: false
+        });
+      } else {
+        this.setState({
+          loading: false,
+          error: true,
+          errorMessage: "Server is not responding"
+        });
       }
-      console.log(result);
     } else {
-      this.setState({ error: true });
+      this.setState({
+        error: true,
+        errorMessage: "Fill All Details",
+        loading: false
+      });
     }
     // console.log(this.state.eventData, "submited click");
   }
@@ -135,6 +142,8 @@ class Events extends Component {
                       ["TextField", "City"],
                       ["TextField", "State"]
                     ]}
+                    errorMessage={this.state.errorMessage}
+                    loading={this.state.loading}
                   />
                 </CardBody>
               </Card>
@@ -227,7 +236,9 @@ class Events extends Component {
                       </table>
                     </div>
                   ) : (
-                    <p>loading</p>
+                    <center>
+                      <div className="spinner-border text-primary" />
+                    </center>
                   )}
                 </CardBody>
               </Card>

@@ -74,7 +74,10 @@ const FormCreater = props => {
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-        {props.error ? <p style={{ color: "red" }}>Fill All Details</p> : null}
+        {props.error ? (
+          <p style={{ color: "red" }}>{props.errorMessage}</p>
+        ) : null}
+
         <Grid container spacing={24} style={{ marginTop: "20px" }}>
           {props.fields != undefined && props.fields != null
             ? props.fields.map((prop, key) => {
@@ -94,6 +97,11 @@ const FormCreater = props => {
             >
               Create
             </Button>
+            {props.loading ? (
+              <center>
+                <div className="spinner-border text-primary" />
+              </center>
+            ) : null}
           </Grid>
         </Grid>
       </GridItem>

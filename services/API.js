@@ -11,7 +11,8 @@ const productService = {
   addTemplateToUser: data => serviceBase.post("/shoojus/addtemplates", data),
   siteIncrement: data => serviceBase.post("/shoojus/siteincrement", data),
   registerStrapiUser: data => serviceBase.post("/auth/local/register", data),
-  //
+  createContentTypesData: (url, data) =>
+    serviceBase.post("/content-manager/explorer/" + url, data),
   addBlogs: data => serviceBase.post("/shoojus/addblogs", data),
   affilateCreateBlog: data => serviceBase.post("/blogs", data),
   affilateCreateEvent: data => serviceBase.post("/events", data),
@@ -25,6 +26,7 @@ const productService = {
   getChapters: () => serviceBase.get("/shoojus/chapters_affiliates"),
   getAffiliatesBySeries: series => serviceBase.get("/shoojus/series/" + series), //NYSSCA_AFFILIATES
   getBlogsData: () => serviceBase.get("/blogs"),
-  getEventsData: () => serviceBase.get("/events")
+  getEventsData: () => serviceBase.get("/events"),
+  getContentTypes: () => serviceBase.get("/content-manager/models")
 };
 export default productService;

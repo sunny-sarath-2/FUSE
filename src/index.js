@@ -9,8 +9,6 @@ import Admin from "./layouts/Admin";
 import LoginLayout from "./layouts/LoginLayout";
 import Registration from "./views/Registration/registration";
 import "./assets/css/material-dashboard-react.css?v=1.6.0";
-// import Template from "./template/bundle";
-// require("../public/template/css/style.css");
 
 const hist = createBrowserHistory();
 

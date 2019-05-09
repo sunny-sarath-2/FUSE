@@ -82,25 +82,11 @@ class ContentManager extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
   async componentDidMount() {
-    let strapitoken = localStorage.getItem("strapiJwtToken");
-    let url = "https://localhost:1337/content-manager/models";
-    fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + strapitoken
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-        console.log(Object.keys(response.models.layout).length);
-        this.setState({
-          content_list: response,
-          models: Object.keys(response.models.layout)
-        });
-      });
+    let response = await API.getContentTypes();
+    this.setState({
+      content_list: response,
+      models: Object.keys(response.models.layout)
+    });
   }
   handleChange(e) {
     this.setState({ Con_manager: e.target.value });
@@ -126,7 +112,7 @@ class ContentManager extends React.Component {
                 <div className={classes.demo}>
                   <List dense={dense}>
                     {this.state.models.map((prop, key) => {
-                      return (
+                      return prop == "user" ? null : (
                         <ListItem key={key}>
                           <FolderIcon />
                           <ListItemText

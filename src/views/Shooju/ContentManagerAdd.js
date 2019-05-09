@@ -4,12 +4,121 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
-import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 // core components
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
 import appController from "../../controller/controller";
 import API from "../../../services/API";
+import moment from "moment";
+import FieldCreate from "../../components/fieldCreater/fieldCreater";
+
+class ContentManagerAdd extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [],
+      model_name: "",
+      data: {
+        fields: {},
+        files: {}
+      },
+      loading: false
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.SubmitForm = this.SubmitForm.bind(this);
+    this.onEditorChange = this.onEditorChange.bind(this);
+  }
+  async componentDidMount() {
+    this.setState({ loading: true });
+    let model = this.props.match.params.model;
+    let response = await API.getContentTypes();
+    console.log(response);
+    this.setState({
+      columns: Object.values(response.models.models[model].fields),
+      model_name: model,
+      loading: false
+    });
+  }
+  handleChange(e, fieldName, fieldType) {
+    // console.log(e.target.value, fieldName, fieldType);
+    let data = this.state.data;
+    // data["type"] = this.state.model_name;
+    data.fields[fieldName] = e.target.value;
+    this.setState({ data: data });
+  }
+  onEditorChange(e, fieldName) {
+    let data = this.state.data;
+    data.fields[fieldName] = e.editor.getData();
+    this.setState({ data: data });
+  }
+  async SubmitForm() {
+    let response = await API.createContentTypesData(
+      this.state.model_name + "/?source=content-manager",
+      this.state.data
+    );
+    console.log(response);
+  }
+  render() {
+    const { classes } = this.props;
+    console.log(this.state.data);
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4
+                style={{ textTransform: "capitalize" }}
+                className={classes.cardTitleWhite}
+              >
+                {"Add " + this.state.model_name}
+              </h4>
+              <Button
+                style={{ float: "right" }}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => {
+                  this.props.history.push("/admin/content-manager");
+                }}
+              >
+                GO BACK
+              </Button>
+            </CardHeader>
+            <CardBody>
+              {this.state.loading ? (
+                <center>
+                  <div className="spinner-border text-primary" />
+                </center>
+              ) : null}
+              {this.state.columns.map((field, i) => {
+                // console.log(field);
+                return (
+                  <FieldCreate
+                    key={i}
+                    field={field}
+                    classes={classes}
+                    data={this.state.data.fields}
+                    Change={this.handleChange}
+                    onEditorChange={this.onEditorChange}
+                  />
+                );
+              })}
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={this.SubmitForm}
+              >
+                SUBMIT
+              </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
+}
 
 const styles = {
   cardCategoryWhite: {
@@ -40,123 +149,5 @@ const styles = {
     }
   }
 };
-
-class ContentManagerAdd extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // Title: "",
-      // Description: "",
-      // Created_on: "",
-      formBuild: { Title: "", Description: "", Created_on: "" },
-      formData: [],
-      columns: [],
-      open: false,
-      dense: false,
-      secondary: false,
-      model_name: ""
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.tableData = this.tableData.bind(this);
-  }
-  async componentDidMount() {
-    let strapitoken = localStorage.getItem("strapiJwtToken");
-    let model = this.props.match.params.model;
-    this.setState({
-      model_name: model
-    });
-    let url = "https://localhost:1337/content-manager/models";
-    if (model.substring(model.length - 1) !== "s") {
-      model = model + "s";
-    }
-    let model_url = `https://localhost:1337/${model}`;
-    await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + strapitoken
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        this.setState({
-          columns: Object.values(
-            response.models.models[this.state.model_name].fields
-          )
-        });
-      });
-  }
-  handleChange(e) {
-    let formData = [...this.state.formData];
-    let formBuild = [...this.state.formBuild];
-    if (e.target.name === "Title") {
-      formBuild.Title = e.target.value;
-    } else if (e.target.name === "Description") {
-      formBuild.Description = e.target.value;
-    } else {
-      formBuild.Created_on = e.target.value;
-    }
-    console.log(formBuild.Title);
-    console.log(formBuild.Description);
-    console.log(formBuild.Created_on);
-    formData[e.target.name] = e.target.value;
-    this.setState({ formData }, () => console.log(this.state.formData));
-    this.setState({ formBuild }, () => console.log(this.state.formBuild));
-    //this.setState({ [e.target.name]: e.target.value });
-  }
-  handleClickOpen() {
-    this.setState({ open: true });
-  }
-  handleClose() {
-    this.setState({ open: false });
-  }
-  tableData(data) {}
-  render() {
-    const { classes } = this.props;
-    console.log(this.state.formData);
-    console.log(this.state.formBuild);
-    return (
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4
-                style={{ textTransform: "capitalize" }}
-                className={classes.cardTitleWhite}
-              >
-                {"Add " + this.state.model_name}
-              </h4>
-            </CardHeader>
-            <CardBody>
-              {this.state.columns.map((field, i) => {
-                return (
-                  <TextField
-                    key={i}
-                    data-id={i}
-                    id="outlined-name"
-                    label={field.label}
-                    name={field.name}
-                    fullWidth
-                    multiline={field.type === "text" ? true : false}
-                    rows={field.type === "text" ? "5" : "1"}
-                    type={field.type}
-                    className={classes.textField}
-                    //value={this.state[field.name]}
-                    onChange={this.handleChange}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                );
-              })}
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
-    );
-  }
-}
 
 export default withStyles(styles)(ContentManagerAdd);

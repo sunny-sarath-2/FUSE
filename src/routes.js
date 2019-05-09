@@ -114,13 +114,13 @@ if (id_token == null) {
         component: Blogs,
         layout: "/admin"
       },
-      // {
-      //   path: "/content-manager",
-      //   name: "Content Manager",
-      //   icon: Language,
-      //   component: ContentManager,
-      //   layout: "/admin"
-      // },
+      {
+        path: "/content-manager",
+        name: "Content Manager",
+        icon: Language,
+        component: ContentManager,
+        layout: "/admin"
+      },
       {
         path: "/content/view/:model",
         name: "Content Manager View",

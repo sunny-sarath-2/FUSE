@@ -6,18 +6,18 @@ import CKEditor from "ckeditor4-react";
 const FieldCreater = props => {
   let { field, classes, data } = props;
   console.log(props);
-  switch (field.type) {
+  switch (field.params.type) {
     case "string":
       return (
         <TextField
           id="outlined-name"
-          label={field.label}
+          label={field.name}
           name={field.name}
           fullWidth
-          type={field.type}
+          type={field.params.type}
           className={classes.textField}
-          value={data[field.label]}
-          onChange={e => props.Change(e, field.label, field.type)}
+          value={data[field.name]}
+          onChange={e => props.Change(e, field.name, field.params.type)}
           margin="normal"
           variant="outlined"
         />
@@ -25,10 +25,10 @@ const FieldCreater = props => {
     case "text":
       return (
         <div>
-          <label>{field.label}</label>
+          <label>{field.name}</label>
           <CKEditor
-            data={data[field.label]}
-            onChange={e => props.onEditorChange(e, field.label)}
+            data={data[field.name]}
+            onChange={e => props.onEditorChange(e, field.name)}
           />
         </div>
       );
@@ -36,19 +36,21 @@ const FieldCreater = props => {
       return (
         <TextField
           id="outlined-name"
-          label={field.label}
+          label={field.name}
           name={field.name}
           fullWidth
-          multiline={field.type === "text" ? true : false}
-          rows={field.type === "text" ? "5" : "1"}
-          type={field.type == "date" ? "datetime-local" : field.type}
+          multiline={field.params.type === "text" ? true : false}
+          rows={field.params.type === "text" ? "5" : "1"}
+          type={
+            field.params.type == "date" ? "datetime-local" : field.params.type
+          }
           className={classes.textField}
           value={
-            data[field.label] == undefined
+            data[field.name] == undefined
               ? moment().format("YYYY-MM-DDThh:mm")
-              : data[field.label]
+              : data[field.name]
           }
-          onChange={e => props.Change(e, field.label, field.type)}
+          onChange={e => props.Change(e, field.name, field.params.type)}
           margin="normal"
           variant="outlined"
           InputLabelProps={{

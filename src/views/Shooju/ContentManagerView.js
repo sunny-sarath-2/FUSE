@@ -5,6 +5,8 @@ import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Table from "../../components/Table/Table";
+import Button from "@material-ui/core/Button";
+
 // core components
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
@@ -54,71 +56,38 @@ class ContentManagerView extends React.Component {
       model_name: "",
       datafound: false
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
     this.tableData = this.tableData.bind(this);
   }
   async componentDidMount() {
-    let strapitoken = localStorage.getItem("strapiJwtToken");
     let model = this.props.match.params.model;
-    this.setState({
-      model_name: model
-    });
-    //let url = "https://183.83.216.197:5432/content-manager/models";
-    if (model.substring(model.length - 1) !== "s") {
-      model = model + "s";
-    }
-    let model_url = `https://183.83.216.197:5432/${model}`;
-    await fetch(model_url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + strapitoken
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-        if (response.series.length > 0) {
-          var col = new Array();
-          col = Object.keys(response.series[0].fields);
-          col.push("Action");
-          this.setState({
-            content_list: response.series,
-            columns: col,
-            datafound: true
-          });
-        }
+    let response = await API.getDataContentTypes(model);
+    let col = [];
+    col = Object.keys(response[0]);
+    col.push("Action");
+    if (response.length > 0) {
+      this.setState({
+        content_list: response,
+        columns: col,
+        datafound: true,
+        model_name: model
       });
-  }
-  handleChange(e) {
-    this.setState({ Con_manager: e.target.value });
-  }
-  handleClickOpen() {
-    this.setState({ open: true });
-  }
-  handleClose() {
-    this.setState({ open: false });
+    }
   }
   tableData(data) {
-    //console.log("data", data);
+    // console.log("data", data);
     var arr1 = new Array();
     data.map((td, i) => {
       var arr = new Array();
       this.state.columns.map(col => {
-        col = col.toLowerCase();
-        if (col === "action") {
+        //col = col.toLowerCase();
+        if (col === "Action") {
           arr.push("View");
         } else {
-          //console.log("td:", td.fields, "col", col);
-          if (td.fields[col] !== null) {
-            arr.push(
-              td.fields[col] != null
-                ? td.fields[col].substring(0, 200)
-                : td.fields[col]
-            );
+          console.log("td:", td, "col", col);
+          if (td[col] !== null) {
+            console.log(td[col]);
+            let c = td[col];
+            arr.push(td[col] != null ? c.toString().substring(0, 50) : td[col]);
           }
         }
       });
@@ -142,18 +111,33 @@ class ContentManagerView extends React.Component {
               >
                 {this.state.model_name}
               </h4>
+              <Button
+                style={{ float: "right" }}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => {
+                  this.props.history.push("/admin/content-manager");
+                }}
+              >
+                GO BACK
+              </Button>
             </CardHeader>
             <CardBody>
               {this.state.datafound ? (
                 <Table
                   tableHeaderColor="primary"
                   tableHead={this.state.columns.map(col => {
-                    return col.charAt(0).toUpperCase() + col.slice(1);
+                    // console.log(col);
+                    return col; //col.charAt(0).toUpperCase() + col.slice(1);
                   })}
                   tableData={this.tableData(this.state.content_list)}
+                  // columns={this.state.columns}
                 />
               ) : (
-                <div>No data found...</div>
+                <center>
+                  <div className="spinner-border text-primary" />
+                </center>
               )}
             </CardBody>
           </Card>

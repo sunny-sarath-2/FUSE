@@ -75,7 +75,8 @@ class ContentManager extends React.Component {
       models: [],
       open: false,
       dense: false,
-      secondary: false
+      secondary: false,
+      loading: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
@@ -85,7 +86,8 @@ class ContentManager extends React.Component {
     let response = await API.getContentTypes();
     this.setState({
       content_list: response,
-      models: Object.keys(response.models.layout)
+      models: Object.keys(response.models.layout),
+      loading: false
     });
   }
   handleChange(e) {
@@ -107,38 +109,48 @@ class ContentManager extends React.Component {
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Content Manager</h4>
             </CardHeader>
-            <CardBody>
-              <Grid item xs={12} md={12}>
-                <div className={classes.demo}>
-                  <List dense={dense}>
-                    {this.state.models.map((prop, key) => {
-                      return prop == "user" ? null : (
-                        <ListItem key={key}>
-                          <FolderIcon />
-                          <ListItemText
-                            style={{ textTransform: "capitalize" }}
-                            primary={prop}
-                            secondary={secondary ? "Secondary text" : null}
-                          />
-                          <ListItemSecondaryAction>
-                            <Link to={"content/view/" + prop}>
-                              <IconButton aria-label="view">
-                                <Icon className={classes.icon}>visibility</Icon>
-                              </IconButton>
-                            </Link>
-                            <Link to={"content/add/" + prop}>
-                              <IconButton aria-label="add">
-                                <Icon className={classes.icon}>add_circle</Icon>
-                              </IconButton>
-                            </Link>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                </div>
-              </Grid>
-            </CardBody>
+            {this.state.loading ? (
+              <center>
+                <div className="spinner-border text-primary" />
+              </center>
+            ) : (
+              <CardBody>
+                <Grid item xs={12} md={12}>
+                  <div className={classes.demo}>
+                    <List dense={dense}>
+                      {this.state.models.map((prop, key) => {
+                        return prop == "user" ? null : (
+                          <ListItem key={key}>
+                            <FolderIcon />
+                            <ListItemText
+                              style={{ textTransform: "capitalize" }}
+                              primary={prop}
+                              secondary={secondary ? "Secondary text" : null}
+                            />
+                            <ListItemSecondaryAction>
+                              <Link to={"content/view/" + prop}>
+                                <IconButton aria-label="view">
+                                  <Icon className={classes.icon}>
+                                    visibility
+                                  </Icon>
+                                </IconButton>
+                              </Link>
+                              <Link to={"content/add/" + prop}>
+                                <IconButton aria-label="add">
+                                  <Icon className={classes.icon}>
+                                    add_circle
+                                  </Icon>
+                                </IconButton>
+                              </Link>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </div>
+                </Grid>
+              </CardBody>
+            )}
           </Card>
         </GridItem>
       </GridContainer>

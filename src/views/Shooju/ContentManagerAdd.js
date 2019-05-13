@@ -32,10 +32,10 @@ class ContentManagerAdd extends React.Component {
   async componentDidMount() {
     this.setState({ loading: true });
     let model = this.props.match.params.model;
-    let response = await API.getContentTypes();
+    let response = await API.getOneContentTypes(model);
     console.log(response);
     this.setState({
-      columns: Object.values(response.models.models[model].fields),
+      columns: response.model.attributes,
       model_name: model,
       loading: false
     });
@@ -92,7 +92,7 @@ class ContentManagerAdd extends React.Component {
                 </center>
               ) : null}
               {this.state.columns.map((field, i) => {
-                // console.log(field);
+                console.log(field);
                 return (
                   <FieldCreate
                     key={i}

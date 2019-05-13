@@ -27,6 +27,10 @@ const productService = {
   getAffiliatesBySeries: series => serviceBase.get("/shoojus/series/" + series), //NYSSCA_AFFILIATES
   getBlogsData: () => serviceBase.get("/blogs"),
   getEventsData: () => serviceBase.get("/events"),
-  getContentTypes: () => serviceBase.get("/content-manager/models")
+  getContentTypes: () => serviceBase.get("/content-manager/models"),
+  getOneContentTypes: url =>
+    serviceBase.get("/content-type-builder/models/" + url),
+  getDataContentTypes: model =>
+    serviceBase.get("/content-manager/explorer/" + model)
 };
 export default productService;

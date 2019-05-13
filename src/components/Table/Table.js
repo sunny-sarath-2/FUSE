@@ -40,11 +40,7 @@ function CustomTable({ ...props }) {
                   console.log("prop", prop);
                   return (
                     <TableCell className={classes.tableCell} key={key}>
-                      {prop == "View" ? (
-                        <Button color="primary">Delete</Button>
-                      ) : (
-                        prop
-                      )}
+                      {prop}
                     </TableCell>
                   );
                 })}

@@ -94,20 +94,20 @@ if (id_token == null) {
         component: DashboardPage,
         layout: "/admin"
       },
-      {
-        path: "/template",
-        name: "Template",
-        icon: DeviceHub,
-        component: UserTemplate,
-        layout: "/admin"
-      },
-      {
-        path: "/event1",
-        name: "Event",
-        icon: Event,
-        component: Events,
-        layout: "/admin"
-      },
+      // {
+      //   path: "/template",
+      //   name: "Template",
+      //   icon: DeviceHub,
+      //   component: UserTemplate,
+      //   layout: "/admin"
+      // },
+      // {
+      //   path: "/event1",
+      //   name: "Event",
+      //   icon: Event,
+      //   component: Events,
+      //   layout: "/admin"
+      // },
       {
         path: "/Blogs",
         name: "Blogs",

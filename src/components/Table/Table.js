@@ -37,12 +37,29 @@ function CustomTable({ ...props }) {
             return (
               <TableRow key={key}>
                 {prop.map((prop, key) => {
-                  console.log("prop", prop);
-                  return (
-                    <TableCell className={classes.tableCell} key={key}>
-                      {prop}
-                    </TableCell>
-                  );
+                  // console.log("prop", prop);
+                  var htmlRegex = new RegExp("/<[a-z][sS]*>/i");
+                  if (!isHTML(prop)) {
+                    return (
+                      <TableCell
+                        style={{ width: "10%" }}
+                        className={classes.tableCell}
+                        key={key}
+                      >
+                        {prop}{" "}
+                      </TableCell>
+                    );
+                  } else {
+                    return (
+                      <TableCell
+                        style={{ width: "10%" }}
+                        className={classes.tableCell}
+                        key={key}
+                      >
+                        <div dangerouslySetInnerHTML={createMarkup(prop)} />
+                      </TableCell>
+                    );
+                  }
                 })}
               </TableRow>
             );
@@ -52,7 +69,20 @@ function CustomTable({ ...props }) {
     </div>
   );
 }
+function isHTML(str) {
+  var a = document.createElement("div");
+  a.innerHTML = str;
 
+  for (var c = a.childNodes, i = c.length; i--; ) {
+    if (c[i].nodeType == 1) return true;
+  }
+
+  return false;
+}
+
+function createMarkup(data) {
+  return { __html: data };
+}
 CustomTable.defaultProps = {
   tableHeaderColor: "gray"
 };

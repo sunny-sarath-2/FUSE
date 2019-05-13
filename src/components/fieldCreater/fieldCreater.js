@@ -56,13 +56,6 @@ const FieldCreater = props => {
           InputLabelProps={{
             shrink: true
           }}
-          //   value={
-          //     field.type == "date"
-          //       ? this.state[field.label] == undefined
-          //         ? moment().format("YYYY-MM-DDThh:mm")
-          //         : ""
-          //       : this.state[field.label]
-          //   }
         />
       );
     default:

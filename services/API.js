@@ -16,6 +16,8 @@ const productService = {
   addBlogs: data => serviceBase.post("/shoojus/addblogs", data),
   affilateCreateBlog: data => serviceBase.post("/blogs", data),
   affilateCreateEvent: data => serviceBase.post("/events", data),
+  updateContentTypesData: (url, data) =>
+    serviceBase.put("/content-manager/explorer/" + url, data),
   //get api
   getAffiliatesOnOrginasation: organisation =>
     serviceBase.get("/shoojus/affiliates/" + organisation),

@@ -100,20 +100,20 @@ if (id_token == null) {
         component: UserTemplate,
         layout: "/admin"
       },
-      // {
-      //   path: "/event1",
-      //   name: "Event",
-      //   icon: Event,
-      //   component: Events,
-      //   layout: "/admin"
-      // },
-      // {
-      //   path: "/Blogs",
-      //   name: "Blogs",
-      //   icon: Event,
-      //   component: Blogs,
-      //   layout: "/admin"
-      // },
+      {
+        path: "/event1",
+        name: "Event",
+        icon: Event,
+        component: Events,
+        layout: "/admin"
+      },
+      {
+        path: "/Blogs",
+        name: "Blogs",
+        icon: Event,
+        component: Blogs,
+        layout: "/admin"
+      },
       {
         path: "/content-manager",
         name: "Content Manager",

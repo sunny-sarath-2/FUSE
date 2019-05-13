@@ -6,12 +6,16 @@ import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import Table from "../../components/Table/Table";
 import Button from "@material-ui/core/Button";
-
+import DeleteIcon from "@material-ui/icons/Delete";
+import ViewIcon from "@material-ui/icons/RemoveRedEye";
+import EditIcon from "@material-ui/icons/Edit";
 // core components
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
 import appController from "../../controller/controller";
 import API from "../../../services/API";
+import ViewData from "../../components/ViewData/ViewData";
+import FieldEditor from "../../components/fieldEditor/FieldEditor";
 
 const styles = {
   cardCategoryWhite: {
@@ -54,22 +58,42 @@ class ContentManagerView extends React.Component {
       dense: false,
       secondary: false,
       model_name: "",
-      datafound: false
+      loading: false,
+      noData: false,
+      switcher: "main",
+      modelTypeColumns: [],
+      transferData: {},
+      data: {
+        fields: {},
+        files: {}
+      }
     };
     this.tableData = this.tableData.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.SubmitForm = this.SubmitForm.bind(this);
+    this.onEditorChange = this.onEditorChange.bind(this);
   }
   async componentDidMount() {
     let model = this.props.match.params.model;
     let response = await API.getDataContentTypes(model);
-    let col = [];
-    col = Object.keys(response[0]);
-    col.push("Action");
-    if (response.length > 0) {
+    if (response.length != 0) {
+      let col = [];
+      col = Object.keys(response[0]);
+      col.push("Action");
+      let modelTypeResponse = await API.getOneContentTypes(model);
+      if (response.length > 0) {
+        this.setState({
+          content_list: response,
+          columns: col,
+          loading: true,
+          model_name: model,
+          modelTypeColumns: modelTypeResponse.model.attributes
+        });
+      }
+    } else {
       this.setState({
-        content_list: response,
-        columns: col,
-        datafound: true,
-        model_name: model
+        loading: false,
+        noData: true
       });
     }
   }
@@ -81,11 +105,36 @@ class ContentManagerView extends React.Component {
       this.state.columns.map(col => {
         //col = col.toLowerCase();
         if (col === "Action") {
-          arr.push("View");
+          arr.push(
+            <span>
+              <ViewIcon
+                onClick={() => {
+                  this.setState({ switcher: "view", transferData: td });
+                  console.log("click", td);
+                }}
+              />
+              <EditIcon
+                onClick={() => {
+                  let data = this.state.data;
+                  data.fields = td;
+                  this.setState({
+                    switcher: "edit",
+                    transferData: td,
+                    data: data
+                  });
+                  console.log("click", td);
+                }}
+              />
+              <DeleteIcon
+                onClick={() => {
+                  this.setState({ switcher: "delete", transferData: td });
+                  console.log("click", td);
+                }}
+              />
+            </span>
+          );
         } else {
-          console.log("td:", td, "col", col);
           if (td[col] !== null) {
-            console.log(td[col]);
             let c = td[col];
             arr.push(td[col] != null ? c.toString().substring(0, 50) : td[col]);
           }
@@ -93,13 +142,70 @@ class ContentManagerView extends React.Component {
       });
       arr1.push(arr);
     });
-    console.log(arr1);
     return arr1;
+  }
+  handleChange(e, fieldName, fieldType) {
+    // console.log(e.target.value, fieldName, fieldType);
+    let data = this.state.data;
+    // data["type"] = this.state.model_name;
+    data.fields[fieldName] = e.target.value;
+    this.setState({ data: data });
+  }
+  onEditorChange(e, fieldName) {
+    let data = this.state.data;
+    data.fields[fieldName] = e.editor.getData();
+    this.setState({ data: data });
+  }
+  async SubmitForm() {
+    console.log("form submited", this.state.data, this.state.transferData.id);
+    let response = await API.updateContentTypesData(
+      this.state.model_name +
+        "/" +
+        this.state.transferData.id +
+        "/?source=content-manager",
+      this.state.data
+    );
+    console.log(response);
+  }
+  loader() {
+    switch (this.state.switcher) {
+      case "main":
+        return (
+          <Table
+            tableHeaderColor="primary"
+            tableHead={this.state.columns.map(col => {
+              return col;
+            })}
+            tableData={this.tableData(this.state.content_list)}
+          />
+        );
+      case "view":
+        return (
+          <ViewData
+            modelType={this.state.modelTypeColumns}
+            classes={this.props.classes}
+            data={this.state.transferData}
+          />
+        );
+      case "edit":
+        return (
+          <FieldEditor
+            field={this.state.modelTypeColumns}
+            classes={this.props.classes}
+            data={this.state.data.fields}
+            Change={this.handleChange}
+            onEditorChange={this.onEditorChange}
+            SubmitForm={this.SubmitForm}
+          />
+        );
+      case "delete":
+        return <ViewData modelType={this.state.modelTypeColumns} />;
+    }
   }
   render() {
     const { classes } = this.props;
     const { dense, secondary } = this.state;
-
+    console.log(this.state.data.fields);
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
@@ -109,7 +215,7 @@ class ContentManagerView extends React.Component {
                 style={{ textTransform: "capitalize" }}
                 className={classes.cardTitleWhite}
               >
-                {this.state.model_name}
+                View {this.state.model_name}
               </h4>
               <Button
                 style={{ float: "right" }}
@@ -117,23 +223,21 @@ class ContentManagerView extends React.Component {
                 color="primary"
                 className={classes.button}
                 onClick={() => {
-                  this.props.history.push("/admin/content-manager");
+                  if (this.state.switcher == "main")
+                    this.props.history.push("/admin/content-manager");
+                  else this.setState({ switcher: "main" });
                 }}
               >
                 GO BACK
               </Button>
             </CardHeader>
             <CardBody>
-              {this.state.datafound ? (
-                <Table
-                  tableHeaderColor="primary"
-                  tableHead={this.state.columns.map(col => {
-                    // console.log(col);
-                    return col; //col.charAt(0).toUpperCase() + col.slice(1);
-                  })}
-                  tableData={this.tableData(this.state.content_list)}
-                  // columns={this.state.columns}
-                />
+              {this.state.loading ? (
+                this.loader()
+              ) : this.state.noData ? (
+                <center>
+                  <h4>No data found</h4>
+                </center>
               ) : (
                 <center>
                   <div className="spinner-border text-primary" />

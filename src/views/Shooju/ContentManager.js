@@ -108,6 +108,17 @@ class ContentManager extends React.Component {
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Content Manager</h4>
+              <Button
+                style={{ float: "right" }}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => {
+                  this.props.history.push("/admin/content-manager-create");
+                }}
+              >
+                Add New
+              </Button>
             </CardHeader>
             {this.state.loading ? (
               <center>

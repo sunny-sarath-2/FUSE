@@ -29,7 +29,8 @@ const Sidebar = ({ ...props }) => {
         var listItemClasses;
         if (
           prop.path === "/content/view/:model" ||
-          prop.path === "/content/add/:model"
+          prop.path === "/content/add/:model" ||
+          prop.path === "/content-manager-create"
         ) {
           return null;
         }

@@ -18,6 +18,7 @@ import Events from "./views/Events/Events";
 import ContentManager from "./views/Shooju/ContentManager";
 import ContentManagerView from "./views/Shooju/ContentManagerView";
 import ContentManagerAdd from "./views/Shooju/ContentManagerAdd";
+import CreateContentManager from "./views/Shooju/CreateContentManager";
 
 var id_token = localStorage.getItem("idToken");
 let dashboardRoutes = [];
@@ -114,6 +115,13 @@ if (id_token == null) {
       //   component: Blogs,
       //   layout: "/admin"
       // },
+      {
+        path: "/content-manager-create",
+        name: "Create Content Manager",
+        icon: Language,
+        component: CreateContentManager,
+        layout: "/admin"
+      },
       {
         path: "/content-manager",
         name: "Content Manager",

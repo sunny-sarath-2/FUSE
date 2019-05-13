@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 
 const FormCreater = props => {
   let create = (fieldType, key) => {
+    console.log(fieldType);
     switch (fieldType[0]) {
       case "TextField":
         return (

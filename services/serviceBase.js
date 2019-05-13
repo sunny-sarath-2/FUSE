@@ -49,7 +49,7 @@ function getUrl(url) {
   const separator = url.includes("?") ? "&" : "?";
   //noinspection JSUnresolvedVariable
   // console.log(url);
-  return "https://192.168.1.7:1337" + url;
+  return "https://localhost:1337" + url;
   //return "http://18.212.235.172:1337" + url; //devbox
   // return "https://183.83.216.197:5432" + url; // test server
   // return `${url}${separator}t=${timestamp}`; //same application

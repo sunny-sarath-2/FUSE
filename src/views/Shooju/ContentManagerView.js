@@ -54,22 +54,30 @@ class ContentManagerView extends React.Component {
       dense: false,
       secondary: false,
       model_name: "",
-      datafound: false
+      datafound: false,
+      noData: false
     };
     this.tableData = this.tableData.bind(this);
   }
   async componentDidMount() {
     let model = this.props.match.params.model;
     let response = await API.getDataContentTypes(model);
-    let col = [];
-    col = Object.keys(response[0]);
-    col.push("Action");
-    if (response.length > 0) {
+    if (response.length != 0) {
+      let col = [];
+      col = Object.keys(response[0]);
+      col.push("Action");
+      if (response.length > 0) {
+        this.setState({
+          content_list: response,
+          columns: col,
+          datafound: true,
+          model_name: model
+        });
+      }
+    } else {
       this.setState({
-        content_list: response,
-        columns: col,
-        datafound: true,
-        model_name: model
+        datafound: false,
+        noData: true
       });
     }
   }
@@ -134,6 +142,10 @@ class ContentManagerView extends React.Component {
                   tableData={this.tableData(this.state.content_list)}
                   // columns={this.state.columns}
                 />
+              ) : this.state.noData ? (
+                <center>
+                  <h4>No data found</h4>
+                </center>
               ) : (
                 <center>
                   <div className="spinner-border text-primary" />

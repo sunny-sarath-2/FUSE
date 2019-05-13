@@ -11,7 +11,22 @@ const FieldCreater = props => {
       return (
         <TextField
           id="outlined-name"
-          label={field.name}
+          label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+          name={field.name}
+          fullWidth
+          type={field.params.type}
+          className={classes.textField}
+          value={data[field.name]}
+          onChange={e => props.Change(e, field.name, field.params.type)}
+          margin="normal"
+          variant="outlined"
+        />
+      );
+    case "integer":
+      return (
+        <TextField
+          id="outlined-name"
+          label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
           name={field.name}
           fullWidth
           type={field.params.type}
@@ -25,7 +40,9 @@ const FieldCreater = props => {
     case "text":
       return (
         <div>
-          <label>{field.name}</label>
+          <label>
+            {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+          </label>
           <CKEditor
             data={data[field.name]}
             onChange={e => props.onEditorChange(e, field.name)}
@@ -36,7 +53,7 @@ const FieldCreater = props => {
       return (
         <TextField
           id="outlined-name"
-          label={field.name}
+          label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
           name={field.name}
           fullWidth
           multiline={field.params.type === "text" ? true : false}

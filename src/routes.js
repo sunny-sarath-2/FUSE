@@ -94,13 +94,13 @@ if (id_token == null) {
         component: DashboardPage,
         layout: "/admin"
       },
-      // {
-      //   path: "/template",
-      //   name: "Template",
-      //   icon: DeviceHub,
-      //   component: UserTemplate,
-      //   layout: "/admin"
-      // },
+      {
+        path: "/template",
+        name: "Template",
+        icon: DeviceHub,
+        component: UserTemplate,
+        layout: "/admin"
+      },
       // {
       //   path: "/event1",
       //   name: "Event",
@@ -108,13 +108,13 @@ if (id_token == null) {
       //   component: Events,
       //   layout: "/admin"
       // },
-      {
-        path: "/Blogs",
-        name: "Blogs",
-        icon: Event,
-        component: Blogs,
-        layout: "/admin"
-      },
+      // {
+      //   path: "/Blogs",
+      //   name: "Blogs",
+      //   icon: Event,
+      //   component: Blogs,
+      //   layout: "/admin"
+      // },
       {
         path: "/content-manager-create",
         name: "Create Content Manager",

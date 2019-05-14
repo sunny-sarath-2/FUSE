@@ -35,6 +35,9 @@ const productService = {
   getOneContentTypes: url =>
     serviceBase.get("/content-type-builder/models/" + url),
   getDataContentTypes: model =>
-    serviceBase.get("/content-manager/explorer/" + model)
+    serviceBase.get("/content-manager/explorer/" + model),
+  //delete API
+  deleteContent: (model, id) =>
+    serviceBase.delete("/content-manager/explorer/" + model + "/" + id)
 };
 export default productService;

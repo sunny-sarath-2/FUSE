@@ -37,10 +37,12 @@ class ContentManagerAdd extends React.Component {
     this.setState({
       columns: response.model.attributes,
       model_name: model,
-      loading: false
+      loading: false,
+      btnvalue: "SUBMIT"
     });
   }
   handleChange(e, fieldName, fieldType) {
+    console.log(e, fieldName, "check");
     // console.log(e.target.value, fieldName, fieldType);
     let data = this.state.data;
     // data["type"] = this.state.model_name;
@@ -53,11 +55,17 @@ class ContentManagerAdd extends React.Component {
     this.setState({ data: data });
   }
   async SubmitForm() {
+    await this.setState({
+      btnvalue: "... SAVING"
+    });
     let response = await API.createContentTypesData(
       this.state.model_name + "/?source=content-manager",
       this.state.data
     );
     console.log(response);
+    if (response.status) {
+      this.props.history.push("/admin/content-manager");
+    }
   }
   render() {
     const { classes } = this.props;
@@ -110,7 +118,7 @@ class ContentManagerAdd extends React.Component {
                 className={classes.button}
                 onClick={this.SubmitForm}
               >
-                SUBMIT
+                {this.state.btnvalue}
               </Button>
             </CardBody>
           </Card>

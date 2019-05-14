@@ -16,6 +16,7 @@ import appController from "../../controller/controller";
 import API from "../../../services/API";
 import ViewData from "../../components/ViewData/ViewData";
 import FieldEditor from "../../components/fieldEditor/FieldEditor";
+import { resolve, reject } from "q";
 
 const styles = {
   cardCategoryWhite: {
@@ -72,33 +73,47 @@ class ContentManagerView extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.SubmitForm = this.SubmitForm.bind(this);
     this.onEditorChange = this.onEditorChange.bind(this);
+    this.copyComponent = this.copyComponent.bind(this);
   }
   async componentDidMount() {
     let model = this.props.match.params.model;
+    await this.copyComponent();
+    await this.setState({
+      model_name: model
+    });
+  }
+  async copyComponent() {
+    let model = this.props.match.params.model;
     let response = await API.getDataContentTypes(model);
-    if (response.length != 0) {
-      let col = [];
-      col = Object.keys(response[0]);
-      col.push("Action");
-      let modelTypeResponse = await API.getOneContentTypes(model);
-      if (response.length > 0) {
-        this.setState({
-          content_list: response,
-          columns: col,
-          loading: true,
-          model_name: model,
-          modelTypeColumns: modelTypeResponse.model.attributes
-        });
-      }
+    let modelTypeResponse = await API.getOneContentTypes(model);
+    console.log(modelTypeResponse.model.attributes);
+
+    let col = [];
+    col.push("id");
+    modelTypeResponse.model.attributes.map((prop, key) => {
+      col.push(prop.name);
+    });
+    col = col;
+    col.push("Action");
+    console.log(response.length, "length");
+    if (response.length > 0) {
+      this.setState({
+        content_list: response,
+        columns: col,
+        loading: true,
+        modelTypeColumns: modelTypeResponse.model.attributes
+      });
     } else {
       this.setState({
+        content_list: response,
         loading: false,
-        noData: true
+        noData: true,
+        columns: []
       });
     }
   }
   tableData(data) {
-    // console.log("data", data);
+    //console.log("data", data);
     var arr1 = new Array();
     data.map((td, i) => {
       var arr = new Array();
@@ -127,7 +142,10 @@ class ContentManagerView extends React.Component {
               />
               <DeleteIcon
                 onClick={() => {
-                  this.setState({ switcher: "delete", transferData: td });
+                  this.setState({
+                    switcher: "delete",
+                    transferData: { id: td["id"] }
+                  });
                   console.log("click", td);
                 }}
               />
@@ -199,9 +217,41 @@ class ContentManagerView extends React.Component {
           />
         );
       case "delete":
-        return <ViewData modelType={this.state.modelTypeColumns} />;
+        console.log("delete");
+        let del_id = this.state.transferData.id;
+        let confirm = window.confirm(
+          "Are you sure you want to delete this entry ?"
+        );
+        if (confirm) {
+          this.Delete(del_id).then(async result => {
+            console.log(result);
+            await this.setState({
+              switcher: "main",
+              loading: true
+            });
+            await this.copyComponent();
+          });
+          return <span>Deleting ...</span>;
+        } else {
+          this.setState({
+            switcher: "main",
+            loading: true
+          });
+          return null;
+        }
+      default:
+        return null;
     }
   }
+  Delete = async id => {
+    // return new Promise(async (resolve, reject) => {
+    let model = this.state.model_name;
+    let response = await API.deleteContent(model, id);
+    // resolve(response);
+    return response;
+    //});
+  };
+
   render() {
     const { classes } = this.props;
     const { dense, secondary } = this.state;

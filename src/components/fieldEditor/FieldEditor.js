@@ -19,14 +19,25 @@ const FieldEditor = props => {
           />
         );
       })}
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={props.SubmitForm}
-      >
-        SUBMIT
-      </Button>
+      {props.btnclick ? (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          disabled
+        >
+          ... Saving
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={props.SubmitForm}
+        >
+          SUBMIT
+        </Button>
+      )}
     </span>
   );
 };

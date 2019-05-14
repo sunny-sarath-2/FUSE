@@ -23,7 +23,8 @@ class ContentManagerAdd extends React.Component {
         fields: {},
         files: {}
       },
-      loading: false
+      loading: false,
+      btnclick: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.SubmitForm = this.SubmitForm.bind(this);
@@ -38,7 +39,7 @@ class ContentManagerAdd extends React.Component {
       columns: response.model.attributes,
       model_name: model,
       loading: false,
-      btnvalue: "SUBMIT"
+      btnclick: false
     });
   }
   handleChange(e, fieldName, fieldType) {
@@ -56,7 +57,7 @@ class ContentManagerAdd extends React.Component {
   }
   async SubmitForm() {
     await this.setState({
-      btnvalue: "... SAVING"
+      btnclick: true
     });
     let response = await API.createContentTypesData(
       this.state.model_name + "/?source=content-manager",
@@ -112,14 +113,20 @@ class ContentManagerAdd extends React.Component {
                   />
                 );
               })}
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.SubmitForm}
-              >
-                {this.state.btnvalue}
-              </Button>
+              {this.state.btnclick ? (
+                <Button variant="contained" color="primary" disabled>
+                  ... Saving
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={this.SubmitForm}
+                >
+                  Submit
+                </Button>
+              )}
             </CardBody>
           </Card>
         </GridItem>

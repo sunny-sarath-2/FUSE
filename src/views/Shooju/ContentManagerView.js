@@ -67,7 +67,8 @@ class ContentManagerView extends React.Component {
       data: {
         fields: {},
         files: {}
-      }
+      },
+      btnclick: false
     };
     this.tableData = this.tableData.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -106,7 +107,7 @@ class ContentManagerView extends React.Component {
     } else {
       this.setState({
         content_list: response,
-        loading: false,
+        loading: true,
         noData: true,
         columns: []
       });
@@ -175,6 +176,9 @@ class ContentManagerView extends React.Component {
     this.setState({ data: data });
   }
   async SubmitForm() {
+    await this.setState({
+      btnclick: true
+    });
     console.log("form submited", this.state.data, this.state.transferData.id);
     let response = await API.updateContentTypesData(
       this.state.model_name +
@@ -184,6 +188,12 @@ class ContentManagerView extends React.Component {
       this.state.data
     );
     console.log(response);
+    if (response.status) {
+      this.setState({
+        switcher: "main",
+        btnclick: false
+      });
+    }
   }
   loader() {
     switch (this.state.switcher) {
@@ -214,6 +224,7 @@ class ContentManagerView extends React.Component {
             Change={this.handleChange}
             onEditorChange={this.onEditorChange}
             SubmitForm={this.SubmitForm}
+            btnclick={this.state["btnclick"]}
           />
         );
       case "delete":
@@ -227,11 +238,21 @@ class ContentManagerView extends React.Component {
             console.log(result);
             await this.setState({
               switcher: "main",
-              loading: true
+              loading: false
             });
-            await this.copyComponent();
+            setTimeout(async () => {
+              await this.copyComponent();
+              await this.setState({
+                switcher: "main",
+                loading: true
+              });
+            }, 2000);
           });
-          return <span>Deleting ...</span>;
+          return (
+            <center>
+              <div className="spinner-border text-primary" />
+            </center>
+          );
         } else {
           this.setState({
             switcher: "main",
@@ -284,15 +305,16 @@ class ContentManagerView extends React.Component {
             <CardBody>
               {this.state.loading ? (
                 this.loader()
-              ) : this.state.noData ? (
-                <center>
-                  <h4>No data found</h4>
-                </center>
               ) : (
                 <center>
                   <div className="spinner-border text-primary" />
                 </center>
               )}
+              {this.state.noData ? (
+                <center>
+                  <h4>No data found</h4>
+                </center>
+              ) : null}
             </CardBody>
           </Card>
         </GridItem>

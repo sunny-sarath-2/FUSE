@@ -17,6 +17,11 @@ import { Link } from "react-router-dom";
 import appController from "../../controller/controller";
 import API from "../../../services/API";
 import { SketchPicker } from "react-color";
+import Checkbox from "@material-ui/core/Checkbox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+//
+import Select from "react-select";
 
 // var sjc = require("shooju-client");
 // var sj = new sjc(
@@ -61,6 +66,8 @@ class Template extends React.Component {
     this.state = {
       Chapter: "",
       ChapterAdmin: "",
+      lChapter: "",
+      lChapterAdmin: "",
       open: false,
       AffiliateData: [],
       AffiliateAdmins: [],
@@ -77,7 +84,8 @@ class Template extends React.Component {
       footerColors: ["#9c27b0", "#00bbff", "#4caf50", "#f44336", "#ff9800"],
       footerColorSelected: [],
       loadingDetails: false,
-      loading: false
+      loading: false,
+      alertmsg: {}
     };
     // location.href = location.origin + location.pathname;
     this.handleChange = this.handleChange.bind(this);
@@ -104,8 +112,13 @@ class Template extends React.Component {
       loadingDetails: false
     });
   }
-  handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value, selected: true });
+  handleChange(e, name) {
+    console.log(e, name);
+    if (e !== null) {
+      this.setState({ [name]: e.value, ["l" + name]: e, selected: true });
+    } else {
+      this.setState({ [name]: "", ["l" + name]: e, selected: false });
+    }
   }
   handleClickOpen() {
     this.setState({ open: true });
@@ -159,13 +172,26 @@ class Template extends React.Component {
       });
       console.log(response);
       if (response.responses[0].success) {
-        alert("saved the template to user");
+        this.setState({
+          alertmsg: { color: "#4caf50", msg: "Saved the template to user" }
+        });
       } else {
-        alert("failed to save template to user");
+        this.setState({
+          alertmsg: { color: "#ff9800", msg: "Failed to save template to user" }
+        });
       }
       this.setState({ loading: false });
+      setTimeout(() => {
+        this.setState({ alertmsg: {} });
+      }, 5000);
     } else {
-      this.setState({ selected: false });
+      this.setState({
+        alertmsg: { color: "#ff9800", msg: "Select Chapter & Admin" }
+      });
+
+      setTimeout(() => {
+        this.setState({ alertmsg: {} });
+      }, 5000);
     }
   }
 
@@ -184,15 +210,23 @@ class Template extends React.Component {
       });
     }
   }
-  colorSave(color, arrayName) {
+  colorSave(arrayName, e) {
+    console.log(e.target.value, e.target.checked);
+    let color = e.target.value;
     let getArray = this.state[arrayName];
-    if (getArray.indexOf(color) == -1) {
+    if (e.target.checked === true) {
       getArray.push(color);
       let dummyState = this.state;
       dummyState[arrayName] = getArray;
       this.setState(dummyState);
     } else {
+      let colorIndex = getArray.indexOf(color);
+      getArray.splice(colorIndex, 1);
+      let dummyState = this.state;
+      dummyState[arrayName] = getArray;
+      this.setState(dummyState);
     }
+    console.log(arrayName, this.state[arrayName]);
   }
   removeColor(color, arrayName) {
     let getArray = this.state[arrayName];
@@ -204,6 +238,7 @@ class Template extends React.Component {
   }
   render() {
     const { classes } = this.props;
+
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
@@ -212,85 +247,52 @@ class Template extends React.Component {
               <h4 className={classes.cardTitleWhite}>Template</h4>
             </CardHeader>
             <CardBody>
-              {this.state.loading ? (
-                <center>
-                  <div className="spinner-border text-primary" />
-                </center>
-              ) : null}
-              <Grid container spacing={24} style={{ marginTop: "20px" }}>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    id="standard-select-currency"
-                    select
-                    name="Chapter"
-                    label="Select Chapter"
-                    style={{ width: "300px" }}
-                    value={this.state.Chapter}
+              <Grid container spacing={24} style={{ marginTop: "0px" }}>
+                {this.state.alertmsg.msg != null ? (
+                  <Grid item xs={12} sm={12}>
+                    <div
+                      style={{
+                        padding: "15px",
+                        fontWeight: "700",
+                        backgroundColor: this.state.alertmsg.color,
+                        color: "#FFF"
+                      }}
+                    >
+                      {this.state.alertmsg.msg}
+                    </div>
+                  </Grid>
+                ) : null}
+                <Grid item xs={12} sm={8}>
+                  <label>Select Chapter</label>
+                  <Select
+                    value={this.state.lChapter}
                     onChange={e => {
-                      this.handleChange(e);
+                      this.handleChange(e, "Chapter");
                     }}
-                    SelectProps={{
-                      MenuProps: {
-                        className: classes.menu
-                      }
-                    }}
-                  >
-                    {this.state.loadingDetails ? (
-                      <MenuItem>
-                        <center>
-                          <div className="spinner-border text-primary" />
-                        </center>
-                      </MenuItem>
-                    ) : (
-                      this.state.AffiliateData.map((prop, key) => {
-                        return (
-                          <MenuItem value={prop.chapter} key={key}>
-                            {prop.chapter}
-                          </MenuItem>
-                        );
-                      })
-                    )}
-                  </TextField>
-                  {this.state.selected ? (
-                    ""
-                  ) : (
-                    <p style={{ color: "red" }}>Select Chapter</p>
-                  )}
+                    options={this.state.AffiliateData.map(suggestion => ({
+                      value: suggestion.chapter,
+                      label: suggestion.chapter
+                    }))}
+                    //components={components}
+                    placeholder="Search Chapter"
+                    isClearable
+                  />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <TextField
-                    id="standard-select-currency"
-                    select
-                    name="ChapterAdmin"
-                    label="Select Admin"
-                    style={{ width: "300px" }}
-                    value={this.state.ChapterAdmin}
+                  <label>Select Admin</label>
+                  <Select
+                    value={this.state.lChapterAdmin}
                     onChange={e => {
-                      this.handleChange(e);
+                      this.handleChange(e, "ChapterAdmin");
                     }}
-                    SelectProps={{
-                      MenuProps: {
-                        className: classes.menu
-                      }
-                    }}
-                  >
-                    {this.state.loadingDetails ? (
-                      <MenuItem>
-                        <center>
-                          <div className="spinner-border text-primary" />
-                        </center>
-                      </MenuItem>
-                    ) : (
-                      this.state.AffiliateAdmins.map((prop, key) => {
-                        //console.log(prop.fields.username);
-                        return (
-                          <MenuItem value={prop.fields.username} key={key}>
-                            {prop.fields.username}
-                          </MenuItem>
-                        );
-                      })
-                    )}
-                  </TextField>
+                    options={this.state.AffiliateAdmins.map(suggestion => ({
+                      value: suggestion.fields.username,
+                      label: suggestion.fields.username
+                    }))}
+                    //components={components}
+                    placeholder="Search Admin"
+                    isClearable
+                  />
                 </Grid>
               </Grid>
               <Grid container spacing={24} style={{ marginTop: "20px" }}>
@@ -308,7 +310,7 @@ class Template extends React.Component {
                     onClick={() => {
                       this.state.ChapterAdmin != ""
                         ? window.open(
-                            "http://183.83.216.197:3000/admin/home?accessToken=" +
+                            "http://localhost:3000/admin/home?accessToken=" +
                               localStorage.getItem("idToken") +
                               "&strapiToken=" +
                               localStorage.getItem("strapiJwtToken") +
@@ -317,7 +319,13 @@ class Template extends React.Component {
                               "&chapter=" +
                               this.state.Chapter
                           )
-                        : alert("Select Admin");
+                        : this.setState({
+                            alertmsg: { color: "#ff9800", msg: "Select Admin" }
+                          });
+
+                      setTimeout(() => {
+                        this.setState({ alertmsg: {} });
+                      }, 5000);
                       return false;
                     }}
                   >
@@ -331,209 +339,125 @@ class Template extends React.Component {
                       Preview
                     </Button>
                   </a>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={this.onSelectClicked}
-                  >
-                    Select
-                  </Button>
+                  {this.state.loading ? (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      disabled
+                    >
+                      <div className="spinner-border text-primary" /> &nbsp;
+                      Saving
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={this.onSelectClicked}
+                    >
+                      Select
+                    </Button>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <div style={{ fontWeight: "700" }}>Header Colors:</div>
-                  <p>Available Colors: </p>
-                  <div style={{ padding: "10px" }} className="row">
+                  <div style={{ fontWeight: "700" }}>Header Colors :</div>
+                  <div style={{ padding: "0px 10px" }} className="row">
                     {this.state.headerColors.map((hcolor, i) => {
+                      let chk = this.state.headerColorSelected.indexOf(hcolor);
                       return (
-                        <div
+                        <Checkbox
+                          style={{ color: hcolor }}
                           key={i}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: hcolor,
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                            cursor: "pointer"
-                          }}
-                          onClick={() => {
-                            this.colorSave(hcolor, "headerColorSelected");
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                  <p>Selected Colors: </p>
-                  <div style={{ padding: "10px" }} className="row">
-                    {this.state.headerColorSelected.map((hcolor, i) => {
-                      return (
-                        <div
-                          key={i}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: hcolor,
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                            cursor: "pointer"
-                          }}
-                          onClick={() => {
-                            this.removeColor(hcolor, "headerColorSelected");
-                          }}
+                          icon={
+                            <CheckBoxOutlineBlankIcon
+                              style={{ fontSize: "30px" }}
+                            />
+                          }
+                          checkedIcon={
+                            <CheckBoxIcon style={{ fontSize: "30px" }} />
+                          }
+                          //indeterminate={chk !== -1 ? false : true}
+                          checked={chk !== -1 ? true : false}
+                          onChange={e =>
+                            this.colorSave("headerColorSelected", e)
+                          }
+                          value={hcolor}
                         />
                       );
                     })}
                   </div>
                   {/* <div
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        cursor: "pointer",
-                        background: "white",
-                        marginRight: "5px",
-                        marginBottom: "5px",
-                        fontSize: "30px",
-                        border: "solid 1px",
-                        textAlign: "center"
-                      }}
-                      onClick={() => this.addMoreColor("headeradd")}
-                    >
-                      +
-                    </div> */}
-                  {/* {this.state.headeradd ? (
-                      <SketchPicker
-                        color={this.state.background}
-                        onChangeComplete={this.handleChangeComplete}
-                      />
-                    ) : null} */}
-                  <div style={{ fontWeight: "700" }}>Widget Colors:</div>
-                  <div style={{ padding: "10px" }} className="row">
-                    {this.state.widgetColors.map((hcolor, i) => {
-                      return (
-                        <div
-                          key={i}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: hcolor,
-                            marginRight: "5px",
-                            marginBottom: "5px"
-                          }}
-                          onClick={() => {
-                            this.colorSave(hcolor, "widgetColorSelected");
-                          }}
-                        />
-                      );
-                    })}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      cursor: "pointer",
+                      background: "white",
+                      marginRight: "5px",
+                      marginBottom: "5px",
+                      fontSize: "30px",
+                      border: "solid 1px",
+                      textAlign: "center"
+                    }}
+                    onClick={() => this.addMoreColor("headeradd")}
+                  >
+                    +
                   </div>
-                  <p>Selected Colors: </p>
-                  <div style={{ padding: "10px" }} className="row">
-                    {this.state.widgetColorSelected.map((hcolor, i) => {
+                  {this.state.headeradd ? (
+                    <SketchPicker
+                      color={this.state.background}
+                      onChangeComplete={this.handleChangeComplete}
+                    />
+                  ) : null} */}
+                  <div style={{ fontWeight: "700" }}>Widget Colors:</div>
+                  <div style={{ padding: "0px 10px" }} className="row">
+                    {this.state.widgetColors.map((hcolor, i) => {
+                      let chk = this.state.widgetColorSelected.indexOf(hcolor);
                       return (
-                        <div
+                        <Checkbox
+                          style={{ color: hcolor }}
                           key={i}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: hcolor,
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                            cursor: "pointer"
-                          }}
-                          onClick={() => {
-                            this.removeColor(hcolor, "widgetColorSelected");
-                          }}
+                          icon={
+                            <CheckBoxOutlineBlankIcon
+                              style={{ fontSize: "30px" }}
+                            />
+                          }
+                          checkedIcon={
+                            <CheckBoxIcon style={{ fontSize: "30px" }} />
+                          }
+                          checked={chk !== -1 ? true : false}
+                          onChange={e =>
+                            this.colorSave("widgetColorSelected", e)
+                          }
+                          value={hcolor}
                         />
                       );
                     })}
-
-                    {/* <div
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        cursor: "pointer",
-                        background: "white",
-                        marginRight: "5px",
-                        marginBottom: "5px",
-                        fontSize: "30px",
-                        border: "solid 1px",
-                        textAlign: "center"
-                      }}
-                      onClick={() => this.addMoreColor("widgetadd")}
-                    >
-                      +
-                    </div>
-
-                    {this.state.widgetadd ? (
-                      <SketchPicker
-                        color={this.state.background}
-                        onChangeComplete={this.handleChangeComplete1}
-                      />
-                    ) : null} */}
                   </div>
                   <div style={{ fontWeight: "700" }}>Footer Colors:</div>
-                  <div style={{ padding: "10px" }} className="row">
+                  <div style={{ padding: "0px 10px" }} className="row">
                     {this.state.footerColors.map((hcolor, i) => {
+                      let chk = this.state.footerColorSelected.indexOf(hcolor);
                       return (
-                        <div
+                        <Checkbox
+                          style={{ color: hcolor }}
                           key={i}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: hcolor,
-                            marginRight: "5px",
-                            marginBottom: "5px"
-                          }}
-                          onClick={() => {
-                            this.colorSave(hcolor, "footerColorSelected");
-                          }}
+                          icon={
+                            <CheckBoxOutlineBlankIcon
+                              style={{ fontSize: "30px" }}
+                            />
+                          }
+                          checkedIcon={
+                            <CheckBoxIcon style={{ fontSize: "30px" }} />
+                          }
+                          checked={chk !== -1 ? true : false}
+                          onChange={e =>
+                            this.colorSave("footerColorSelected", e)
+                          }
+                          value={hcolor}
                         />
                       );
                     })}
-                  </div>
-                  <p>Selected Colors: </p>
-                  <div style={{ padding: "10px" }} className="row">
-                    {this.state.footerColorSelected.map((hcolor, i) => {
-                      return (
-                        <div
-                          key={i}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            background: hcolor,
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                            cursor: "pointer"
-                          }}
-                          onClick={() => {
-                            this.removeColor(hcolor, "footerColorSelected");
-                          }}
-                        />
-                      );
-                    })}
-
-                    {/* <div
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        cursor: "pointer",
-                        background: "white",
-                        marginRight: "5px",
-                        marginBottom: "5px",
-                        fontSize: "30px",
-                        border: "solid 1px",
-                        textAlign: "center"
-                      }}
-                      onClick={() => this.addMoreColor("footeradd")}
-                    >
-                      +
-                    </div>
-                    {this.state.footeradd ? (
-                      <SketchPicker
-                        color={this.state.background}
-                        onChangeComplete={this.handleChangeComplete2}
-                      />
-                    ) : null} */}
                   </div>
                 </Grid>
               </Grid>

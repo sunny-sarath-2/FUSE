@@ -165,10 +165,13 @@ export default class registration extends Component {
               if (err) {
                 // console.log(err, "err");
                 this.setState({
-                  showModel: true,
+                  //showModel: true,
                   loading: false,
                   modelError: err.message,
-                  modelHeader: "Error"
+                  modelHeader: "Error",
+                  error: true,
+                  errorfileds: "",
+                  errorMessage: err.message
                 });
                 return;
               } else {
@@ -224,12 +227,16 @@ export default class registration extends Component {
                 //   }
                 // );
                 this.setState({
-                  showModel: true,
+                  //showModel: true,
                   loading: false,
                   modelError:
                     "user has been registered please confirm your email id",
                   modelHeader: "User Registered",
-                  userRegistered: true
+                  userRegistered: true,
+                  error: true,
+                  errorfileds: "",
+                  errorMessage:
+                    "user has been registered please confirm your email id"
                 });
                 // console.log(result);
               }

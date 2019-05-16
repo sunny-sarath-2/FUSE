@@ -90,14 +90,21 @@ class LoginLayout extends Component {
 
         onFailure: err => {
           this.setState({
-            showModel: true,
+            //showModel: true,
             loading: false,
-            modelError: err.message,
-            modelHeader: "Error"
+            //modelError: err.message,
+            //modelHeader: "Error",
+            error: true,
+            errorfileds: "",
+            errorMessage: err.message
           });
         },
         newPasswordRequired: () => {
-          alert("user haven't confirmed by admin");
+          this.setState({
+            error: true,
+            errorfileds: "",
+            errorMessage: "user haven't confirmed by admin"
+          });
           console.log("called new password");
           return;
         }

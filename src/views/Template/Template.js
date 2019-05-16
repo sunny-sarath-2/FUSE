@@ -314,16 +314,26 @@ class Template extends React.Component {
                   <a
                     target="_blank"
                     onClick={() => {
+                      let idToken = localStorage.getItem("idToken");
+                      let affiliateDetails = null;
+                      if (idToken == null) {
+                        affiliateDetails = {
+                          userName: localStorage.getItem("username"),
+                          userType: "affilate"
+                        };
+                        affiliateDetails = JSON.stringify(affiliateDetails);
+                      }
                       this.state.ChapterAdmin != ""
                         ? window.open(
                             "http://localhost:3000/admin/home?accessToken=" +
-                              localStorage.getItem("idToken") +
+                              idToken +
                               "&strapiToken=" +
                               localStorage.getItem("strapiJwtToken") +
                               "&affiliate=" +
-                              this.state.ChapterAdmin +
-                              "&chapter=" +
-                              this.state.Chapter
+                              localStorage.getItem("username") +
+                              "&sitelaunch=true" +
+                              "&affiliateDetails=" +
+                              affiliateDetails
                           )
                         : this.setState({
                             alertmsg: { color: "#ff9800", msg: "Select Admin" }

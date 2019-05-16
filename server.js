@@ -29,11 +29,11 @@ app.use(function(req, res, next) {
 app.get("/launch", (req, res) => {
   exec("lsof -i -P -n | grep LISTEN", (err, stdout, stderr) => {
     let openports = _.words(stdout.replace(/[^0-9]+/g, " "));
-	console.log(req.body)    
-//res.send({body:req.body})
-     createSite(openports, port + 1).then((result, err,finlizedPort ) => {
-      console.log(result, err,finlizedPort );
-      res.send({ result: result, err: err, finlizedPort :finlizedPort  });
+    console.log(req.body);
+    //res.send({body:req.body})
+    createSite(openports, port + 1).then((result, err, finlizedPort) => {
+      console.log(result, err, finlizedPort);
+      res.send({ result: result, err: err, finlizedPort: finlizedPort });
     });
   });
 });
@@ -43,9 +43,13 @@ createSite = (openports, portgiven) =>
     {
       if (!openports.includes(portgiven)) {
         let finlizedPort = portgiven;
-console.log(finlizedPort)
-console.log(`firewall-cmd --zone=public --add-port=${finlizedPort}/tcp --permanent`)
-console.log(`docker run -d --name check1 -p ${finlizedPort}:3000 affiliate`)
+        console.log(finlizedPort);
+        console.log(
+          `firewall-cmd --zone=public --add-port=${finlizedPort}/tcp --permanent`
+        );
+        console.log(
+          `docker run -d --name check1 -p ${finlizedPort}:3000 affiliate`
+        );
         exec(
           `firewall-cmd --zone=public --add-port=${finlizedPort}/tcp --permanent`,
           (err, stdout, stderr) => {
@@ -56,7 +60,7 @@ console.log(`docker run -d --name check1 -p ${finlizedPort}:3000 affiliate`)
                 exec(
                   `docker run -d --name ${finlizedPort} -p ${finlizedPort}:3000 affiliate`,
                   (err, stdout) => {
-                    resolves(finlizedPort ,stdout, err,finlizedPort );
+                    resolves(finlizedPort, stdout, err, finlizedPort);
                     console.log(err, stdout);
                   }
                 );
@@ -74,12 +78,12 @@ app.get("*", function(req, res, next) {
   res.sendFile(path.resolve(__dirname + "/public", "", "index.html"));
 });
 
-https
-  .createServer(
-    {
-      key: fs.readFileSync("server.key"),
-      cert: fs.readFileSync("server.cert")
-    },
-    app
-  )
-  .listen(port, () => console.log(`Listening on port ${port}`));
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("server.key"),
+//       cert: fs.readFileSync("server.cert")
+//     },
+//     app
+//   )
+app.listen(port, () => console.log(`Listening on port ${port}`));

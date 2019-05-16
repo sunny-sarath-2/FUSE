@@ -3,6 +3,7 @@ import appController from "../controller/controller";
 import Warningprompts from "../modelPopups/warningprompts";
 import Restpasswordprompts from "../modelPopups/restpasswordprompts";
 import API from "../../services/API";
+import Switch from "@material-ui/core/Switch";
 
 var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 require("../../public/style.css");
@@ -23,7 +24,8 @@ class LoginLayout extends Component {
       showModeForgetPassword: false,
       verificationCode: "",
       restPassword: "",
-      submited: false
+      submited: false,
+      handleLogin: false
     };
     this.Login = this.Login.bind(this);
     this.Register = this.Register.bind(this);
@@ -32,6 +34,8 @@ class LoginLayout extends Component {
     this.ForgetPassword = this.ForgetPassword.bind(this);
     this.getNewPassword = this.getNewPassword.bind(this);
     this.sendNewPassword = this.sendNewPassword.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.LoginAffilate = this.LoginAffilate.bind(this);
   }
   Register() {
     this.props.history.push("/register");
@@ -187,6 +191,75 @@ class LoginLayout extends Component {
       submited: true
     });
   }
+  handleChange(e, name) {
+    console.log(e.target.checked, name);
+    this.setState({ [name]: e.target.checked });
+  }
+  LoginAffilate(e) {
+    e.preventDefault();
+    let _state = this.state;
+    let validationCheck = appController.validation([
+      _state.userName,
+      _state.password
+    ]);
+    if (validationCheck.error == 0) {
+      let AppName = "ascaFuse";
+      let AppKey = "6c4f4L0idNy4OJ63";
+      this.getURI(AppName, AppKey).then(res => {
+        this.getTokens(res).then(response => {
+          console.log(response);
+          appController.setAffilateTokens(
+            response.appToken,
+            response.userToken,
+            response.uri
+          );
+          console.log(appController.getAffilateTokens());
+        });
+      });
+    } else {
+      this.setState({
+        error: true,
+        errorfileds: validationCheck.errorfileds,
+        errorMessage: "Please fill all the details"
+      });
+    }
+  }
+  getURI = (AppName, AppKey) =>
+    new Promise((resolve, reject) => {
+      let data = {
+        AppName,
+        AppKey
+      };
+      fetch("https://public.impexium.com/Api/v1/WebApiUrl", {
+        method: "POST",
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(response => resolve(response));
+    });
+  getTokens = res =>
+    new Promise((resolve, reject) => {
+      console.log(res.uri, res.accessToken);
+      let data = {
+        AppId: "ascaFuse",
+        AppPassword: "6c4f4L0idNy4OJ63",
+        AppUserEmail: this.state.userName, //fuse_Integration@notchpoint.com
+        AppUserPassword: this.state.password //8cT8EWMzmsksHcnc
+      };
+      fetch(res.uri, {
+        method: "POST",
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers: {
+          "Content-Type": "application/json",
+          AccessToken: res.accessToken
+        }
+      })
+        .then(res => res.json())
+        .then(response => resolve(response));
+    });
   render() {
     return (
       <div className="container main form-middle-main">
@@ -216,6 +289,15 @@ class LoginLayout extends Component {
                     <h1>Login</h1>
                     <p className="text-muted">Sign In to your account</p>
                     <p style={{ color: "red" }}>{this.state.errorMessage}</p>
+                    <h5 style={{ float: "left" }}>Admin</h5>
+                    <span style={{ float: "left" }}>
+                      <Switch
+                        color="primary"
+                        checked={this.state.handleLogin}
+                        onChange={e => this.handleChange(e, "handleLogin")}
+                      />
+                    </span>
+                    <h5>Affiliate</h5>
                     <div className="mb-3 input-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">
@@ -262,7 +344,11 @@ class LoginLayout extends Component {
                         data-toggle="modal"
                         data-target="#myModal"
                         className="px-4 btn btn-primary"
-                        onClick={this.Login}
+                        onClick={
+                          this.state.handleLogin
+                            ? this.LoginAffilate
+                            : this.Login
+                        }
                       >
                         Login
                       </button>

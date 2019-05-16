@@ -7,6 +7,10 @@ var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 let username = "";
 let StrapiJwtToken = "";
 var algoritham;
+let appToken = "";
+let userToken = "";
+let uri = "";
+
 const appController = {
   checkAccess(callBack) {
     // new Promise((resolve, reject) => {
@@ -198,6 +202,18 @@ const appController = {
   },
   getStrapiJwtToken() {
     return StrapiJwtToken;
+  },
+  setAffilateTokens(rappToken, ruserToken, ruri) {
+    appToken = rappToken;
+    userToken = ruserToken;
+    uri = ruri;
+  },
+  getAffilateTokens() {
+    return {
+      appToken,
+      userToken,
+      uri
+    };
   }
 };
 export default appController;

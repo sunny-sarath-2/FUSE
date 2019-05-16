@@ -10,6 +10,8 @@ var algoritham;
 let appToken = "";
 let userToken = "";
 let uri = "";
+let affilateuserName = "";
+let affilateEmail = "";
 
 const appController = {
   checkAccess(callBack) {
@@ -203,16 +205,25 @@ const appController = {
   getStrapiJwtToken() {
     return StrapiJwtToken;
   },
-  setAffilateTokens(rappToken, ruserToken, ruri) {
+  setAffilateTokens(rappToken, ruserToken, ruri, rname, remail) {
+    localStorage.setItem("username", rname);
+    console.log(rappToken, ruserToken, ruri, rname, remail);
     appToken = rappToken;
     userToken = ruserToken;
     uri = ruri;
+    affilateuserName = rname;
+    affilateEmail = remail;
   },
   getAffilateTokens() {
+    console.log(appToken, uri, userToken, affilateuserName, affilateEmail);
     return {
       appToken,
       userToken,
-      uri
+      uri,
+      userName: affilateuserName,
+      userEmail: affilateEmail,
+      userType: "affilate",
+      userOrganisation: "ASCA"
     };
   }
 };

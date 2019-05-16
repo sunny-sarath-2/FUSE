@@ -203,21 +203,30 @@ class LoginLayout extends Component {
       _state.password
     ]);
     if (validationCheck.error == 0) {
+      this.setState({ loading: true });
       let AppName = "ascaFuse";
       let AppKey = "6c4f4L0idNy4OJ63";
       this.getURI(AppName, AppKey).then(res => {
         this.getTokens(res).then(response => {
           console.log(response);
-          appController.setAffilateTokens(
-            response.appToken,
-            response.userToken,
-            response.uri
-          );
-          console.log(appController.getAffilateTokens());
+          this.getUserDetails(response).then(userResponse => {
+            console.log(userResponse);
+            appController.setAffilateTokens(
+              response.appToken,
+              response.userToken,
+              response.uri,
+              userResponse.dataList[0].name,
+              userResponse.dataList[0].user.loginEmail
+            );
+            this.setStrapiUser(appController.getAffilateTokens());
+            console.log(appController.getAffilateTokens());
+            // this.props.history.push("/admin/dashboard");
+          });
         });
       });
     } else {
       this.setState({
+        loading: false,
         error: true,
         errorfileds: validationCheck.errorfileds,
         errorMessage: "Please fill all the details"
@@ -258,6 +267,19 @@ class LoginLayout extends Component {
         }
       })
         .then(res => res.json())
+        .then(response => resolve(response));
+    });
+  getUserDetails = res =>
+    new Promise((resolve, reject) => {
+      fetch(res.uri + "/Individuals/Profile/" + res.userId + "/1", {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          appToken: res.appToken,
+          userToken: res.userToken
+        }
+      })
+        .then(response => response.json())
         .then(response => resolve(response));
     });
   render() {

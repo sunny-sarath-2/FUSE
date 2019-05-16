@@ -30,8 +30,17 @@ function decide() {
     });
     return true;
   } else {
-    localStorage.setItem("session", false);
-    return false;
+    let checkAffilate = appController.getAffilateTokens();
+    console.log(checkAffilate);
+    if (localStorage.getItem("username") != null) {
+      console.log("if");
+      localStorage.setItem("session", true);
+      return true;
+    } else {
+      console.log("else", localStorage.getItem("username"));
+      localStorage.setItem("session", false);
+      return false;
+    }
   }
 }
 ReactDOM.render(

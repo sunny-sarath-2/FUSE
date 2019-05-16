@@ -110,7 +110,14 @@ class Dashboard extends React.Component {
   async componentDidMount() {
     this.setState({ loading: true });
     let token = localStorage.getItem("idToken");
-    let userDetails = await appController.getUser(token);
+    console.log(token);
+    let userDetails;
+    if (token != null) {
+      userDetails = await appController.getUser(token);
+    } else {
+      userDetails = await appController.getAffilateTokens();
+    }
+    console.log(userDetails);
     if (userDetails.userType === "parent") {
       this.setState({
         title: "Welcome to Parent site."

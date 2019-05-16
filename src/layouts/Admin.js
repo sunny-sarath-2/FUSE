@@ -18,6 +18,7 @@ import dashboardStyle from "../assets/jss/material-dashboard-react/layouts/dashb
 import image from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
 import API from "../../services/API";
+import appController from "../controller/controller";
 
 const SwitchRoutes = (
   <Switch>
@@ -114,6 +115,7 @@ class Admin extends React.Component {
     var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
     cognitoUser.signOut();
     // console.log(userDetails);
+    appController.setAffilateTokens("", "", "", "", "");
     localStorage.clear();
     this.props.history.push("/login");
   }

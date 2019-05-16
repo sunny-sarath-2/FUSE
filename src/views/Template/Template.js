@@ -151,7 +151,13 @@ class Template extends React.Component {
     if (this.state.Chapter != "" && this.state.ChapterAdmin) {
       this.setState({ selected: true, loading: true });
       var id_token = localStorage.getItem("idToken");
-      var userDetails = appController.getUser(id_token);
+      let userDetails;
+      if (id_token != null) {
+        userDetails = await appController.getUser(id_token);
+      } else {
+        userDetails = await appController.getAffilateTokens();
+      }
+      console.log(userDetails);
       var {
         Chapter,
         ChapterAdmin,

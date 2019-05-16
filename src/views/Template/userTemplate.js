@@ -62,7 +62,13 @@ class userTemplate extends Component {
   }
   async componentDidMount() {
     var id_token = localStorage.getItem("idToken");
-    var userDetails = appController.getUser(id_token);
+    let userDetails;
+    if (id_token != null) {
+      userDetails = await appController.getUser(token);
+    } else {
+      userDetails = await appController.getAffilateTokens();
+    }
+    console.log(userDetails);
     var response = await API.getAffiliatesOnOrginasation(
       userDetails.userOrganisation
     );

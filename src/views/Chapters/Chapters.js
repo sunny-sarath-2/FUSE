@@ -53,11 +53,11 @@ class Chapters extends Component {
                           Chapters
                         </th>
                         <th style={{ width: "10%", padding: "10px 20px" }}>
-                          Count Of Affiliates
+                          Number Of Affiliates
                         </th>
-                        <th style={{ width: "10%", padding: "10px 20px" }}>
+                        {/* <th style={{ width: "10%", padding: "10px 20px" }}>
                           Count Of Admins
-                        </th>
+                        </th> */}
                         <th style={{ width: "10%", padding: "10px 20px" }}>
                           URL
                         </th>
@@ -95,7 +95,7 @@ class Chapters extends Component {
                                 {td.affiliates_count}
                               </Link>
                             </td>
-                            <td style={{ width: "10%", padding: "10px 20px" }}>
+                            {/* <td style={{ width: "10%", padding: "10px 20px" }}>
                               <Link
                                 to={{
                                   pathname: "/admin/affiliate_list",
@@ -108,13 +108,14 @@ class Chapters extends Component {
                               >
                                 {td.admin_count}
                               </Link>
-                            </td>
+                            </td> */}
                             <td style={{ width: "10%", padding: "10px 20px" }}>
                               <Link
-                                to={{
-                                  pathname: "/admin/affiliate_list",
-                                  state: { data: td }
-                                }}
+                                // to={{
+                                //   pathname: "/admin/affiliate_list",
+                                //   state: { data: td }
+                                // }}
+                                to={{}}
                                 onClick={() => {
                                   if (td.url != "") window.open(td.url);
                                 }}

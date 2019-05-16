@@ -3,6 +3,7 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 // core components
 import GridItem from "../../components/Grid/GridItem";
+import Grid from "@material-ui/core/Grid";
 import GridContainer from "../../components/Grid/GridContainer";
 import Table from "../../components/Table/Table";
 import Card from "../../components/Card/Card";
@@ -54,7 +55,7 @@ class AffiliateList extends React.Component {
       userType: "",
       AffiliateData: [],
       loading: true,
-      recivedSelect: "",
+      recivedSelect: "New_York_School_Counselor_Association",
       chapterList: [],
       lChapter: ""
     };
@@ -65,10 +66,15 @@ class AffiliateList extends React.Component {
     let AffiliateData = await API.getAffiliatesBySeries("NYSSCA_AFFILIATES");
 
     if (this.props.location.state != undefined) {
+      //console.log(this.props.location.state.adminfound);
       await this.setState({
         chapterList: response.fields.sites_map_obj,
         recivedData: this.props.location.state.data,
         recivedSelect: this.props.location.state.data.chapter,
+        lChapter: {
+          label: this.props.location.state.data.chapter,
+          value: this.props.location.state.data.chapter
+        },
         loading: false,
         AffiliateData: AffiliateData.series[0].fields.sites_map_obj
       });
@@ -106,7 +112,7 @@ class AffiliateList extends React.Component {
                     backgroundColor: "#00acc1"
                   }}
                 >
-                  Create Affiliate
+                  Create Affiliate Admin
                 </Button>
               </Link>
               <p
@@ -118,21 +124,22 @@ class AffiliateList extends React.Component {
             </CardHeader>
             <CardBody>
               <div>
-                <label>Select Chapter</label>
-                <Select
-                  value={this.state.lChapter}
-                  onChange={e => {
-                    this.handleChange(e);
-                  }}
-                  options={this.state.chapterList.map(suggestion => ({
-                    value: suggestion.chapter,
-                    label: suggestion.chapter
-                  }))}
-                  //components={components}
-                  placeholder="Search Chapter"
-                  isClearable
-                />
-
+                <Grid item xs={12} sm={6} md={6}>
+                  <label>Select Chapter</label>
+                  <Select
+                    value={this.state.lChapter}
+                    onChange={e => {
+                      this.handleChange(e);
+                    }}
+                    options={this.state.chapterList.map(suggestion => ({
+                      value: suggestion.chapter,
+                      label: suggestion.chapter
+                    }))}
+                    //components={components}
+                    placeholder="Search Chapter"
+                    isClearable
+                  />
+                </Grid>
                 {this.state.loading === false ? (
                   this.state.recivedSelect ==
                   "New_York_School_Counselor_Association" ? (
@@ -146,13 +153,13 @@ class AffiliateList extends React.Component {
                             <th style={{ width: "10%", padding: "10px 20px" }}>
                               Association Name
                             </th>
-                            <th style={{ width: "10%", padding: "10px 20px" }}>
+                            <th style={{ width: "40%", padding: "10px 20px" }}>
                               Contact Information
                             </th>
-                            <th style={{ width: "10%", padding: "10px 20px" }}>
+                            <th style={{ width: "15%", padding: "10px 20px" }}>
                               region
                             </th>
-                            <th style={{ width: "40%", padding: "10px 20px" }}>
+                            <th style={{ width: "20%", padding: "10px 20px" }}>
                               Admin info
                             </th>
                           </tr>
@@ -162,7 +169,7 @@ class AffiliateList extends React.Component {
                             let contact_information = td.contact_information;
                             let cuttedString = contact_information.substring(
                               0,
-                              30
+                              50
                             );
                             return (
                               <tr key={i}>
@@ -172,27 +179,22 @@ class AffiliateList extends React.Component {
                                   {td.association_name}
                                 </td>
                                 <td
-                                  style={{ width: "10%", padding: "10px 20px" }}
+                                  style={{ width: "40%", padding: "10px 20px" }}
                                 >
                                   {cuttedString + "..."}
                                 </td>
                                 <td
-                                  style={{ width: "10%", padding: "10px 20px" }}
+                                  style={{ width: "15%", padding: "10px 20px" }}
                                 >
                                   {td.region}
                                 </td>
 
                                 <td
-                                  style={{ width: "40%", padding: "10px 20px" }}
+                                  style={{ width: "20%", padding: "10px 20px" }}
                                 >
                                   {td.admin_information != undefined
                                     ? td.admin_information
-                                    : "No admin found, would like to create new admin "}
-                                  {td.admin_information != undefined ? null : (
-                                    <Link to="/admin/reg_affiliate">
-                                      Click Here
-                                    </Link>
-                                  )}
+                                    : "No admin found "}
                                 </td>
                               </tr>
                             );
@@ -203,9 +205,13 @@ class AffiliateList extends React.Component {
                   ) : (
                     <center>
                       {this.state.recivedSelect == "" ? (
-                        <h3>Select A Chapter</h3>
+                        <div>
+                          <label>Select A Chapter</label>
+                        </div>
                       ) : (
-                        <h3>No Data Found</h3>
+                        <div>
+                          <label>No Data Found</label>
+                        </div>
                       )}
                     </center>
                   )

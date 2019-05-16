@@ -16,6 +16,7 @@ import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import { Link } from "react-router-dom";
 import API from "../../../services/API";
+import Select from "react-select";
 
 const styles = {
   cardCategoryWhite: {
@@ -51,41 +52,86 @@ class userTemplate extends Component {
     super(props);
     this.state = {
       Chapter: "",
-      open: false,
+      ChapterAdmin: "",
+      lChapter: "",
+      lChapterAdmin: "",
       AffiliateData: [],
+      AffiliateAdmins: [],
+      Chapter: "",
+      open: false,
+      AffiliateData1: [],
       selected: true,
       templateProvided: false,
       loading: true
     };
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
   async componentDidMount() {
     var id_token = localStorage.getItem("idToken");
     let userDetails;
     if (id_token != null) {
-      userDetails = await appController.getUser(token);
+      userDetails = await appController.getUser(id_token);
     } else {
       userDetails = await appController.getAffilateTokens();
     }
     console.log(userDetails);
+    let response1 = await API.getChapters();
+    console.log(response1);
+    await this.setState({
+      AffiliateData: response1.fields.sites_map_obj
+    });
     var response = await API.getAffiliatesOnOrginasation(
       userDetails.userOrganisation
     );
     if (response.series.length == 0)
       this.setState({
-        AffiliateData: response.series,
+        AffiliateData1: response.series,
         loading: false,
         templateProvided: false,
         loading: false
       });
     else
       this.setState({
-        AffiliateData: response.series,
+        AffiliateData1: response.series,
         loading: false,
         templateProvided: true,
         loading: false
       });
+  }
+  async handleChange(e, name) {
+    console.log(e, name);
+    if (e !== null) {
+      await this.setState({ [name]: e.value, ["l" + name]: e, selected: true });
+      if (name === "Chapter") {
+        await this.setState({
+          lChapterAdmin: null,
+          AffiliateAdmins: []
+        });
+        let series_id = e.series_id;
+        series_id = series_id.replace("sid=test\\", "");
+        console.log(series_id);
+        let affiliates = await API.getAffiliatesBySeries(series_id);
+        //console.log(affiliates.series[0]);
+        if (affiliates) {
+          await this.setState({
+            AffiliateAdmins: affiliates.series[0].fields.sites_map_obj
+          });
+        } else {
+          await this.setState({
+            AffiliateAdmins: []
+          });
+        }
+      }
+    } else {
+      await this.setState({
+        [name]: "",
+        ["l" + name]: e,
+        selected: false,
+        AffiliateAdmins: []
+      });
+    }
   }
   handleClickOpen() {
     this.setState({ open: true });
@@ -103,12 +149,45 @@ class userTemplate extends Component {
               <h4 className={classes.cardTitleWhite}>Template</h4>
             </CardHeader>
             <CardBody>
-              <Grid container spacing={24} style={{ marginTop: "20px" }}>
-                {this.state.loading ? (
-                  <center>
-                    <div className="spinner-border text-primary" />
-                  </center>
-                ) : this.state.templateProvided ? (
+              {this.state.loading ? (
+                <center>
+                  <div className="spinner-border text-primary" />
+                </center>
+              ) : this.state.templateProvided ? (
+                <Grid container spacing={24} style={{ marginTop: "0px" }}>
+                  <Grid item xs={12} sm={6}>
+                    <label>Select Chapter</label>
+                    <Select
+                      value={this.state.lChapter}
+                      onChange={e => {
+                        this.handleChange(e, "Chapter");
+                      }}
+                      options={this.state.AffiliateData.map(suggestion => ({
+                        value: suggestion.chapter,
+                        label: suggestion.chapter,
+                        series_id: suggestion.series_id
+                      }))}
+                      //components={components}
+                      placeholder="Search Chapter"
+                      isClearable
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <label>Select Affiliate</label>
+                    <Select
+                      value={this.state.lChapterAdmin}
+                      onChange={e => {
+                        this.handleChange(e, "ChapterAdmin");
+                      }}
+                      options={this.state.AffiliateAdmins.map(suggestion => ({
+                        value: suggestion.association_name.replace(" ", "_"),
+                        label: suggestion.association_name
+                      }))}
+                      //components={components}
+                      placeholder="Search Affiliate"
+                      isClearable
+                    />
+                  </Grid>
                   <Grid item xs={12} sm={4}>
                     <Card>
                       <img
@@ -131,13 +210,20 @@ class userTemplate extends Component {
                           affiliateDetails = JSON.stringify(affiliateDetails);
                         }
                         window.open(
+<<<<<<< HEAD
                           "http://localhost:3000/admin/home?accessToken=" +
+=======
+                          "http://183.83.216.197:3000/admin/home?accessToken=" +
+>>>>>>> ee115944798406ee7d7b55d3ce5fbf4982375e11
                             idToken +
                             "&strapiToken=" +
                             localStorage.getItem("strapiJwtToken") +
                             "&affiliate=" +
                             localStorage.getItem("username") +
+<<<<<<< HEAD
                             "&sitelaunch=true" +
+=======
+>>>>>>> ee115944798406ee7d7b55d3ce5fbf4982375e11
                             "&affiliateDetails=" +
                             affiliateDetails
                         );
@@ -166,7 +252,11 @@ class userTemplate extends Component {
                           affiliateDetails = JSON.stringify(affiliateDetails);
                         }
                         window.open(
+<<<<<<< HEAD
                           "http://localhost:3000/admin/home?accessToken=" +
+=======
+                          "http://183.83.216.197:3000/admin/home?accessToken=" +
+>>>>>>> ee115944798406ee7d7b55d3ce5fbf4982375e11
                             idToken +
                             "&strapiToken=" +
                             localStorage.getItem("strapiJwtToken") +
@@ -189,10 +279,10 @@ class userTemplate extends Component {
                       </Button>
                     </a>
                   </Grid>
-                ) : (
-                  <h4>No template is provided to this user</h4>
-                )}
-              </Grid>
+                </Grid>
+              ) : (
+                <h4>No template is provided to this user</h4>
+              )}
             </CardBody>
           </Card>
         </GridItem>

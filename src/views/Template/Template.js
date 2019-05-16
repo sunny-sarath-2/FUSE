@@ -106,18 +106,44 @@ class Template extends React.Component {
     );
     //console.log(responseadmins.series);
     let response = await API.getChapters();
+    console.log(response);
     await this.setState({
-      AffiliateAdmins: responseadmins.series,
+      //AffiliateAdmins: responseadmins.series,
       AffiliateData: response.fields.sites_map_obj,
       loadingDetails: false
     });
   }
-  handleChange(e, name) {
+  async handleChange(e, name) {
     console.log(e, name);
     if (e !== null) {
-      this.setState({ [name]: e.value, ["l" + name]: e, selected: true });
+      await this.setState({ [name]: e.value, ["l" + name]: e, selected: true });
+      if (name === "Chapter") {
+        await this.setState({
+          lChapterAdmin: null,
+          AffiliateAdmins: []
+        });
+        let series_id = e.series_id;
+        series_id = series_id.replace("sid=test\\", "");
+        console.log(series_id);
+        let affiliates = await API.getAffiliatesBySeries(series_id);
+        //console.log(affiliates.series[0]);
+        if (affiliates) {
+          await this.setState({
+            AffiliateAdmins: affiliates.series[0].fields.sites_map_obj
+          });
+        } else {
+          await this.setState({
+            AffiliateAdmins: []
+          });
+        }
+      }
     } else {
-      this.setState({ [name]: "", ["l" + name]: e, selected: false });
+      await this.setState({
+        [name]: "",
+        ["l" + name]: e,
+        selected: false,
+        AffiliateAdmins: []
+      });
     }
   }
   handleClickOpen() {
@@ -268,7 +294,7 @@ class Template extends React.Component {
                     </div>
                   </Grid>
                 ) : null}
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={6}>
                   <label>Select Chapter</label>
                   <Select
                     value={this.state.lChapter}
@@ -277,53 +303,57 @@ class Template extends React.Component {
                     }}
                     options={this.state.AffiliateData.map(suggestion => ({
                       value: suggestion.chapter,
-                      label: suggestion.chapter
+                      label: suggestion.chapter,
+                      series_id: suggestion.series_id
                     }))}
                     //components={components}
                     placeholder="Search Chapter"
                     isClearable
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <label>Select Admin</label>
+                <Grid item xs={12} sm={6}>
+                  <label>Select Affiliate</label>
                   <Select
                     value={this.state.lChapterAdmin}
                     onChange={e => {
                       this.handleChange(e, "ChapterAdmin");
                     }}
                     options={this.state.AffiliateAdmins.map(suggestion => ({
-                      value: suggestion.fields.username,
-                      label: suggestion.fields.username
+                      value: suggestion.association_name.replace(" ", "_"),
+                      label: suggestion.association_name
                     }))}
                     //components={components}
-                    placeholder="Search Admin"
+                    placeholder="Search Affiliate"
                     isClearable
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={24} style={{ marginTop: "20px" }}>
                 <Grid item xs={12} sm={4}>
-                  <Card>
-                    <img
-                      className={classes.media}
-                      style={{ height: "200px" }}
-                      src="https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png"
-                      alt="Paella dish"
-                    />
-                  </Card>
+                  <label>Click on image for preview</label>
                   <a
                     target="_blank"
                     onClick={() => {
+                      let idToken = localStorage.getItem("idToken");
+                      let affiliateDetails = null;
+                      if (idToken == null) {
+                        affiliateDetails = {
+                          userName: localStorage.getItem("username"),
+                          userType: "affilate"
+                        };
+                        affiliateDetails = JSON.stringify(affiliateDetails);
+                      }
                       this.state.ChapterAdmin != ""
                         ? window.open(
-                            "http://localhost:3000/admin/home?accessToken=" +
-                              localStorage.getItem("idToken") +
+                            "http://183.83.216.197:3000/admin/home?accessToken=" +
+                              idToken +
                               "&strapiToken=" +
                               localStorage.getItem("strapiJwtToken") +
                               "&affiliate=" +
-                              this.state.ChapterAdmin +
-                              "&chapter=" +
-                              this.state.Chapter
+                              localStorage.getItem("username") +
+                              "&sitelaunch=true" +
+                              "&affiliateDetails=" +
+                              affiliateDetails
                           )
                         : this.setState({
                             alertmsg: { color: "#ff9800", msg: "Select Admin" }
@@ -335,36 +365,18 @@ class Template extends React.Component {
                       return false;
                     }}
                   >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      style={{ marginRight: "10px" }}
-                      onClick={this.handleClickOpen}
-                    >
-                      Preview
-                    </Button>
+                    <Card>
+                      <img
+                        className={classes.media}
+                        style={{ height: "200px" }}
+                        src="https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png"
+                        alt="Paella dish"
+                      />
+                    </Card>
                   </a>
-                  {this.state.loading ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      disabled
-                    >
-                      <div className="spinner-border text-primary" /> &nbsp;
-                      Saving
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={this.onSelectClicked}
-                    >
-                      Select
-                    </Button>
-                  )}
+                </Grid>
+                <Grid item xs={12} sm={1}>
+                  <label>&nbsp;</label>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <div style={{ fontWeight: "700" }}>Header Colors :</div>
@@ -464,6 +476,28 @@ class Template extends React.Component {
                         />
                       );
                     })}
+                  </div>
+                  <div>
+                    {this.state.loading ? (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        disabled
+                      >
+                        <div className="spinner-border text-primary" /> &nbsp;
+                        Saving
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={this.onSelectClicked}
+                      >
+                        Submit
+                      </Button>
+                    )}
                   </div>
                 </Grid>
               </Grid>

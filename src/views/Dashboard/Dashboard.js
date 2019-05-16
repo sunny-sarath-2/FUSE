@@ -28,6 +28,7 @@ import appController from "../../controller/controller";
 import Authenticate from "../../model/authenticate.model";
 import { card } from "../../assets/jss/material-dashboard-react";
 import API from "../../../services/API";
+import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -90,7 +91,9 @@ class Dashboard extends React.Component {
       title: "",
       userdetails: {
         username: localStorage.getItem("username")
-      }
+      },
+      affiliates: 0,
+      chapters: 0
     };
     this.pageData = this.pageData.bind(this);
   }
@@ -127,8 +130,17 @@ class Dashboard extends React.Component {
         title: "Welcome to Affiliate site."
       });
     }
+    let affiliates = await API.getAffiliatesBySeries("NYSSCA_AFFILIATES");
+    let chapters = await API.getChapters();
     let response = await API.getSiteIncrement();
-    //console.log(response);
+    console.log(
+      chapters.fields.sites_map_obj.length,
+      affiliates.series[0].fields.sites_map_obj.length
+    );
+    await this.setState({
+      chapters: chapters.fields.sites_map_obj.length,
+      affiliates: affiliates.series[0].fields.sites_map_obj.length
+    });
     this.pageData(response.fields).then(async site_inc => {
       // let postresponse = await API.siteIncrement({
       //   site_id: "003",
@@ -155,7 +167,24 @@ class Dashboard extends React.Component {
             </p>
           </CardHeader>
         </GridItem> */}
-
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="success">
+                <h4 style={{ color: "#fff", fontWeight: "bold" }}>
+                  {this.state.loading ? (
+                    <div
+                      className="spinner-border text-primary"
+                      role="status"
+                    />
+                  ) : (
+                    this.state.title
+                  )}
+                </h4>
+              </CardHeader>
+            </Card>
+          </GridItem>
+        </GridContainer>
         <GridContainer>
           <GridItem xs={12} sm={6} md={3}>
             <Card>
@@ -163,8 +192,10 @@ class Dashboard extends React.Component {
                 <CardIcon color="warning">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                <p className={classes.cardCategory}>Chapters Live</p>
-                <h3 className={classes.cardTitle}>31</h3>
+                <p className={classes.cardCategory}>
+                  <Link to={"/admin/Chapters"}>Chapters Live</Link>
+                </p>
+                <h3 className={classes.cardTitle}>{this.state.chapters}</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -184,13 +215,32 @@ class Dashboard extends React.Component {
                 <CardIcon color="success">
                   <Store />
                 </CardIcon>
-                <p className={classes.cardCategory}>Affiliates</p>
-                <h3 className={classes.cardTitle}>34</h3>
+                <p className={classes.cardCategory}>
+                  <Link to={"/admin/affiliate_list"}>Affiliates</Link>
+                </p>
+                <h3 className={classes.cardTitle}>{this.state.affiliates}</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
                   {/* <DateRange />
                   Last 24 Hours */}
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={6} md={3}>
+            <Card>
+              <CardHeader color="info" stats icon>
+                <CardIcon color="info">
+                  <Accessibility />
+                </CardIcon>
+                <p className={classes.cardCategory}>Sites Live</p>
+                <h3 className={classes.cardTitle}>10</h3>
+              </CardHeader>
+              <CardFooter stats>
+                <div className={classes.stats}>
+                  {/* <Update />    
+                  Just Updated */}
                 </div>
               </CardFooter>
             </Card>
@@ -212,28 +262,11 @@ class Dashboard extends React.Component {
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="info" stats icon>
-                <CardIcon color="info">
-                  <Accessibility />
-                </CardIcon>
-                <p className={classes.cardCategory}>visitors</p>
-                <h3 className={classes.cardTitle}>245</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  {/* <Update />    
-                  Just Updated */}
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
         </GridContainer>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
             <Card>
-              <CardHeader color="success">
+              {/* <CardHeader color="success">
                 <h4 style={{ color: "#fff", fontWeight: "bold" }}>
                   {this.state.loading ? (
                     <div
@@ -244,7 +277,7 @@ class Dashboard extends React.Component {
                     this.state.title
                   )}
                 </h4>
-              </CardHeader>
+              </CardHeader> */}
               <CardBody>
                 <h5
                   style={{
@@ -259,10 +292,27 @@ class Dashboard extends React.Component {
                       role="status"
                     />
                   ) : (
-                    this.state.site_desc
+                    <div>
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                      magna aliquyam erat, sed diam voluptua. At vero eos et
+                      accusam et justo duo dolores et ea rebum. Stet clita kasd
+                      gubergren, no sea takimata sanctus est Lorem ipsum dolor
+                      sit amet. Lorem ipsum dolor sit amet, consetetur
+                      sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+                      ut labore et dolore magna aliquyam erat, sed diam
+                      voluptua. At vero eos et accusam et justo duo dolores et
+                      ea rebum. Stet clita kasd gubergren, no sea takimata
+                      sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor
+                      sit amet, consetetur sadipscing elitr, sed diam nonumy
+                      eirmod tempor invidunt ut labore et dolore magna aliquyam
+                      erat, sed diam voluptua. At vero eos et accusam et justo
+                      duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                      takimata sanctus est Lorem ipsum dolor sit amet.
+                    </div>
                   )}
                 </h5>
-                <h5>
+                {/* <h5>
                   {this.state.loading ? (
                     <div
                       className="spinner-border text-primary"
@@ -271,7 +321,7 @@ class Dashboard extends React.Component {
                   ) : (
                     "Site Increment:" + this.state.site_inc
                   )}
-                </h5>
+                </h5> */}
               </CardBody>
             </Card>
           </GridItem>

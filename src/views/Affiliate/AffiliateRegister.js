@@ -4,6 +4,14 @@ import appController from "../../controller/controller";
 import Button from "../../components/CustomButtons/Button";
 import Warningprompts from "../../modelPopups/warningprompts";
 import API from "../../../services/API";
+import GridItem from "../../components/Grid/GridItem";
+import GridContainer from "../../components/Grid/GridContainer";
+import Danger from "../../components/Typography/Danger";
+import Card from "../../components/Card/Card";
+import CardHeader from "../../components/Card/CardHeader";
+import CardIcon from "../../components/Card/CardIcon";
+import CardBody from "../../components/Card/CardBody";
+import CardFooter from "../../components/Card/CardFooter";
 var sjc = require("shooju-client");
 var sj = new sjc(
   "https://fuse.shooju.com",
@@ -288,6 +296,7 @@ export default class registration extends Component {
     this.props.history.push("/admin/affiliate_list");
   }
   render() {
+    const { classes } = this.props;
     return (
       <div className="container">
         <Warningprompts
@@ -298,206 +307,221 @@ export default class registration extends Component {
           userRegistered={this.state.userRegistered}
           submit={this.userRegistered}
         />
-        <div className="justify-content-center row regi">
-          <div className="col-md-6">
-            <div className="card-group">
-              <div className="p-4 card">
-                <div className="card-body">
-                  <Button
-                    style={{ float: "right", backgroundColor: "#036470" }}
-                    onClick={() =>
-                      this.props.history.push("/admin/affiliate_list")
-                    }
-                  >
-                    GO Back
-                  </Button>
-                  <div>
-                    <h1>Sign Up</h1>
-                    <p className="text-muted">Create your account</p>
-                    <p style={{ color: "red" }}>{this.state.errorMessage}</p>
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-user-o" aria-hidden="true" />
-                        </span>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 style={{ color: "#fff", fontWeight: "bold" }}>
+                  Create Affiliate Admin
+                </h4>
+                <Button
+                  style={{ float: "right", backgroundColor: "#00acc1" }}
+                  onClick={() =>
+                    this.props.history.push("/admin/affiliate_list")
+                  }
+                >
+                  GO Back
+                </Button>
+              </CardHeader>
+              <CardBody>
+                <div className="justify-content-center row regi">
+                  <div className="col-md-12">
+                    {/* <div className="card-group">
+                      <div className="p-4 card">
+                        <div className="card-body"> */}
+                    <div>
+                      <p style={{ color: "red" }}>{this.state.errorMessage}</p>
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-user-o" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="jon jones"
+                          type="text"
+                          className={
+                            this.state.errorfileds[1] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.userName}
+                          onChange={e => {
+                            this.inputChange(e, "userName");
+                          }}
+                        />
                       </div>
-                      <input
-                        placeholder="jon jones"
-                        type="text"
-                        className={
-                          this.state.errorfileds[1] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.userName}
-                        onChange={e => {
-                          this.inputChange(e, "userName");
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-user-o" aria-hidden="true" />
-                        </span>
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-user-o" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="jon"
+                          type="text"
+                          className={
+                            this.state.errorfileds[2] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.firstName}
+                          onChange={e => {
+                            this.inputChange(e, "firstName");
+                          }}
+                        />
                       </div>
-                      <input
-                        placeholder="jon"
-                        type="text"
-                        className={
-                          this.state.errorfileds[2] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.firstName}
-                        onChange={e => {
-                          this.inputChange(e, "firstName");
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-user-o" aria-hidden="true" />
-                        </span>
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-user-o" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="jones"
+                          type="text"
+                          className={
+                            this.state.errorfileds[3] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.lastName}
+                          onChange={e => {
+                            this.inputChange(e, "lastName");
+                          }}
+                        />
                       </div>
-                      <input
-                        placeholder="jones"
-                        type="text"
-                        className={
-                          this.state.errorfileds[3] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.lastName}
-                        onChange={e => {
-                          this.inputChange(e, "lastName");
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-envelope-o " aria-hidden="true" />
-                        </span>
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i
+                              className="fa fa-envelope-o "
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="jonjones@gmail.com"
+                          type="text"
+                          className={
+                            this.state.errorfileds[4] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.emailId}
+                          onChange={e => {
+                            this.inputChange(e, "emailId");
+                          }}
+                        />
                       </div>
-                      <input
-                        placeholder="jonjones@gmail.com"
-                        type="text"
-                        className={
-                          this.state.errorfileds[4] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.emailId}
-                        onChange={e => {
-                          this.inputChange(e, "emailId");
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-phone" aria-hidden="true" />
-                        </span>
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-phone" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="+19471256478"
+                          type="number"
+                          className={
+                            this.state.errorfileds[5] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.emphone_numberailId}
+                          onChange={e => {
+                            this.inputChange(e, "phone_number");
+                          }}
+                        />
                       </div>
-                      <input
-                        placeholder="+19471256478"
-                        type="number"
-                        className={
-                          this.state.errorfileds[5] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.emphone_numberailId}
-                        onChange={e => {
-                          this.inputChange(e, "phone_number");
-                        }}
-                      />
-                    </div>
 
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-sitemap" aria-hidden="true" />
-                        </span>
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-sitemap" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <select
+                          name="organisation"
+                          className={
+                            this.state.errorfileds[6] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          onChange={e => {
+                            this.inputChange(e, "organisation");
+                          }}
+                        >
+                          <option value="Organisation">Organisation</option>
+                          <option value="ASCA">ASCA</option>
+                          <option value="ZEE5">ZEE5</option>
+                          <option value="FUSE-ASCA">FUSE-ASCA</option>
+                        </select>
                       </div>
-                      <select
-                        name="organisation"
-                        className={
-                          this.state.errorfileds[6] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        onChange={e => {
-                          this.inputChange(e, "organisation");
-                        }}
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-lock" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="abcXYZ123#"
+                          type="password"
+                          className={
+                            this.state.errorfileds[7] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.password}
+                          onChange={e => {
+                            this.inputChange(e, "password");
+                          }}
+                        />
+                      </div>
+
+                      <div className="mb-3 input-group">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-lock" aria-hidden="true" />
+                          </span>
+                        </div>
+                        <input
+                          placeholder="abcXYZ123#"
+                          type="password"
+                          className={
+                            this.state.errorfileds[8] && this.state.error
+                              ? "form-control error-border-color"
+                              : "form-control"
+                          }
+                          value={this.state.confirmPassword}
+                          onChange={e => {
+                            this.inputChange(e, "confirmPassword");
+                          }}
+                        />
+                      </div>
+
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.SignUp}
                       >
-                        <option value="Organisation">Organisation</option>
-                        <option value="ASCA">ASCA</option>
-                        <option value="ZEE5">ZEE5</option>
-                        <option value="FUSE-ASCA">FUSE-ASCA</option>
-                      </select>
+                        Create Admin
+                      </Button>
                     </div>
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-lock" aria-hidden="true" />
-                        </span>
-                      </div>
-                      <input
-                        placeholder="abcXYZ123#"
-                        type="password"
-                        className={
-                          this.state.errorfileds[7] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.password}
-                        onChange={e => {
-                          this.inputChange(e, "password");
-                        }}
-                      />
+                    {/* </div>
                     </div>
-
-                    <div className="mb-3 input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <i className="fa fa-lock" aria-hidden="true" />
-                        </span>
-                      </div>
-                      <input
-                        placeholder="abcXYZ123#"
-                        type="password"
-                        className={
-                          this.state.errorfileds[8] && this.state.error
-                            ? "form-control error-border-color"
-                            : "form-control"
-                        }
-                        value={this.state.confirmPassword}
-                        onChange={e => {
-                          this.inputChange(e, "confirmPassword");
-                        }}
-                      />
-                    </div>
-
-                    <button
-                      className="mt-3 btn btn-primary btn-block"
-                      onClick={this.SignUp}
-                    >
-                      Sign up
-                    </button>
+                  </div> */}
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {this.state.loading ? (
-          <div className="loading">Loading&#8230;</div>
-        ) : (
-          ""
-        )}
+                {this.state.loading ? (
+                  <div className="loading">Loading&#8230;</div>
+                ) : (
+                  ""
+                )}
+              </CardBody>
+            </Card>
+          </GridItem>
+        </GridContainer>
       </div>
     );
   }

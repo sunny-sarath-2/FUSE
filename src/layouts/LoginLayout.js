@@ -4,6 +4,7 @@ import Warningprompts from "../modelPopups/warningprompts";
 import Restpasswordprompts from "../modelPopups/restpasswordprompts";
 import API from "../../services/API";
 import Switch from "@material-ui/core/Switch";
+import AWS from "aws-sdk";
 
 var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 require("../../public/style.css");
@@ -89,15 +90,16 @@ class LoginLayout extends Component {
         },
 
         onFailure: err => {
-          this.setState({
-            //showModel: true,
-            loading: false,
-            //modelError: err.message,
-            //modelHeader: "Error",
-            error: true,
-            errorfileds: "",
-            errorMessage: err.message
-          });
+          this.LoginAffilate(e, err);
+          // this.setState({
+          //   //showModel: true,
+          //   loading: false,
+          //   //modelError: err.message,
+          //   //modelHeader: "Error",
+          //   error: true,
+          //   errorfileds: "",
+          //   errorMessage: err.message
+          // });
         },
         newPasswordRequired: () => {
           this.setState({
@@ -202,8 +204,9 @@ class LoginLayout extends Component {
     console.log(e.target.checked, name);
     this.setState({ [name]: e.target.checked });
   }
-  LoginAffilate(e) {
+  LoginAffilate(e, err) {
     e.preventDefault();
+    console.log(err);
     let _state = this.state;
     let validationCheck = appController.validation([
       _state.userName,
@@ -213,24 +216,80 @@ class LoginLayout extends Component {
       this.setState({ loading: true });
       let AppName = "ascaFuse";
       let AppKey = "6c4f4L0idNy4OJ63";
-      this.getURI(AppName, AppKey).then(res => {
-        this.getTokens(res).then(response => {
-          console.log(response);
-          this.getUserDetails(response).then(userResponse => {
-            console.log(userResponse);
-            appController.setAffilateTokens(
-              response.appToken,
-              response.userToken,
-              response.uri,
-              userResponse.dataList[0].name,
-              userResponse.dataList[0].user.loginEmail
-            );
-            this.setStrapiUser(appController.getAffilateTokens());
-            console.log(appController.getAffilateTokens());
-            // this.props.history.push("/admin/dashboard");
-          });
+      this.getURI(AppName, AppKey).then(basicAuth => {
+        this.getTokens(basicAuth).then(secoundryAuth => {
+          console.log(secoundryAuth);
+          if (secoundryAuth != undefined) {
+            console.log(secoundryAuth);
+            this.getUserDetails(secoundryAuth).then(finalAuth => {
+              console.log(finalAuth);
+              appController.setAffilateTokens(
+                basicAuth.appToken,
+                basicAuth.userToken,
+                basicAuth.uri,
+                finalAuth.dataList[0].name,
+                finalAuth.dataList[0].user.loginEmail
+              );
+              this.setStrapiUser(appController.getAffilateTokens());
+              console.log(appController.getAffilateTokens());
+            });
+          } else {
+            this.setState({
+              loading: false,
+              error: true,
+              errorfileds: "",
+              errorMessage: err.message
+            });
+          }
         });
       });
+
+      // const cognitoidentity = new AWS.CognitoIdentity({
+      //   apiVersion: "2014-06-30",
+      //   region: "us-east-1"
+      // });
+      // cognitoidentity.getId(
+      //   {
+      //     IdentityPoolId:
+      //       "us-east-1:d8850f9b-8c08-4694-8a8f-8b0b42ba18ef",
+      //     Logins: {
+      //       "cognito-identity.amazonaws.com": "login.impexium.fuseas"
+      //     }
+      //   },
+      //   (err, data) => {
+      //     console.log(finalAuth.dataList[0].id);
+      //     console.log(data, err);
+      //   }
+      // );
+      // cognitoidentity.getCredentialsForIdentity(
+      //   {
+      //     // IdentityPoolId: "FuseAS_Dev_FedIdPool",
+      //     IdentityId: "16dd2398-7568-41cd-8502-98fd30674670",
+      //     Logins: {
+      //       "cognito-identity.amazonaws.com": secoundryAuth.appToken
+      //     }
+      //   },
+      //   (err, data) => {
+      //     // console.log(
+      //     //   data,
+      //     //   err,
+      //     //   "check the copgnoito ~~~~~~~~~~~~~~~~~~~"
+      //     // );
+      //   }
+      // );
+      // AWS.config.credentials = new AWS.CognitoIdentityCredentials(
+      //   {
+      //     IdentityPoolId: "FuseAS_Dev_FedIdPool",
+      //     IdentityId: "IDENTITY_ID_RETURNED_FROM_YOUR_PROVIDER",
+      //     Logins: {
+      //       "cognito-identity.amazonaws.com": response.appToken
+      //     }
+      //   },
+      //   {
+      //     region: "us-east-1"
+      //   }
+      // );
+      // this.props.history.push("/admin/dashboard");
     } else {
       this.setState({
         loading: false,
@@ -258,7 +317,6 @@ class LoginLayout extends Component {
     });
   getTokens = res =>
     new Promise((resolve, reject) => {
-      console.log(res.uri, res.accessToken);
       let data = {
         AppId: "ascaFuse",
         AppPassword: "6c4f4L0idNy4OJ63",
@@ -273,8 +331,18 @@ class LoginLayout extends Component {
           AccessToken: res.accessToken
         }
       })
-        .then(res => res.json())
-        .then(response => resolve(response));
+        .then(res => {
+          console.log(res);
+          if (res.status == 401) {
+            return undefined;
+          } else {
+            return res.json();
+          }
+        })
+        .then(response => {
+          console.log(response);
+          resolve(response);
+        });
     });
   getUserDetails = res =>
     new Promise((resolve, reject) => {
@@ -318,15 +386,15 @@ class LoginLayout extends Component {
                     <h1>Login</h1>
                     <p className="text-muted">Sign In to your account</p>
                     <p style={{ color: "red" }}>{this.state.errorMessage}</p>
-                    <h5 style={{ float: "left" }}>Admin</h5>
+                    {/* <h5 style={{ float: "left" }}>Admin</h5>
                     <span style={{ float: "left" }}>
                       <Switch
                         color="primary"
                         checked={this.state.handleLogin}
                         onChange={e => this.handleChange(e, "handleLogin")}
                       />
-                    </span>
-                    <h5>Affiliate</h5>
+                    </span> */}
+                    {/* <h5>Affiliate</h5> */}
                     <div className="mb-3 input-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">

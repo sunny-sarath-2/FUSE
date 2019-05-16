@@ -121,13 +121,25 @@ class userTemplate extends Component {
                     <a
                       target="_blank"
                       onClick={() => {
+                        let idToken = localStorage.getItem("idToken");
+                        let affiliateDetails = null;
+                        if (idToken == null) {
+                          affiliateDetails = {
+                            userName: localStorage.getItem("username"),
+                            userType: "affilate"
+                          };
+                          affiliateDetails = JSON.stringify(affiliateDetails);
+                        }
                         window.open(
                           "http://localhost:3000/admin/home?accessToken=" +
-                            localStorage.getItem("idToken") +
+                            idToken +
                             "&strapiToken=" +
                             localStorage.getItem("strapiJwtToken") +
                             "&affiliate=" +
-                            localStorage.getItem("username")
+                            localStorage.getItem("username") +
+                            "&sitelaunch=true" +
+                            "&affiliateDetails=" +
+                            affiliateDetails
                         );
                       }}
                     >
@@ -144,14 +156,25 @@ class userTemplate extends Component {
                     <a
                       target="_blank"
                       onClick={() => {
+                        let idToken = localStorage.getItem("idToken");
+                        let affiliateDetails = null;
+                        if (idToken == null) {
+                          affiliateDetails = {
+                            userName: localStorage.getItem("username"),
+                            userType: "affilate"
+                          };
+                          affiliateDetails = JSON.stringify(affiliateDetails);
+                        }
                         window.open(
                           "http://localhost:3000/admin/home?accessToken=" +
-                            localStorage.getItem("idToken") +
+                            idToken +
                             "&strapiToken=" +
                             localStorage.getItem("strapiJwtToken") +
                             "&affiliate=" +
                             localStorage.getItem("username") +
-                            "&sitelaunch=true"
+                            "&sitelaunch=true" +
+                            "&affiliateDetails=" +
+                            affiliateDetails
                         );
                       }}
                     >

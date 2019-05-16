@@ -71,6 +71,7 @@ class CreateContentManager extends React.Component {
     this.state = {
       open: false,
       loading: true,
+      btnsubmit: false,
       count: 1,
       name: "",
       connection: "default",
@@ -183,13 +184,17 @@ class CreateContentManager extends React.Component {
       description: description,
       collectionName: collectionName
     };
+    this.setState({
+      btnsubmit: true
+    });
 
-    //console.log(data);
     let response = await API.createNewContentType(data);
 
     console.log(response);
     if (response.ok === true) {
-      this.props.history.push("/admin/content-manager");
+      setTimeout(() => {
+        this.props.history.push("/admin/content-manager");
+      }, 10000);
     }
   }
   render() {
@@ -322,14 +327,25 @@ class CreateContentManager extends React.Component {
                 </Grid>
                 <Grid container spacing={24}>
                   <Grid item xs={12} md={12}>
-                    <Button
-                      variant="contained"
-                      color={"primary"}
-                      className={classes.button}
-                      onClick={this.handleSubmit}
-                    >
-                      {"Submit"}
-                    </Button>
+                    {this.state.btnsubmit ? (
+                      <Button
+                        variant="contained"
+                        color={"primary"}
+                        className={classes.button}
+                        disabled
+                      >
+                        {"... Saving"}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color={"primary"}
+                        className={classes.button}
+                        onClick={this.handleSubmit}
+                      >
+                        {"Submit"}
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </CardBody>

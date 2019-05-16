@@ -14,6 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
 import API from "../../../services/API";
+import Select from "react-select";
 
 const styles = {
   cardCategoryWhite: {
@@ -54,7 +55,8 @@ class AffiliateList extends React.Component {
       AffiliateData: [],
       loading: true,
       recivedSelect: "",
-      chapterList: []
+      chapterList: [],
+      lChapter: ""
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -78,7 +80,11 @@ class AffiliateList extends React.Component {
       });
   }
   handleChange(e) {
-    this.setState({ recivedSelect: e.target.value });
+    if (e !== null) {
+      this.setState({ recivedSelect: e.value, lChapter: e });
+    } else {
+      this.setState({ recivedSelect: "", lChapter: e });
+    }
     // getData();
   }
   render() {
@@ -112,27 +118,21 @@ class AffiliateList extends React.Component {
             </CardHeader>
             <CardBody>
               <div>
-                <TextField
-                  id="standard-select-currency"
-                  select
-                  label="Select Chapter"
-                  style={{ width: "300px" }}
-                  value={this.state.recivedSelect}
+                <label>Select Chapter</label>
+                <Select
+                  value={this.state.lChapter}
                   onChange={e => {
                     this.handleChange(e);
                   }}
-                  SelectProps={{
-                    className: classes.menu
-                  }}
-                >
-                  {this.state.chapterList.map((prop, key) => {
-                    return (
-                      <MenuItem value={prop.chapter} key={key}>
-                        {prop.chapter}
-                      </MenuItem>
-                    );
-                  })}
-                </TextField>
+                  options={this.state.chapterList.map(suggestion => ({
+                    value: suggestion.chapter,
+                    label: suggestion.chapter
+                  }))}
+                  //components={components}
+                  placeholder="Search Chapter"
+                  isClearable
+                />
+
                 {this.state.loading === false ? (
                   this.state.recivedSelect ==
                   "New_York_School_Counselor_Association" ? (

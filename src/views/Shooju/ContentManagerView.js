@@ -17,6 +17,8 @@ import API from "../../../services/API";
 import ViewData from "../../components/ViewData/ViewData";
 import FieldEditor from "../../components/fieldEditor/FieldEditor";
 import { resolve, reject } from "q";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 
 const styles = {
   cardCategoryWhite: {
@@ -63,6 +65,7 @@ class ContentManagerView extends React.Component {
       noData: false,
       switcher: "main",
       modelTypeColumns: [],
+      chapters: [],
       transferData: {},
       data: {
         fields: {},
@@ -88,18 +91,22 @@ class ContentManagerView extends React.Component {
     let response = await API.getDataContentTypes(model);
     let modelTypeResponse = await API.getOneContentTypes(model);
     console.log(modelTypeResponse.model.attributes);
-
+    let chapters = await API.getChapters();
+    console.log(chapters.series);
     let col = [];
     col.push("id");
+
     modelTypeResponse.model.attributes.map((prop, key) => {
       col.push(prop.name);
     });
     col = col;
+    col.push("fuse_chapter");
     col.push("Action");
-    console.log(response.length, "length");
+
     if (response.length > 0) {
       this.setState({
         content_list: response,
+        chapters: chapters.series,
         columns: col,
         loading: true,
         modelTypeColumns: modelTypeResponse.model.attributes
@@ -109,7 +116,8 @@ class ContentManagerView extends React.Component {
         content_list: response,
         loading: true,
         noData: true,
-        columns: []
+        columns: [],
+        chapters: chapters.series
       });
     }
   }
@@ -217,15 +225,18 @@ class ContentManagerView extends React.Component {
         );
       case "edit":
         return (
-          <FieldEditor
-            field={this.state.modelTypeColumns}
-            classes={this.props.classes}
-            data={this.state.data.fields}
-            Change={this.handleChange}
-            onEditorChange={this.onEditorChange}
-            SubmitForm={this.SubmitForm}
-            btnclick={this.state["btnclick"]}
-          />
+          <div>
+            <FieldEditor
+              field={this.state.modelTypeColumns}
+              classes={this.props.classes}
+              data={this.state.data.fields}
+              chapters={this.state.chapters}
+              Change={this.handleChange}
+              onEditorChange={this.onEditorChange}
+              SubmitForm={this.SubmitForm}
+              btnclick={this.state["btnclick"]}
+            />
+          </div>
         );
       case "delete":
         console.log("delete");

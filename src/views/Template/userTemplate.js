@@ -80,7 +80,7 @@ class userTemplate extends Component {
     let response1 = await API.getChapters();
     console.log(response1);
     await this.setState({
-      AffiliateData: response1.fields.sites_map_obj
+      AffiliateData: response1.series
     });
     var response = await API.getAffiliatesOnOrginasation(
       userDetails.userOrganisation
@@ -134,6 +134,7 @@ class userTemplate extends Component {
     }
   }
   handleClickOpen() {
+    // API.launchSite({});
     this.setState({ open: true });
   }
   handleClose() {
@@ -155,7 +156,7 @@ class userTemplate extends Component {
                 </center>
               ) : this.state.templateProvided ? (
                 <Grid container spacing={24} style={{ marginTop: "0px" }}>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <label>Select Chapter</label>
                     <Select
                       value={this.state.lChapter}
@@ -171,8 +172,8 @@ class userTemplate extends Component {
                       placeholder="Search Chapter"
                       isClearable
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
+                  </Grid> */}
+                  {/* <Grid item xs={12} sm={6}>
                     <label>Select Affiliate</label>
                     <Select
                       value={this.state.lChapterAdmin}
@@ -187,7 +188,7 @@ class userTemplate extends Component {
                       placeholder="Search Affiliate"
                       isClearable
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={4}>
                     <Card>
                       <img

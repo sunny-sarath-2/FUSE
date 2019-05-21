@@ -20,7 +20,7 @@ const CreateChapter = props => {
         />
         <TextField
           id="outlined-name"
-          label="loaction"
+          label="location"
           fullWidth
           className={classes.textField}
           value={props.location}
@@ -47,16 +47,20 @@ const CreateChapter = props => {
             isClearable
           />
         )}
-        <Button
-          style={{
-            backgroundColor: "#00acc1",
-            color: "#fff",
-            marginTop: "15px"
-          }}
-          onClick={props.submit}
-        >
-          Submit
-        </Button>
+        {props.btnsubmit ? (
+          <Button disabled>... Saving</Button>
+        ) : (
+          <Button
+            style={{
+              backgroundColor: "#00acc1",
+              color: "#fff",
+              marginTop: "15px"
+            }}
+            onClick={props.submit}
+          >
+            Submit
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,13 @@ const productService = {
    * @returns {*}
    */
   //these are sample api call's
+  //put api
+  updateContentTypesData: (url, data) =>
+    serviceBase.put("/content-manager/explorer/" + url, data),
+  updateNewContentType: (url, data) =>
+    serviceBase.put("/content-type-builder/models/" + url, data),
   //post api
+  launchSite: data => serviceBase.post("/launch", data),
   registerAffiliates: data => serviceBase.post("/shoojus/addaffiliate", data),
   addTemplateToUser: data => serviceBase.post("/shoojus/addtemplates", data),
   siteIncrement: data => serviceBase.post("/shoojus/siteincrement", data),
@@ -16,11 +22,11 @@ const productService = {
   addBlogs: data => serviceBase.post("/shoojus/addblogs", data),
   affilateCreateBlog: data => serviceBase.post("/blogs", data),
   affilateCreateEvent: data => serviceBase.post("/events", data),
-  updateContentTypesData: (url, data) =>
-    serviceBase.put("/content-manager/explorer/" + url, data),
   createNewContentType: data =>
     serviceBase.post("/content-type-builder/models", data),
   createChapters: data => serviceBase.post("/shoojus/addChapters", data),
+  getSiteconfigbyChapter: data =>
+    serviceBase.post("/shoojus/getSiteconfigbyChapter", data),
   //get api
   getAffiliatesOnOrginasation: organisation =>
     serviceBase.get("/shoojus/affiliates/" + organisation),

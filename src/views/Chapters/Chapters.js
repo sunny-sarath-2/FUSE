@@ -23,7 +23,8 @@ class Chapters extends Component {
       recivedSelect: "",
       location: "",
       name: "",
-      loadingCreate: true
+      loadingCreate: true,
+      btnsubmit: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
@@ -70,14 +71,32 @@ class Chapters extends Component {
     }
   }
   async submit() {
-    if (this.state.recivedSelect.value != undefined) {
+    if (this.state.name != undefined) {
+      this.setState({
+        btnsubmit: true
+      });
       let a = await API.createChapters({
         chapter: this.state.name,
         location: this.state.location,
         affiliates: [this.state.recivedSelect.value]
       });
       console.log("clcikced", a);
+      this.setState({
+        createChapter: false,
+        btnsubmit: false
+      });
+      this.recall();
     }
+  }
+  async recall() {
+    this.setState({ loading: true });
+    setTimeout(async () => {
+      let response = await API.getChapters();
+      this.setState({
+        loading: false,
+        AffiliateData: response.series
+      });
+    }, 2500);
   }
   render() {
     const { classes } = this.props;
@@ -118,6 +137,7 @@ class Chapters extends Component {
                     location={this.state.location}
                     submit={this.submit}
                     loadingCreate={this.state.loadingCreate}
+                    btnsubmit={this.state.btnsubmit}
                   />
                 ) : (
                   <div className="CustomTable-tableResponsive-397">
@@ -148,7 +168,7 @@ class Chapters extends Component {
                               <td
                                 style={{ width: "10%", padding: "10px 20px" }}
                               >
-                                <Link
+                                {/* <Link
                                   to={{
                                     pathname: "/admin/affiliate_list",
                                     state: { data: td }
@@ -157,14 +177,14 @@ class Chapters extends Component {
                                     textDecoration: "none",
                                     color: "#3c4858"
                                   }}
-                                >
-                                  {td.fields.chapter}
-                                </Link>
+                                > */}
+                                {td.fields.chapter}
+                                {/* </Link> */}
                               </td>
                               <td
                                 style={{ width: "10%", padding: "10px 20px" }}
                               >
-                                <Link
+                                {/* <Link
                                   to={{
                                     pathname: "/admin/affiliate_list",
                                     state: { data: td }
@@ -173,9 +193,9 @@ class Chapters extends Component {
                                     textDecoration: "none",
                                     color: "#3c4858"
                                   }}
-                                >
-                                  {td.fields.affiliates[0]}
-                                </Link>
+                                > */}
+                                {td.fields.affiliates[0]}
+                                {/* </Link> */}
                               </td>
                               {/* <td style={{ width: "10%", padding: "10px 20px" }}>
                               <Link
@@ -194,7 +214,7 @@ class Chapters extends Component {
                               <td
                                 style={{ width: "10%", padding: "10px 20px" }}
                               >
-                                <Link
+                                {/* <Link
                                   // to={{
                                   //   pathname: "/admin/affiliate_list",
                                   //   state: { data: td }
@@ -207,11 +227,11 @@ class Chapters extends Component {
                                     textDecoration: "none",
                                     color: "#3c4858"
                                   }}
-                                >
-                                  {td.fields.location == ""
-                                    ? "no url found"
-                                    : td.fields.location}
-                                </Link>
+                                > */}
+                                {td.fields.location == ""
+                                  ? ""
+                                  : td.fields.location}
+                                {/* </Link> */}
                               </td>
                             </tr>
                           );

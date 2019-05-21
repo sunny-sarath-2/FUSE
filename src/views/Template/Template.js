@@ -22,6 +22,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 //
 import Select from "react-select";
+import serviceBase from "../../../services/serviceBase";
 
 // var sjc = require("shooju-client");
 // var sj = new sjc(
@@ -114,15 +115,39 @@ class Template extends React.Component {
     });
   }
   async handleChange(e, name) {
-    console.log(e.value);
+    console.log(e);
     if (e !== null) {
       await this.setState({
         [name]: {
-          label: e.value,
+          label: e.label,
           value: e.value
         },
         selected: true
       });
+      let template = await API.getSiteconfigbyChapter({
+        chapter: e.label,
+        affiliate: e.value
+      });
+      console.log(template);
+      if (template.series.length > 0) {
+        await this.setState({
+          footerColorSelected: template.series[0].fields.footercolors
+            ? template.series[0].fields.footercolors
+            : [],
+          headerColorSelected: template.series[0].fields.headercolors
+            ? template.series[0].fields.headercolors
+            : [],
+          widgetColorSelected: template.series[0].fields.widgetcolors
+            ? template.series[0].fields.widgetcolors
+            : []
+        });
+      } else {
+        await this.setState({
+          footerColorSelected: [],
+          widgetColorSelected: [],
+          headerColorSelected: []
+        });
+      }
       if (name === "Chapter") {
         await this.setState({
           lChapterAdmin: null
@@ -175,11 +200,12 @@ class Template extends React.Component {
         widgetColorSelected,
         footerColorSelected
       } = this.state;
+      //console.log(Chapter, "ch");
       var response = await API.addTemplateToUser({
         userName: Chapter.value,
         organisation: userDetails.userOrganisation,
         tier: userDetails.userType,
-        chapter: Chapter.value,
+        chapter: Chapter.label,
         templateUrl:
           "https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png",
         headercolors: headerColorSelected,
@@ -286,7 +312,9 @@ class Template extends React.Component {
                       this.handleChange(e, "Chapter");
                     }}
                     options={this.state.AffiliateData.map(suggestion => ({
-                      value: suggestion.fields.chapter,
+                      value: suggestion.fields.affiliates[0]
+                        ? suggestion.fields.affiliates[0]
+                        : "",
                       label: suggestion.fields.chapter,
                       series_id: suggestion.fields.chapter
                     }))}

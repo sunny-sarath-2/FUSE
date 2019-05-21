@@ -48,11 +48,14 @@ function getUrl(url) {
   const timestamp = new Date().getTime();
   const separator = url.includes("?") ? "&" : "?";
   //noinspection JSUnresolvedVariable
-  // console.log(url);
-  //return "https://localhost:1337" + url;
-  //return "http://18.212.235.172:1337" + url; //devbox
-  return "https://183.83.216.197:5432" + url; // test server
-  // return `${url}${separator}t=${timestamp}`; //same application
+  if (url == "/launch") {
+    console.log(url);
+    return `${url}${separator}t=${timestamp}`; //same application
+  } else {
+    //return "https://localhost:1337" + url;
+    //return "http://18.212.235.172:1337" + url; //devbox
+    return "https://183.83.216.197:5432" + url; // test server
+  }
 }
 
 /**
@@ -84,7 +87,9 @@ const serviceBase = {
 
   put: async (url, request) => serviceBase.postPutDelete(url, "PUT", request),
 
-  delete: (url, request) => serviceBase.postPutDelete(url, "DELETE", request)
+  delete: (url, request) => serviceBase.postPutDelete(url, "DELETE", request),
+
+  url: url => getUrl(url)
 };
 
 export default serviceBase;

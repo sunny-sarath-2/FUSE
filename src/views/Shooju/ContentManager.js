@@ -146,6 +146,11 @@ class ContentManager extends React.Component {
                                   </Icon>
                                 </IconButton>
                               </Link>
+                              <Link to={"content-manager-edit/" + prop}>
+                                <IconButton aria-label="add">
+                                  <Icon className={classes.icon}>edit</Icon>
+                                </IconButton>
+                              </Link>
                               <Link to={"content/add/" + prop}>
                                 <IconButton aria-label="add">
                                   <Icon className={classes.icon}>

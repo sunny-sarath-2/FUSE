@@ -65,29 +65,20 @@ function generate(element) {
   );
 }
 
-class CreateContentManager extends React.Component {
+class EditContentManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
       loading: true,
       btnsubmit: false,
+      model_name: "",
       count: 1,
       name: "",
       connection: "default",
       description: "",
       collectionName: "",
-      attributes: [
-        {
-          name: "Title",
-          params: {
-            default: "",
-            appearance: {},
-            multiple: "false",
-            type: "string"
-          }
-        }
-      ],
+      attributes: [],
       errmsg: ""
     };
     this.handleChange = this.handleChange.bind(this);
@@ -99,9 +90,17 @@ class CreateContentManager extends React.Component {
     this.DelAttributes = this.DelAttributes.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  componentDidMount() {
-    this.setState({
-      loading: false
+  async componentDidMount() {
+    let model = this.props.match.params.model;
+    let fields = await API.getOneContentTypes(model);
+    //console.log(fields);
+    await this.setState({
+      loading: false,
+      model_name: model,
+      name: fields.model.name,
+      description: fields.model.description,
+      collectionName: fields.model.collectionName,
+      attributes: fields.model.attributes
     });
   }
   handleChange(e) {}
@@ -160,14 +159,15 @@ class CreateContentManager extends React.Component {
       description,
       attributes,
       connection,
-      collectionName
+      collectionName,
+      model_name
     } = this.state;
     name = name.toLowerCase();
     name = name.replace(" ", "");
 
-    if (name === "") {
+    if (attributes.length === 0) {
       await this.setState({
-        errmsg: "Name cannot be empty."
+        errmsg: "Attributes cannot be empty."
       });
       setTimeout(() => {
         this.setState({
@@ -176,9 +176,9 @@ class CreateContentManager extends React.Component {
       }, 3000);
       return false;
     }
-    if (attributes.length === 0) {
+    if (name === "") {
       await this.setState({
-        errmsg: "Attributes cannot be empty."
+        errmsg: "Name cannot be empty."
       });
       setTimeout(() => {
         this.setState({
@@ -214,9 +214,9 @@ class CreateContentManager extends React.Component {
       btnsubmit: true
     });
 
-    let response = await API.createNewContentType(data);
+    let response = await API.updateNewContentType(model_name, data);
 
-    console.log(response);
+    console.log(response, "response");
     if (response.ok === true) {
       setTimeout(() => {
         this.props.history.push("/admin/content-manager");
@@ -230,7 +230,9 @@ class CreateContentManager extends React.Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Create Content Manager</h4>
+              <h4 className={classes.cardTitleWhite}>
+                Edit Content Manager {this.state.model_name}
+              </h4>
               <Button
                 style={{ float: "right" }}
                 variant="contained"
@@ -385,4 +387,4 @@ class CreateContentManager extends React.Component {
   }
 }
 
-export default withStyles(styles)(CreateContentManager);
+export default withStyles(styles)(EditContentManager);

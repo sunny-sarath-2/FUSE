@@ -30,7 +30,8 @@ const Sidebar = ({ ...props }) => {
         if (
           prop.path === "/content/view/:model" ||
           prop.path === "/content/add/:model" ||
-          prop.path === "/content-manager-create"
+          prop.path === "/content-manager-create" ||
+          prop.path === "/content-manager-edit/:model"
         ) {
           return null;
         }
@@ -96,7 +97,6 @@ const Sidebar = ({ ...props }) => {
         <div className={classes.logoImage}>
           <img src={logo} alt="logo" className={classes.img} />
         </div>
-        {logoText}
       </a>
     </div>
   );

@@ -11,6 +11,8 @@ import GridContainer from "../../components/Grid/GridContainer";
 import appController from "../../controller/controller";
 import API from "../../../services/API";
 import moment from "moment";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 import FieldCreate from "../../components/fieldCreater/fieldCreater";
 
 class ContentManagerAdd extends React.Component {
@@ -18,9 +20,12 @@ class ContentManagerAdd extends React.Component {
     super(props);
     this.state = {
       columns: [],
+      chapters: [],
       model_name: "",
       data: {
-        fields: {},
+        fields: {
+          fuse_chapter: ""
+        },
         files: {}
       },
       loading: false,
@@ -35,9 +40,12 @@ class ContentManagerAdd extends React.Component {
     let model = this.props.match.params.model;
     let response = await API.getOneContentTypes(model);
     console.log(response);
+    let chapters = await API.getChapters();
+    console.log(chapters.series);
     this.setState({
       columns: response.model.attributes,
       model_name: model,
+      chapters: chapters.series,
       loading: false,
       btnclick: false
     });
@@ -103,16 +111,40 @@ class ContentManagerAdd extends React.Component {
               {this.state.columns.map((field, i) => {
                 console.log(field);
                 return (
-                  <FieldCreate
-                    key={i}
-                    field={field}
-                    classes={classes}
-                    data={this.state.data.fields}
-                    Change={this.handleChange}
-                    onEditorChange={this.onEditorChange}
-                  />
+                  <div key={i}>
+                    <FieldCreate
+                      key={i}
+                      field={field}
+                      classes={classes}
+                      data={this.state.data.fields}
+                      Change={this.handleChange}
+                      onEditorChange={this.onEditorChange}
+                    />
+                  </div>
                 );
               })}
+              <TextField
+                id="outlined-name"
+                label={"Chapter"}
+                name={"fuse_chapter"}
+                fullWidth
+                select
+                type={"text"}
+                className={classes.textField}
+                value={this.state.data.fields.fuse_chapter}
+                onChange={e => this.handleChange(e, "fuse_chapter", "string")}
+                margin="normal"
+                variant="outlined"
+              >
+                {this.state.chapters.map((chap, i) => {
+                  console.log(chap.fields.chapter, "chapter");
+                  return (
+                    <MenuItem key={i} value={chap.fields.chapter}>
+                      {chap.fields.chapter}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
               {this.state.btnclick ? (
                 <Button variant="contained" color="primary" disabled>
                   ... Saving

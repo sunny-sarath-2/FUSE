@@ -106,13 +106,13 @@ if (id_token == null) {
         component: Chapters,
         layout: "/admin"
       },
-      {
-        path: "/affiliate_list",
-        name: "Affiliates",
-        icon: Person,
-        component: AffiliateList,
-        layout: "/admin"
-      },
+      // {
+      //   path: "/affiliate_list",
+      //   name: "Affiliates",
+      //   icon: Person,
+      //   component: AffiliateList,
+      //   layout: "/admin"
+      // },
       {
         path: "/template",
         name: "Template",

@@ -210,20 +210,12 @@ class userTemplate extends Component {
                           affiliateDetails = JSON.stringify(affiliateDetails);
                         }
                         window.open(
-<<<<<<< HEAD
-                          "http://localhost:3000/admin/home?accessToken=" +
-=======
                           "http://183.83.216.197:3000/admin/home?accessToken=" +
->>>>>>> ee115944798406ee7d7b55d3ce5fbf4982375e11
                             idToken +
                             "&strapiToken=" +
                             localStorage.getItem("strapiJwtToken") +
                             "&affiliate=" +
                             localStorage.getItem("username") +
-<<<<<<< HEAD
-                            "&sitelaunch=true" +
-=======
->>>>>>> ee115944798406ee7d7b55d3ce5fbf4982375e11
                             "&affiliateDetails=" +
                             affiliateDetails
                         );
@@ -252,11 +244,7 @@ class userTemplate extends Component {
                           affiliateDetails = JSON.stringify(affiliateDetails);
                         }
                         window.open(
-<<<<<<< HEAD
-                          "http://localhost:3000/admin/home?accessToken=" +
-=======
                           "http://183.83.216.197:3000/admin/home?accessToken=" +
->>>>>>> ee115944798406ee7d7b55d3ce5fbf4982375e11
                             idToken +
                             "&strapiToken=" +
                             localStorage.getItem("strapiJwtToken") +

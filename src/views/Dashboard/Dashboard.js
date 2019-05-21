@@ -134,12 +134,12 @@ class Dashboard extends React.Component {
     let chapters = await API.getChapters();
     let response = await API.getSiteIncrement();
     console.log(
-      chapters.fields.sites_map_obj.length,
+      chapters.series.length,
       affiliates.series[0].fields.sites_map_obj.length
     );
     await this.setState({
-      chapters: chapters.fields.sites_map_obj.length,
-      affiliates: affiliates.series[0].fields.sites_map_obj.length
+      chapters: chapters.series.length,
+      affiliates: chapters.series.length
     });
     this.pageData(response.fields).then(async site_inc => {
       // let postresponse = await API.siteIncrement({
@@ -216,7 +216,7 @@ class Dashboard extends React.Component {
                   <Store />
                 </CardIcon>
                 <p className={classes.cardCategory}>
-                  <Link to={"/admin/affiliate_list"}>Affiliates</Link>
+                  <Link to={"/admin/Chapters"}>Affiliates</Link>
                 </p>
                 <h3 className={classes.cardTitle}>{this.state.affiliates}</h3>
               </CardHeader>

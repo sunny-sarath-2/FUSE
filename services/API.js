@@ -20,6 +20,7 @@ const productService = {
     serviceBase.put("/content-manager/explorer/" + url, data),
   createNewContentType: data =>
     serviceBase.post("/content-type-builder/models", data),
+  createChapters: data => serviceBase.post("/shoojus/addChapters", data),
   //get api
   getAffiliatesOnOrginasation: organisation =>
     serviceBase.get("/shoojus/affiliates/" + organisation),
@@ -27,7 +28,7 @@ const productService = {
   getAscaAffiliatesContent1: () => serviceBase.get("/shoojus/affiliate"),
   getAscaAffiliatesContent2: () => serviceBase.get("/shoojus/affiliate1"),
   getAscaAffiliatesContent3: () => serviceBase.get("/shoojus/affiliate2"),
-  getChapters: () => serviceBase.get("/shoojus/chapters_affiliates"),
+  // getChapters: () => serviceBase.get("/shoojus/chapters_affiliates"),
   getAffiliatesBySeries: series => serviceBase.get("/shoojus/series/" + series), //NYSSCA_AFFILIATES
   getBlogsData: () => serviceBase.get("/blogs"),
   getEventsData: () => serviceBase.get("/events"),
@@ -38,6 +39,7 @@ const productService = {
     serviceBase.get("/content-manager/explorer/" + model),
   //delete API
   deleteContent: (model, id) =>
-    serviceBase.delete("/content-manager/explorer/" + model + "/" + id)
+    serviceBase.delete("/content-manager/explorer/" + model + "/" + id),
+  getChapters: () => serviceBase.get("/shoojus/getChapters")
 };
 export default productService;

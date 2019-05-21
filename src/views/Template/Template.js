@@ -89,8 +89,8 @@ class Template extends React.Component {
     };
     // location.href = location.origin + location.pathname;
     this.handleChange = this.handleChange.bind(this);
-    this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    // this.handleClickOpen = this.handleClickOpen.bind(this);
+    // this.handleClose = this.handleClose.bind(this);
     this.onSelectClicked = this.onSelectClicked.bind(this);
     this.colorSave = this.colorSave.bind(this);
     this.removeColor = this.removeColor.bind(this);
@@ -106,51 +106,35 @@ class Template extends React.Component {
     );
     //console.log(responseadmins.series);
     let response = await API.getChapters();
-    console.log(response);
+    console.log(response, "````````````");
     await this.setState({
       //AffiliateAdmins: responseadmins.series,
-      AffiliateData: response.fields.sites_map_obj,
+      AffiliateData: response.series,
       loadingDetails: false
     });
   }
   async handleChange(e, name) {
-    console.log(e, name);
+    console.log(e.value);
     if (e !== null) {
-      await this.setState({ [name]: e.value, ["l" + name]: e, selected: true });
+      await this.setState({
+        [name]: {
+          label: e.value,
+          value: e.value
+        },
+        selected: true
+      });
       if (name === "Chapter") {
         await this.setState({
-          lChapterAdmin: null,
-          AffiliateAdmins: []
+          lChapterAdmin: null
         });
-        let series_id = e.series_id;
-        series_id = series_id.replace("sid=test\\", "");
-        console.log(series_id);
-        let affiliates = await API.getAffiliatesBySeries(series_id);
-        //console.log(affiliates.series[0]);
-        if (affiliates) {
-          await this.setState({
-            AffiliateAdmins: affiliates.series[0].fields.sites_map_obj
-          });
-        } else {
-          await this.setState({
-            AffiliateAdmins: []
-          });
-        }
       }
     } else {
       await this.setState({
         [name]: "",
         ["l" + name]: e,
-        selected: false,
-        AffiliateAdmins: []
+        selected: false
       });
     }
-  }
-  handleClickOpen() {
-    this.setState({ open: true });
-  }
-  handleClose() {
-    this.setState({ open: false });
   }
   handleChangeComplete = color => {
     this.setState({
@@ -174,7 +158,7 @@ class Template extends React.Component {
   };
   async onSelectClicked() {
     // console.log("clicked");
-    if (this.state.Chapter != "" && this.state.ChapterAdmin) {
+    if (this.state.Chapter != "") {
       this.setState({ selected: true, loading: true });
       var id_token = localStorage.getItem("idToken");
       let userDetails;
@@ -192,10 +176,10 @@ class Template extends React.Component {
         footerColorSelected
       } = this.state;
       var response = await API.addTemplateToUser({
-        userName: ChapterAdmin,
+        userName: Chapter.value,
         organisation: userDetails.userOrganisation,
         tier: userDetails.userType,
-        chapter: Chapter,
+        chapter: Chapter.value,
         templateUrl:
           "https://adminlte.io/uploads/images/free_templates/creative-tim-material-angular.png",
         headercolors: headerColorSelected,
@@ -218,7 +202,7 @@ class Template extends React.Component {
       }, 5000);
     } else {
       this.setState({
-        alertmsg: { color: "#ff9800", msg: "Select Chapter & Admin" }
+        alertmsg: { color: "#ff9800", msg: "Select Chapter" }
       });
 
       setTimeout(() => {
@@ -297,33 +281,17 @@ class Template extends React.Component {
                 <Grid item xs={12} sm={6}>
                   <label>Select Chapter</label>
                   <Select
-                    value={this.state.lChapter}
+                    value={this.state.Chapter}
                     onChange={e => {
                       this.handleChange(e, "Chapter");
                     }}
                     options={this.state.AffiliateData.map(suggestion => ({
-                      value: suggestion.chapter,
-                      label: suggestion.chapter,
-                      series_id: suggestion.series_id
+                      value: suggestion.fields.chapter,
+                      label: suggestion.fields.chapter,
+                      series_id: suggestion.fields.chapter
                     }))}
                     //components={components}
                     placeholder="Search Chapter"
-                    isClearable
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <label>Select Affiliate</label>
-                  <Select
-                    value={this.state.lChapterAdmin}
-                    onChange={e => {
-                      this.handleChange(e, "ChapterAdmin");
-                    }}
-                    options={this.state.AffiliateAdmins.map(suggestion => ({
-                      value: suggestion.association_name.replace(" ", "_"),
-                      label: suggestion.association_name
-                    }))}
-                    //components={components}
-                    placeholder="Search Affiliate"
                     isClearable
                   />
                 </Grid>
@@ -343,7 +311,7 @@ class Template extends React.Component {
                         };
                         affiliateDetails = JSON.stringify(affiliateDetails);
                       }
-                      this.state.ChapterAdmin != ""
+                      this.state.chapter != ""
                         ? window.open(
                             "http://183.83.216.197:3000/admin/home?accessToken=" +
                               idToken +
@@ -356,7 +324,10 @@ class Template extends React.Component {
                               affiliateDetails
                           )
                         : this.setState({
-                            alertmsg: { color: "#ff9800", msg: "Select Admin" }
+                            alertmsg: {
+                              color: "#ff9800",
+                              msg: "Select Chapter"
+                            }
                           });
 
                       setTimeout(() => {

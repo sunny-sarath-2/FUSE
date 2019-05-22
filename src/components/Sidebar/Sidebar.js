@@ -89,7 +89,7 @@ const Sidebar = ({ ...props }) => {
   var brand = (
     <div className={classes.logo}>
       <a
-        href="#"
+        href="/admin/dashboard"
         className={classNames(classes.logoLink, {
           [classes.logoLinkRTL]: props.rtlActive
         })}
@@ -119,7 +119,7 @@ const Sidebar = ({ ...props }) => {
         >
           {brand}
           <div className={classes.sidebarWrapper}>
-            {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
+            {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks handleSignoutClick = {props.signout}/>}
             {links}
           </div>
           {image !== undefined ? (

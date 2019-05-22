@@ -85,7 +85,7 @@ ReactDOM.render(
         // component={LoginLayout}
       />
       <Route path="/register" component={Registration} />
-      <Route path="/template1" component={Template1} />
+
       <Redirect from="/" to="/login" />
     </Switch>
   </Router>,

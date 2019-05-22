@@ -89,7 +89,6 @@ if (id_token == null) {
   } else {
     userDetails = appController.getAffilateTokens();
   }
-  console.log(userDetails);
   if (userDetails.userType == "parent") {
     dashboardRoutes = [
       {

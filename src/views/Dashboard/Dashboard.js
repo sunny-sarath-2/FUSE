@@ -113,14 +113,12 @@ class Dashboard extends React.Component {
   async componentDidMount() {
     this.setState({ loading: true });
     let token = localStorage.getItem("idToken");
-    console.log(token);
     let userDetails;
     if (token != null) {
       userDetails = await appController.getUser(token);
     } else {
       userDetails = await appController.getAffilateTokens();
     }
-    console.log(userDetails);
     if (userDetails.userType === "parent") {
       this.setState({
         title: "Welcome to Parent site."
@@ -133,10 +131,6 @@ class Dashboard extends React.Component {
     let affiliates = await API.getAffiliatesBySeries("NYSSCA_AFFILIATES");
     let chapters = await API.getChapters();
     let response = await API.getSiteIncrement();
-    console.log(
-      chapters.series.length,
-      affiliates.series[0].fields.sites_map_obj.length
-    );
     await this.setState({
       chapters: chapters.series.length,
       affiliates: chapters.series.length

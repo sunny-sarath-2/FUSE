@@ -42,9 +42,14 @@ class ContentManagerAdd extends React.Component {
     console.log(response);
     let chapters = await API.getChapters();
     console.log(chapters.series);
-    this.setState({
-      columns: response.model.attributes,
-      model_name: model,
+    let col = [];
+    let fields = JSON.parse(response.fields);
+    fields.map((prop, key) => {
+      col.push(prop);
+    });
+    await this.setState({
+      columns: col,
+      model_name: response.pagename.toLowerCase(),
       chapters: chapters.series,
       loading: false,
       btnclick: false
@@ -71,14 +76,13 @@ class ContentManagerAdd extends React.Component {
       this.state.model_name + "/?source=content-manager",
       this.state.data
     );
-    console.log(response);
-    if (response.status) {
+    console.log(response, "response");
+    if (response) {
       this.props.history.push("/admin/content-manager");
     }
   }
   render() {
     const { classes } = this.props;
-    console.log(this.state.data);
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
@@ -137,7 +141,6 @@ class ContentManagerAdd extends React.Component {
                 variant="outlined"
               >
                 {this.state.chapters.map((chap, i) => {
-                  console.log(chap.fields.chapter, "chapter");
                   return (
                     <MenuItem key={i} value={chap.fields.chapter}>
                       {chap.fields.chapter}

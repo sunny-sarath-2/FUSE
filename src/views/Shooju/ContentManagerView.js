@@ -82,42 +82,40 @@ class ContentManagerView extends React.Component {
   async componentDidMount() {
     let model = this.props.match.params.model;
     await this.copyComponent();
-    await this.setState({
-      model_name: model
-    });
   }
   async copyComponent() {
     let model = this.props.match.params.model;
     let response = await API.getDataContentTypes(model);
     let modelTypeResponse = await API.getOneContentTypes(model);
-    console.log(modelTypeResponse.model.attributes);
+    console.log(response, "response");
     let chapters = await API.getChapters();
-    console.log(chapters.series);
     let col = [];
     col.push("id");
-
-    modelTypeResponse.model.attributes.map((prop, key) => {
+    let fields = JSON.parse(modelTypeResponse.fields);
+    fields.map((prop, key) => {
       col.push(prop.name);
     });
     col = col;
     col.push("fuse_chapter");
     col.push("Action");
 
-    if (response.length > 0) {
+    if (response.data.length > 0) {
       this.setState({
-        content_list: response,
+        content_list: response.data,
         chapters: chapters.series,
         columns: col,
         loading: true,
-        modelTypeColumns: modelTypeResponse.model.attributes
+        modelTypeColumns: fields,
+        model_name: response.modelname
       });
     } else {
       this.setState({
-        content_list: response,
+        content_list: response.data,
         loading: true,
         noData: true,
         columns: [],
-        chapters: chapters.series
+        chapters: chapters.series,
+        model_name: response.modelname
       });
     }
   }
@@ -196,7 +194,7 @@ class ContentManagerView extends React.Component {
       this.state.data
     );
     console.log(response);
-    if (response.status) {
+    if (response) {
       this.setState({
         switcher: "main",
         btnclick: false
@@ -287,7 +285,6 @@ class ContentManagerView extends React.Component {
   render() {
     const { classes } = this.props;
     const { dense, secondary } = this.state;
-    console.log(this.state.data.fields);
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>

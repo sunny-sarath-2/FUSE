@@ -204,11 +204,12 @@ class CreateContentManager extends React.Component {
     }
 
     var data = {
-      attributes: attributes,
-      name: name,
-      connection: connection,
+      fields: JSON.stringify(attributes),
+      pagename: name,
       description: description,
-      collectionName: collectionName
+      chapter: "Test",
+      username: "fusez5x",
+      status: true
     };
     this.setState({
       btnsubmit: true
@@ -217,10 +218,10 @@ class CreateContentManager extends React.Component {
     let response = await API.createNewContentType(data);
 
     console.log(response);
-    if (response.ok === true) {
+    if (response) {
       setTimeout(() => {
         this.props.history.push("/admin/content-manager");
-      }, 10000);
+      }, 1000);
     }
   }
   render() {

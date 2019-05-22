@@ -8,9 +8,9 @@ const productService = {
   //these are sample api call's
   //put api
   updateContentTypesData: (url, data) =>
-    serviceBase.put("/content-manager/explorer/" + url, data),
+    serviceBase.put("/fusecruds/putmodel/" + url, data),
   updateNewContentType: (url, data) =>
-    serviceBase.put("/content-type-builder/models/" + url, data),
+    serviceBase.put("/content-manager/explorer/pages/" + url, data),
   //post api
   launchSite: data => serviceBase.post("/launch", data),
   registerAffiliates: data => serviceBase.post("/shoojus/addaffiliate", data),
@@ -18,12 +18,12 @@ const productService = {
   siteIncrement: data => serviceBase.post("/shoojus/siteincrement", data),
   registerStrapiUser: data => serviceBase.post("/auth/local/register", data),
   createContentTypesData: (url, data) =>
-    serviceBase.post("/content-manager/explorer/" + url, data),
+    serviceBase.post("/fusecruds/addmodel/" + url, data),
   addBlogs: data => serviceBase.post("/shoojus/addblogs", data),
   affilateCreateBlog: data => serviceBase.post("/blogs", data),
   affilateCreateEvent: data => serviceBase.post("/events", data),
   createNewContentType: data =>
-    serviceBase.post("/content-type-builder/models", data),
+    serviceBase.post("/content-manager/explorer/pages", data),
   createChapters: data => serviceBase.post("/shoojus/addChapters", data),
   getSiteconfigbyChapter: data =>
     serviceBase.post("/shoojus/getSiteconfigbyChapter", data),
@@ -34,18 +34,16 @@ const productService = {
   getAscaAffiliatesContent1: () => serviceBase.get("/shoojus/affiliate"),
   getAscaAffiliatesContent2: () => serviceBase.get("/shoojus/affiliate1"),
   getAscaAffiliatesContent3: () => serviceBase.get("/shoojus/affiliate2"),
-  // getChapters: () => serviceBase.get("/shoojus/chapters_affiliates"),
   getAffiliatesBySeries: series => serviceBase.get("/shoojus/series/" + series), //NYSSCA_AFFILIATES
   getBlogsData: () => serviceBase.get("/blogs"),
   getEventsData: () => serviceBase.get("/events"),
-  getContentTypes: () => serviceBase.get("/content-manager/models"),
+  getContentTypes: () => serviceBase.get("/content-manager/explorer/pages"),
   getOneContentTypes: url =>
-    serviceBase.get("/content-type-builder/models/" + url),
-  getDataContentTypes: model =>
-    serviceBase.get("/content-manager/explorer/" + model),
+    serviceBase.get("/content-manager/explorer/pages/" + url),
+  getDataContentTypes: model => serviceBase.get("/fusecruds/getmodel/" + model),
   //delete API
   deleteContent: (model, id) =>
-    serviceBase.delete("/content-manager/explorer/" + model + "/" + id),
+    serviceBase.delete("/fusecruds/deletemodel/" + model + "/" + id),
   getChapters: () => serviceBase.get("/shoojus/getChapters")
 };
 export default productService;

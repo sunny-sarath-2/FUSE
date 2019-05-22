@@ -77,9 +77,10 @@ class EditContentManager extends React.Component {
       name: "",
       connection: "default",
       description: "",
-      collectionName: "",
+      chapter: "",
       attributes: [],
-      errmsg: ""
+      errmsg: "",
+      username: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
@@ -93,14 +94,14 @@ class EditContentManager extends React.Component {
   async componentDidMount() {
     let model = this.props.match.params.model;
     let fields = await API.getOneContentTypes(model);
-    //console.log(fields);
     await this.setState({
       loading: false,
       model_name: model,
-      name: fields.model.name,
-      description: fields.model.description,
-      collectionName: fields.model.collectionName,
-      attributes: fields.model.attributes
+      name: fields.pagename,
+      description: fields.description,
+      chapter: fields.chapter,
+      username: fields.username,
+      attributes: JSON.parse(fields.fields)
     });
   }
   handleChange(e) {}
@@ -160,7 +161,9 @@ class EditContentManager extends React.Component {
       attributes,
       connection,
       collectionName,
-      model_name
+      model_name,
+      chapter,
+      username
     } = this.state;
     name = name.toLowerCase();
     name = name.replace(" ", "");
@@ -204,11 +207,12 @@ class EditContentManager extends React.Component {
     }
 
     var data = {
-      attributes: attributes,
-      name: name,
-      connection: connection,
+      fields: JSON.stringify(attributes),
+      pagename: name,
       description: description,
-      collectionName: collectionName
+      chapter: chapter,
+      username: username,
+      status: true
     };
     this.setState({
       btnsubmit: true
@@ -217,10 +221,10 @@ class EditContentManager extends React.Component {
     let response = await API.updateNewContentType(model_name, data);
 
     console.log(response, "response");
-    if (response.ok === true) {
+    if (response) {
       setTimeout(() => {
         this.props.history.push("/admin/content-manager");
-      }, 10000);
+      }, 1000);
     }
   }
   render() {
@@ -230,9 +234,7 @@ class EditContentManager extends React.Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>
-                Edit Content Manager {this.state.model_name}
-              </h4>
+              <h4 className={classes.cardTitleWhite}>Edit Content Manager</h4>
               <Button
                 style={{ float: "right" }}
                 variant="contained"

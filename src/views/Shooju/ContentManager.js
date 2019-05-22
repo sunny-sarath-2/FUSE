@@ -86,7 +86,7 @@ class ContentManager extends React.Component {
     let response = await API.getContentTypes();
     this.setState({
       content_list: response,
-      models: Object.keys(response.models.layout),
+      models: response,
       loading: false
     });
   }
@@ -130,28 +130,28 @@ class ContentManager extends React.Component {
                   <div className={classes.demo}>
                     <List dense={dense}>
                       {this.state.models.map((prop, key) => {
-                        return prop == "user" ? null : (
+                        return prop.pagename == "user" ? null : (
                           <ListItem key={key}>
                             <FolderIcon />
                             <ListItemText
                               style={{ textTransform: "capitalize" }}
-                              primary={prop}
+                              primary={prop.pagename}
                               secondary={secondary ? "Secondary text" : null}
                             />
                             <ListItemSecondaryAction>
-                              <Link to={"content/view/" + prop}>
+                              <Link to={"content/view/" + prop.id}>
                                 <IconButton aria-label="view">
                                   <Icon className={classes.icon}>
                                     visibility
                                   </Icon>
                                 </IconButton>
                               </Link>
-                              <Link to={"content-manager-edit/" + prop}>
+                              <Link to={"content-manager-edit/" + prop.id}>
                                 <IconButton aria-label="add">
                                   <Icon className={classes.icon}>edit</Icon>
                                 </IconButton>
                               </Link>
-                              <Link to={"content/add/" + prop}>
+                              <Link to={"content/add/" + prop.id}>
                                 <IconButton aria-label="add">
                                   <Icon className={classes.icon}>
                                     add_circle

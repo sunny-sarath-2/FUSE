@@ -119,6 +119,7 @@ class Dashboard extends React.Component {
     } else {
       userDetails = await appController.getAffilateTokens();
     }
+    console.log(userDetails);
     if (userDetails.userType === "parent") {
       this.setState({
         title: "Welcome to Parent site."
@@ -142,7 +143,7 @@ class Dashboard extends React.Component {
       //   site_map: "Welcome to Parent site.",
       //   site_desc: "This is site description from Shooju DB" + " "
       // });
-      //console.log(site_inc);
+      // console.log(site_inc);
       //console.log(postresponse);
     });
   }

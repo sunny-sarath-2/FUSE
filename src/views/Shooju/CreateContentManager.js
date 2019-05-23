@@ -72,10 +72,12 @@ class CreateContentManager extends React.Component {
       open: false,
       loading: true,
       btnsubmit: false,
+      getChapters: [],
       count: 1,
       name: "",
       connection: "default",
       description: "",
+      chapter: "",
       collectionName: "",
       attributes: [
         {
@@ -99,9 +101,14 @@ class CreateContentManager extends React.Component {
     this.DelAttributes = this.DelAttributes.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  componentDidMount() {
-    this.setState({
-      loading: false
+  async componentDidMount() {
+    let response = await API.getChaptersbyAdmin({
+      affiliate: localStorage.getItem("username")
+    });
+    console.log(response);
+    await this.setState({
+      loading: false,
+      getChapters: response.series
     });
   }
   handleChange(e) {}
@@ -160,7 +167,8 @@ class CreateContentManager extends React.Component {
       description,
       attributes,
       connection,
-      collectionName
+      collectionName,
+      chapter
     } = this.state;
     name = name.toLowerCase();
     name = name.replace(" ", "");
@@ -207,8 +215,8 @@ class CreateContentManager extends React.Component {
       fields: JSON.stringify(attributes),
       pagename: name,
       description: description,
-      chapter: "Test",
-      username: "fusez5x",
+      chapter: chapter,
+      username: localStorage.getItem("username"),
       status: true
     };
     this.setState({

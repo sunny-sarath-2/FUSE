@@ -28,10 +28,11 @@ const Sidebar = ({ ...props }) => {
         var activePro = " ";
         var listItemClasses;
         if (
-          prop.path === "/content/view/:model" ||
-          prop.path === "/content/add/:model" ||
+          prop.path === "/content/view/:model/:chapter" ||
+          prop.path === "/content/add/:model/:chapter" ||
           prop.path === "/content-manager-create" ||
-          prop.path === "/content-manager-edit/:model"
+          prop.path === "/content-manager-edit/:model" ||
+          prop.path === "/content-manager/:chapter"
         ) {
           return null;
         }
@@ -119,7 +120,11 @@ const Sidebar = ({ ...props }) => {
         >
           {brand}
           <div className={classes.sidebarWrapper}>
-            {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks handleSignoutClick = {props.signout}/>}
+            {props.rtlActive ? (
+              <RTLNavbarLinks />
+            ) : (
+              <AdminNavbarLinks handleSignoutClick={props.signout} />
+            )}
             {links}
           </div>
           {image !== undefined ? (

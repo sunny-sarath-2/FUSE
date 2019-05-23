@@ -77,6 +77,7 @@ class EditContentManager extends React.Component {
       name: "",
       connection: "default",
       description: "",
+      getChapters: [],
       chapter: "",
       attributes: [],
       errmsg: "",
@@ -94,6 +95,9 @@ class EditContentManager extends React.Component {
   async componentDidMount() {
     let model = this.props.match.params.model;
     let fields = await API.getOneContentTypes(model);
+    let response = await API.getChaptersbyAdmin({
+      affiliate: localStorage.getItem("username")
+    });
     await this.setState({
       loading: false,
       model_name: model,
@@ -101,7 +105,8 @@ class EditContentManager extends React.Component {
       description: fields.description,
       chapter: fields.chapter,
       username: fields.username,
-      attributes: JSON.parse(fields.fields)
+      attributes: JSON.parse(fields.fields),
+      getChapters: response.series
     });
   }
   handleChange(e) {}
@@ -211,7 +216,7 @@ class EditContentManager extends React.Component {
       pagename: name,
       description: description,
       chapter: chapter,
-      username: username,
+      username: localStorage.getItem("username"),
       status: true
     };
     this.setState({
@@ -286,6 +291,7 @@ class EditContentManager extends React.Component {
                     variant="outlined"
                   />
                 </Grid>
+
                 <Grid item xs={12} md={12}>
                   <div style={{ fontSize: "18px", fontWeight: "800" }}>
                     Attributes:

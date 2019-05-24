@@ -52,9 +52,15 @@ function getUrl(url) {
     console.log(url);
     return `${url}${separator}t=${timestamp}`; //same application
   } else {
+<<<<<<< HEAD
     //return "https://localhost:1337" + url;
     return "http://3.215.207.179:1337" + url; //devbox
     // return "https://192.168.0.160:5432" + url; // test server
+=======
+    return "https://localhost:1337" + url;
+    //return "http://3.215.207.179:1337" + url; //devbox
+    //return "https://192.168.0.160:5432" + url; // test server
+>>>>>>> d5dc4a82d5380854acd9f5d28c4c769efa9dbae3
   }
 }
 

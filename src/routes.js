@@ -20,6 +20,7 @@ import ContentManagerView from "./views/Shooju/ContentManagerView";
 import ContentManagerAdd from "./views/Shooju/ContentManagerAdd";
 import CreateContentManager from "./views/Shooju/CreateContentManager";
 import EditContentManager from "./views/Shooju/EditContentManager";
+import ContentManagerChapter from "./views/Shooju/ContentManagerChapter";
 
 var id_token = localStorage.getItem("idToken");
 let dashboardRoutes = [];
@@ -194,21 +195,28 @@ if (id_token == null) {
         layout: "/admin"
       },
       {
-        path: "/content-manager",
+        path: "/content-manager/:chapter",
         name: "Content Manager",
         icon: Language,
         component: ContentManager,
         layout: "/admin"
       },
       {
-        path: "/content/view/:model",
+        path: "/content-manager",
+        name: "Content Manager",
+        icon: Language,
+        component: ContentManagerChapter,
+        layout: "/admin"
+      },
+      {
+        path: "/content/view/:model/:chapter",
         name: "Content Manager View",
         icon: Language,
         component: ContentManagerView,
         layout: "/admin"
       },
       {
-        path: "/content/add/:model",
+        path: "/content/add/:model/:chapter",
         name: "Content Manager Add",
         icon: Language,
         component: ContentManagerAdd,

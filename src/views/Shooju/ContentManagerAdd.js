@@ -38,15 +38,20 @@ class ContentManagerAdd extends React.Component {
   async componentDidMount() {
     this.setState({ loading: true });
     let model = this.props.match.params.model;
+    let chapter = this.props.match.params.chapter;
     let response = await API.getOneContentTypes(model);
     console.log(response);
-    let chapters = await API.getChapters();
+    let chapters = await API.getChaptersbyAdmin({
+      affiliate: localStorage.getItem("username")
+    });
     console.log(chapters.series);
     let col = [];
     let fields = JSON.parse(response.fields);
     fields.map((prop, key) => {
       col.push(prop);
     });
+    let data = this.state.data;
+    data.fields["fuse_chapter"] = chapter;
     await this.setState({
       columns: col,
       model_name: response.pagename.toLowerCase(),
@@ -54,6 +59,7 @@ class ContentManagerAdd extends React.Component {
       loading: false,
       btnclick: false
     });
+    await this.setState({ data: data });
   }
   handleChange(e, fieldName, fieldType) {
     console.log(e, fieldName, "check");
@@ -140,13 +146,16 @@ class ContentManagerAdd extends React.Component {
                 margin="normal"
                 variant="outlined"
               >
-                {this.state.chapters.map((chap, i) => {
+                <MenuItem key={1} value={this.state.data.fields.fuse_chapter}>
+                  {this.state.data.fields.fuse_chapter}
+                </MenuItem>
+                {/* {this.state.chapters.map((chap, i) => {
                   return (
                     <MenuItem key={i} value={chap.fields.chapter}>
                       {chap.fields.chapter}
                     </MenuItem>
                   );
-                })}
+                })} */}
               </TextField>
               {this.state.btnclick ? (
                 <Button variant="contained" color="primary" disabled>

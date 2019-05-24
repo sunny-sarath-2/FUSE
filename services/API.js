@@ -27,6 +27,8 @@ const productService = {
   createChapters: data => serviceBase.post("/shoojus/addChapters", data),
   getSiteconfigbyChapter: data =>
     serviceBase.post("/shoojus/getSiteconfigbyChapter", data),
+  getChaptersbyAdmin: data =>
+    serviceBase.post("/shoojus/getChaptersbyAdmin", data),
   //get api
   getAffiliatesOnOrginasation: organisation =>
     serviceBase.get("/shoojus/affiliates/" + organisation),
@@ -41,9 +43,12 @@ const productService = {
   getOneContentTypes: url =>
     serviceBase.get("/content-manager/explorer/pages/" + url),
   getDataContentTypes: model => serviceBase.get("/fusecruds/getmodel/" + model),
+
   //delete API
-  deleteContent: (model, id) =>
-    serviceBase.delete("/fusecruds/deletemodel/" + model + "/" + id),
+  deleteContent: (model, id, chapter) =>
+    serviceBase.delete(
+      "/fusecruds/deletemodel/" + chapter + "/" + model + "/" + id
+    ),
   getChapters: () => serviceBase.get("/shoojus/getChapters")
 };
 export default productService;

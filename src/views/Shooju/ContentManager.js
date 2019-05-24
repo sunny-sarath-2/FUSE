@@ -72,7 +72,7 @@ class ContentManager extends React.Component {
     this.state = {
       Con_manager: "",
       content_list: [],
-      models: [],
+      chapter: "",
       open: false,
       dense: false,
       secondary: false,
@@ -83,10 +83,11 @@ class ContentManager extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
   async componentDidMount() {
+    let chapter = this.props.match.params.chapter;
     let response = await API.getContentTypes();
     this.setState({
       content_list: response,
-      models: response,
+      chapter: chapter,
       loading: false
     });
   }
@@ -102,6 +103,7 @@ class ContentManager extends React.Component {
   render() {
     const { classes } = this.props;
     const { dense, secondary } = this.state;
+
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
@@ -129,7 +131,7 @@ class ContentManager extends React.Component {
                 <Grid item xs={12} md={12}>
                   <div className={classes.demo}>
                     <List dense={dense}>
-                      {this.state.models.map((prop, key) => {
+                      {this.state.content_list.map((prop, key) => {
                         return prop.pagename == "user" ? null : (
                           <ListItem key={key}>
                             <FolderIcon />
@@ -139,19 +141,35 @@ class ContentManager extends React.Component {
                               secondary={secondary ? "Secondary text" : null}
                             />
                             <ListItemSecondaryAction>
-                              <Link to={"content/view/" + prop.id}>
+                              <Link
+                                to={
+                                  "/admin/content/view/" +
+                                  prop.id +
+                                  "/" +
+                                  this.state.chapter
+                                }
+                              >
                                 <IconButton aria-label="view">
                                   <Icon className={classes.icon}>
                                     visibility
                                   </Icon>
                                 </IconButton>
                               </Link>
-                              <Link to={"content-manager-edit/" + prop.id}>
+                              <Link
+                                to={"/admin/content-manager-edit/" + prop.id}
+                              >
                                 <IconButton aria-label="add">
                                   <Icon className={classes.icon}>edit</Icon>
                                 </IconButton>
                               </Link>
-                              <Link to={"content/add/" + prop.id}>
+                              <Link
+                                to={
+                                  "/admin/content/add/" +
+                                  prop.id +
+                                  "/" +
+                                  this.state.chapter
+                                }
+                              >
                                 <IconButton aria-label="add">
                                   <Icon className={classes.icon}>
                                     add_circle

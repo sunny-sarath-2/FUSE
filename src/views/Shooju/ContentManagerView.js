@@ -10,6 +10,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import ViewIcon from "@material-ui/icons/RemoveRedEye";
 import EditIcon from "@material-ui/icons/Edit";
 // core components
+import Grid from "@material-ui/core/Grid";
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
 import appController from "../../controller/controller";
@@ -19,6 +20,7 @@ import FieldEditor from "../../components/fieldEditor/FieldEditor";
 import { resolve, reject } from "q";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+import Select from "react-select";
 
 const styles = {
   cardCategoryWhite: {
@@ -71,24 +73,35 @@ class ContentManagerView extends React.Component {
         fields: {},
         files: {}
       },
-      btnclick: false
+      btnclick: false,
+      chapterselected: ""
     };
     this.tableData = this.tableData.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.SubmitForm = this.SubmitForm.bind(this);
     this.onEditorChange = this.onEditorChange.bind(this);
     this.copyComponent = this.copyComponent.bind(this);
+    this.loadData = this.loadData.bind(this);
   }
   async componentDidMount() {
     let model = this.props.match.params.model;
+    let schapter = this.props.match.params.chapter;
+    let chapters = await API.getChaptersbyAdmin({
+      affiliate: localStorage.getItem("username")
+    });
+    await this.setState({
+      chapters: chapters.series
+    });
     await this.copyComponent();
   }
   async copyComponent() {
     let model = this.props.match.params.model;
-    let response = await API.getDataContentTypes(model);
+    let schapter = this.props.match.params.chapter;
+    let modelpath = schapter + "/" + model;
+    let response = await API.getDataContentTypes(modelpath);
     let modelTypeResponse = await API.getOneContentTypes(model);
     console.log(response, "response");
-    let chapters = await API.getChapters();
+
     let col = [];
     col.push("id");
     let fields = JSON.parse(modelTypeResponse.fields);
@@ -102,7 +115,6 @@ class ContentManagerView extends React.Component {
     if (response.data.length > 0) {
       this.setState({
         content_list: response.data,
-        chapters: chapters.series,
         columns: col,
         loading: true,
         modelTypeColumns: fields,
@@ -114,7 +126,6 @@ class ContentManagerView extends React.Component {
         loading: true,
         noData: true,
         columns: [],
-        chapters: chapters.series,
         model_name: response.modelname
       });
     }
@@ -151,7 +162,10 @@ class ContentManagerView extends React.Component {
                 onClick={() => {
                   this.setState({
                     switcher: "delete",
-                    transferData: { id: td["id"] }
+                    transferData: {
+                      id: td["id"],
+                      fuse_chapter: td["fuse_chapter"]
+                    }
                   });
                   console.log("click", td);
                 }}
@@ -175,6 +189,13 @@ class ContentManagerView extends React.Component {
     // data["type"] = this.state.model_name;
     data.fields[fieldName] = e.target.value;
     this.setState({ data: data });
+  }
+  async loadData(e) {
+    await this.setState({
+      chapterselected: e,
+      noData: false
+    });
+    await this.copyComponent();
   }
   onEditorChange(e, fieldName) {
     let data = this.state.data;
@@ -205,13 +226,36 @@ class ContentManagerView extends React.Component {
     switch (this.state.switcher) {
       case "main":
         return (
-          <Table
-            tableHeaderColor="primary"
-            tableHead={this.state.columns.map(col => {
-              return col;
-            })}
-            tableData={this.tableData(this.state.content_list)}
-          />
+          <div>
+            {/* <div>
+              <Grid container spacing={24} style={{ marginTop: "0px" }}>
+                <Grid item xs={12} sm={6}>
+                  <label>Select Chapter</label>
+                  <Select
+                    value={this.state.chapterselected}
+                    onChange={e => {
+                      this.loadData(e);
+                    }}
+                    options={this.state.chapters.map(suggestion => ({
+                      value: suggestion.fields.chapter,
+                      label: suggestion.fields.chapter,
+                      series_id: suggestion.fields.chapter
+                    }))}
+                    //components={components}
+                    placeholder="Search Chapter"
+                    isClearable
+                  />
+                </Grid>
+              </Grid>
+            </div> */}
+            <Table
+              tableHeaderColor="primary"
+              tableHead={this.state.columns.map(col => {
+                return col;
+              })}
+              tableData={this.tableData(this.state.content_list)}
+            />
+          </div>
         );
       case "view":
         return (
@@ -238,12 +282,14 @@ class ContentManagerView extends React.Component {
         );
       case "delete":
         console.log("delete");
+        console.log(this.state.transferData);
         let del_id = this.state.transferData.id;
+        let del_chapter = this.state.transferData.fuse_chapter;
         let confirm = window.confirm(
           "Are you sure you want to delete this entry ?"
         );
         if (confirm) {
-          this.Delete(del_id).then(async result => {
+          this.Delete(del_id, del_chapter).then(async result => {
             console.log(result);
             await this.setState({
               switcher: "main",
@@ -273,11 +319,11 @@ class ContentManagerView extends React.Component {
         return null;
     }
   }
-  Delete = async id => {
+  Delete = async (id, del_chapter) => {
     // return new Promise(async (resolve, reject) => {
     let model = this.state.model_name;
-    let response = await API.deleteContent(model, id);
-    // resolve(response);
+    let response = await API.deleteContent(model, id, del_chapter);
+    // // resolve(response);
     return response;
     //});
   };
@@ -312,7 +358,7 @@ class ContentManagerView extends React.Component {
             </CardHeader>
             <CardBody>
               {this.state.loading ? (
-                this.loader()
+                <div>{this.loader()}</div>
               ) : (
                 <center>
                   <div className="spinner-border text-primary" />

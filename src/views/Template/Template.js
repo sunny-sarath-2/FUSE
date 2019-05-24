@@ -249,6 +249,7 @@ class Template extends React.Component {
     console.log(e.target.value, e.target.checked);
     let color = e.target.value;
     let getArray = this.state[arrayName];
+    getArray = [];
     if (e.target.checked === true) {
       getArray.push(color);
       let dummyState = this.state;
@@ -305,9 +306,7 @@ class Template extends React.Component {
                       this.handleChange(e, "Chapter");
                     }}
                     options={this.state.AffiliateData.map(suggestion => ({
-                      value: suggestion.fields.affiliates[0]
-                        ? suggestion.fields.affiliates[0]
-                        : "",
+                      value: suggestion.fields.chapter,
                       label: suggestion.fields.chapter,
                       series_id: suggestion.fields.chapter
                     }))}

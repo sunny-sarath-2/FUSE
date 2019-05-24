@@ -12,12 +12,7 @@ import CardHeader from "../../components/Card/CardHeader";
 import CardIcon from "../../components/Card/CardIcon";
 import CardBody from "../../components/Card/CardBody";
 import CardFooter from "../../components/Card/CardFooter";
-var sjc = require("shooju-client");
-var sj = new sjc(
-  "https://fuse.shooju.com",
-  "api.test",
-  "tMAFDsRVm1ONRAaCzCzAZFFkvwmsf4vUBIfo6DntokOFSlBWWaJjMwAqUZwe9DZZH"
-);
+
 // const AWS = require("aws-sdk");
 // AWS.config.region = "us-east-1";
 // AWS.config.credentials = new AWS.CognitoIdentityCredentials(

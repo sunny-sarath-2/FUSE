@@ -4,12 +4,7 @@ import appController from "../../controller/controller";
 import Button from "../../components/CustomButtons/Button";
 import Warningprompts from "../../modelPopups/warningprompts";
 import API from "../../../services/API";
-var sjc = require("shooju-client");
-var sj = new sjc(
-  "https://fuse.shooju.com",
-  "api.test",
-  "tMAFDsRVm1ONRAaCzCzAZFFkvwmsf4vUBIfo6DntokOFSlBWWaJjMwAqUZwe9DZZH"
-);
+
 // const AWS = require("aws-sdk");
 // AWS.config.region = "us-east-1";
 // AWS.config.credentials = new AWS.CognitoIdentityCredentials(

@@ -53,8 +53,8 @@ function getUrl(url) {
     return `${url}${separator}t=${timestamp}`; //same application
   } else {
     //return "https://localhost:1337" + url;
-    //return "http://18.212.235.172:1337" + url; //devbox
-    return "https://192.168.0.160:5432" + url; // test server
+    return "http://3.215.207.179:1337" + url; //devbox
+    // return "https://192.168.0.160:5432" + url; // test server
   }
 }
 

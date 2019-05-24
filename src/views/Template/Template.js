@@ -16,7 +16,6 @@ import CardBody from "../../components/Card/CardBody";
 import { Link } from "react-router-dom";
 import appController from "../../controller/controller";
 import API from "../../../services/API";
-import { SketchPicker } from "react-color";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
@@ -24,12 +23,6 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import Select from "react-select";
 import serviceBase from "../../../services/serviceBase";
 
-// var sjc = require("shooju-client");
-// var sj = new sjc(
-//   "https://fuse.shooju.com",
-//   "api.test",
-//   "tMAFDsRVm1ONRAaCzCzAZFFkvwmsf4vUBIfo6DntokOFSlBWWaJjMwAqUZwe9DZZH"
-// );
 
 const styles = {
   cardCategoryWhite: {

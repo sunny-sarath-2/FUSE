@@ -86,7 +86,8 @@ class CreateContentManager extends React.Component {
             default: "",
             appearance: {},
             multiple: "false",
-            type: "string"
+            type: "string",
+            options: ""
           }
         }
       ],
@@ -148,7 +149,8 @@ class CreateContentManager extends React.Component {
         default: "",
         appearance: {},
         multiple: "false",
-        type: "string"
+        type: "string",
+        options: ""
       }
     };
     newArray.push(attr_params);
@@ -330,9 +332,29 @@ class CreateContentManager extends React.Component {
                             <MenuItem value={"string"}>String</MenuItem>
                             <MenuItem value={"text"}>Text</MenuItem>
                             <MenuItem value={"integer"}>Integer</MenuItem>
+                            <MenuItem value={"email"}>Email</MenuItem>
                             <MenuItem value={"date"}>Date</MenuItem>
+                            <MenuItem value={"media"}>Image</MenuItem>
+                            <MenuItem value={"enum"}>Enumeration</MenuItem>
+                            <MenuItem value={"boolean"}>Boolean</MenuItem>
                           </TextField>
                         </Grid>
+                        {attr.params.type === "enum" ? (
+                          <Grid item xs={12} md={10}>
+                            <TextField
+                              id="outlined-name"
+                              label={"Options (separate them with a comma)"}
+                              name={"options"}
+                              fullWidth
+                              type={"text"}
+                              className={classes.textField}
+                              value={attr.params.options}
+                              onChange={e => this.AttrChange(e, i)}
+                              margin="normal"
+                              variant="outlined"
+                            />
+                          </Grid>
+                        ) : null}
                         <Grid item xs={12} md={2}>
                           <div
                             style={{ textAlign: "center", marginTop: "24px" }}

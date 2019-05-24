@@ -63,10 +63,26 @@ class ContentManagerAdd extends React.Component {
   }
   handleChange(e, fieldName, fieldType) {
     console.log(e, fieldName, "check");
-    // console.log(e.target.value, fieldName, fieldType);
     let data = this.state.data;
+    if (e.target.type === "file") {
+      let reader = new FileReader();
+      let file = e.target.files[0];
+      reader.onloadend = theFile => {
+        var filedata = {
+          blob: theFile.target.result,
+          name: file.name,
+          lastModified: file.lastModified,
+          size: file.size,
+          type: file.type
+        };
+        console.log(filedata);
+        data.fields[fieldName] = file.name;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      data.fields[fieldName] = e.target.value;
+    }
     // data["type"] = this.state.model_name;
-    data.fields[fieldName] = e.target.value;
     this.setState({ data: data });
   }
   onEditorChange(e, fieldName) {
@@ -75,6 +91,7 @@ class ContentManagerAdd extends React.Component {
     this.setState({ data: data });
   }
   async SubmitForm() {
+    //console.log(this.state.data);
     await this.setState({
       btnclick: true
     });

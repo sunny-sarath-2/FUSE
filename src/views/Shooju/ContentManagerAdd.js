@@ -34,17 +34,20 @@ class ContentManagerAdd extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.SubmitForm = this.SubmitForm.bind(this);
     this.onEditorChange = this.onEditorChange.bind(this);
+    this.readFile = this.readFile.bind(this);
+    this.saveImage = this.saveImage.bind(this);
+    this.passState = this.passState.bind(this);
   }
   async componentDidMount() {
     this.setState({ loading: true });
     let model = this.props.match.params.model;
     let chapter = this.props.match.params.chapter;
     let response = await API.getOneContentTypes(model);
-    console.log(response);
+
     let chapters = await API.getChaptersbyAdmin({
       affiliate: localStorage.getItem("username")
     });
-    console.log(chapters.series);
+
     let col = [];
     let fields = JSON.parse(response.fields);
     fields.map((prop, key) => {
@@ -61,29 +64,63 @@ class ContentManagerAdd extends React.Component {
     });
     await this.setState({ data: data });
   }
-  handleChange(e, fieldName, fieldType) {
+
+  async readFile(evt, fieldName) {
+    var f = evt.target.files[0];
+    if (f) {
+      if (/(jpe?g|png|gif)$/i.test(f.type)) {
+        var r = new FileReader();
+        r.onload = e => this.passState(e, f, fieldName);
+        r.readAsDataURL(f);
+      } else {
+        alert("Failed file type");
+      }
+    } else {
+      alert("Failed to load file");
+    }
+  }
+  async passState(e, f, fieldName) {
+    var blobURL;
+    var fileName;
+    var base64Img = e.target.result;
+    var dataURI = base64Img;
+    var BASE64_MARKER = ";base64,";
+    var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    var base64 = dataURI.substring(base64Index);
+    var raw = window.atob(base64);
+    var rawLength = raw.length;
+    var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (var i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    var binaryImg = array;
+    var blob = new Blob([binaryImg], { type: f.type });
+    blobURL = window.URL.createObjectURL(blob);
+    fileName = f.name;
+    this.saveImage(base64Img, fieldName, f);
+  }
+  saveImage(image, fieldName, file) {
+    var data = this.state.data;
+    var filedata = {
+      blob: image,
+      name: file.name,
+      lastModified: file.lastModified,
+      size: file.size,
+      type: file.type
+    };
+    data.fields[fieldName] = filedata;
+    this.setState({ data: data });
+  }
+  async handleChange(e, fieldName, fieldType) {
     console.log(e, fieldName, "check");
     let data = this.state.data;
     if (e.target.type === "file") {
-      let reader = new FileReader();
-      let file = e.target.files[0];
-      reader.onloadend = theFile => {
-        var filedata = {
-          blob: theFile.target.result,
-          name: file.name,
-          lastModified: file.lastModified,
-          size: file.size,
-          type: file.type
-        };
-        console.log(filedata);
-        data.fields[fieldName] = file.name;
-      };
-      reader.readAsDataURL(file);
+      await this.readFile(e, fieldName);
     } else {
       data.fields[fieldName] = e.target.value;
+      this.setState({ data: data });
     }
-    // data["type"] = this.state.model_name;
-    this.setState({ data: data });
   }
   onEditorChange(e, fieldName) {
     let data = this.state.data;
@@ -102,9 +139,12 @@ class ContentManagerAdd extends React.Component {
     console.log(response, "response");
     if (response) {
       this.props.history.push("/admin/content-manager");
+    } else {
+      alert("Error! \n Something went wrong");
     }
   }
   render() {
+    console.log(this.state.data);
     const { classes } = this.props;
     return (
       <GridContainer>
@@ -136,7 +176,7 @@ class ContentManagerAdd extends React.Component {
                 </center>
               ) : null}
               {this.state.columns.map((field, i) => {
-                console.log(field);
+                console.log(this.state.data.fields, "this.state.data.fields");
                 return (
                   <div key={i}>
                     <FieldCreate

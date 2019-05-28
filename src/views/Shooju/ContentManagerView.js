@@ -82,6 +82,9 @@ class ContentManagerView extends React.Component {
     this.onEditorChange = this.onEditorChange.bind(this);
     this.copyComponent = this.copyComponent.bind(this);
     this.loadData = this.loadData.bind(this);
+    this.readFile = this.readFile.bind(this);
+    this.saveImage = this.saveImage.bind(this);
+    this.passState = this.passState.bind(this);
   }
   async componentDidMount() {
     let model = this.props.match.params.model;
@@ -103,14 +106,14 @@ class ContentManagerView extends React.Component {
     console.log(response, "response");
 
     let col = [];
-    col.push("id");
+    col.push({ name: "id", params: {} });
     let fields = JSON.parse(modelTypeResponse.fields);
     fields.map((prop, key) => {
-      col.push(prop.name);
+      col.push(prop);
     });
     col = col;
-    col.push("fuse_chapter");
-    col.push("Action");
+    col.push({ name: "fuse_chapter", params: {} });
+    col.push({ name: "Action", params: {} });
 
     if (response.data.length > 0) {
       this.setState({
@@ -130,14 +133,20 @@ class ContentManagerView extends React.Component {
       });
     }
   }
+  base64ArrayBuffer(arrayBuffer) {
+    console.log(arrayBuffer, "arraybuffer");
+    var blob = new Blob([arrayBuffer], { type: "image/jpeg" });
+    var blobURL = window.URL.createObjectURL(blob);
+    console.log(blobURL);
+    return blobURL;
+  }
   tableData(data) {
     //console.log("data", data);
     var arr1 = new Array();
     data.map((td, i) => {
       var arr = new Array();
       this.state.columns.map(col => {
-        //col = col.toLowerCase();
-        if (col === "Action") {
+        if (col.name === "Action") {
           arr.push(
             <span>
               <ViewIcon
@@ -172,10 +181,30 @@ class ContentManagerView extends React.Component {
               />
             </span>
           );
+        } else if (col.params.type === "media") {
+          let imgsrc;
+          if (td[col.name] !== null) {
+            if (typeof td[col.name] === "string") {
+              var media = JSON.parse(td[col.name]);
+              imgsrc = media.blob;
+            } else {
+              var media = td[col.name];
+              imgsrc = media.blob;
+            }
+          }
+          arr.push(
+            <span>
+              <img alt="..." src={imgsrc} height="100" width="150" />
+            </span>
+          );
         } else {
-          if (td[col] !== null) {
-            let c = td[col];
-            arr.push(td[col] != null ? c.toString().substring(0, 50) : td[col]);
+          if (td[col.name] !== null) {
+            let c = td[col.name];
+            arr.push(
+              td[col.name] != null
+                ? c.toString().substring(0, 50)
+                : td[col.name]
+            );
           }
         }
       });
@@ -183,12 +212,62 @@ class ContentManagerView extends React.Component {
     });
     return arr1;
   }
-  handleChange(e, fieldName, fieldType) {
+  async readFile(evt, fieldName) {
+    var f = evt.target.files[0];
+    if (f) {
+      if (/(jpe?g|png|gif)$/i.test(f.type)) {
+        var r = new FileReader();
+        r.onload = e => this.passState(e, f, fieldName);
+        r.readAsDataURL(f);
+      } else {
+        alert("Failed file type");
+      }
+    } else {
+      alert("Failed to load file");
+    }
+  }
+  async passState(e, f, fieldName) {
+    var blobURL;
+    var fileName;
+    var base64Img = e.target.result;
+    var dataURI = base64Img;
+    var BASE64_MARKER = ";base64,";
+    var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    var base64 = dataURI.substring(base64Index);
+    var raw = window.atob(base64);
+    var rawLength = raw.length;
+    var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (var i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    var binaryImg = array;
+    var blob = new Blob([binaryImg], { type: f.type });
+    blobURL = window.URL.createObjectURL(blob);
+    fileName = f.name;
+    this.saveImage(base64Img, fieldName, f);
+  }
+  saveImage(image, fieldName, file) {
+    var data = this.state.data;
+    var filedata = {
+      blob: image,
+      name: file.name,
+      lastModified: file.lastModified,
+      size: file.size,
+      type: file.type
+    };
+    data.fields[fieldName] = filedata;
+    this.setState({ data: data });
+  }
+  async handleChange(e, fieldName, fieldType) {
     // console.log(e.target.value, fieldName, fieldType);
     let data = this.state.data;
-    // data["type"] = this.state.model_name;
-    data.fields[fieldName] = e.target.value;
-    this.setState({ data: data });
+    if (e.target.type === "file") {
+      await this.readFile(e, fieldName);
+    } else {
+      data.fields[fieldName] = e.target.value;
+      this.setState({ data: data });
+    }
   }
   async loadData(e) {
     await this.setState({
@@ -251,7 +330,7 @@ class ContentManagerView extends React.Component {
             <Table
               tableHeaderColor="primary"
               tableHead={this.state.columns.map(col => {
-                return col;
+                return col.name;
               })}
               tableData={this.tableData(this.state.content_list)}
             />
@@ -331,6 +410,7 @@ class ContentManagerView extends React.Component {
   render() {
     const { classes } = this.props;
     const { dense, secondary } = this.state;
+    console.log(this.state.columns);
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>

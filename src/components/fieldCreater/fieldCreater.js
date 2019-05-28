@@ -7,7 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 const FieldCreater = props => {
   let { field, classes, data } = props;
-  console.log(props);
+  //console.log(props);
   switch (field.params.type) {
     case "string":
       return (
@@ -93,32 +93,55 @@ const FieldCreater = props => {
         />
       );
     case "boolean":
+      let booleanvalue;
+      if (data[field.name]) {
+        if (data[field.name].toString() === "true") {
+          booleanvalue = true;
+        } else {
+          booleanvalue = false;
+        }
+      }
       return (
         <div>
           <label>{field.name}</label>
           <Switch
             color="primary"
+            checked={booleanvalue}
             name={field.name}
             value={data[field.name] === "true" ? false : true}
             onChange={e => props.Change(e, field.name, field.params.type)}
           />
+          <label>{data[field.name]}</label>
         </div>
       );
     case "media":
+      let blob;
+      let fname;
+      if (data[field.name]) {
+        if (typeof data[field.name] === "string") {
+          data[field.name] = JSON.parse(data[field.name]);
+        }
+        if (typeof data[field.name] === "object") {
+          blob = data[field.name].blob;
+          fname = data[field.name].name;
+        }
+      }
       return (
-        <TextField
-          id="outlined-name"
-          label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
-          name={field.name}
-          fullWidth
-          type={"file"}
-          className={classes.textField}
-          value={data[field.name]}
-          placeholder={"select file"}
-          onChange={e => props.Change(e, field.name, field.params.type)}
-          margin="normal"
-          variant="outlined"
-        />
+        <div>
+          {blob ? <img alt="..." src={blob} height="100" width="150" /> : null}
+          <TextField
+            id="outlined-name"
+            label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+            name={field.name}
+            fullWidth
+            type={"file"}
+            className={classes.textField}
+            //value={""}
+            onChange={e => props.Change(e, field.name, field.params.type)}
+            margin="normal"
+            variant="outlined"
+          />
+        </div>
       );
     case "enum":
       let options = field.params.options.split(",");
@@ -131,7 +154,7 @@ const FieldCreater = props => {
           select
           type={"text"}
           className={classes.textField}
-          value={data[field.name]}
+          value={data[field.name] ? data[field.name] : ""}
           onChange={e => props.Change(e, field.name, field.params.type)}
           margin="normal"
           variant="outlined"

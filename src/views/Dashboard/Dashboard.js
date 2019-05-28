@@ -144,7 +144,7 @@ class Dashboard extends React.Component {
       //   site_desc: "This is site description from Shooju DB" + " "
       // });
       // console.log(site_inc);
-      //console.log(postresponse);
+      // console.log(postresponse);
     });
   }
 

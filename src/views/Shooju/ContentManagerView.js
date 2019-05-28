@@ -306,27 +306,6 @@ class ContentManagerView extends React.Component {
       case "main":
         return (
           <div>
-            {/* <div>
-              <Grid container spacing={24} style={{ marginTop: "0px" }}>
-                <Grid item xs={12} sm={6}>
-                  <label>Select Chapter</label>
-                  <Select
-                    value={this.state.chapterselected}
-                    onChange={e => {
-                      this.loadData(e);
-                    }}
-                    options={this.state.chapters.map(suggestion => ({
-                      value: suggestion.fields.chapter,
-                      label: suggestion.fields.chapter,
-                      series_id: suggestion.fields.chapter
-                    }))}
-                    //components={components}
-                    placeholder="Search Chapter"
-                    isClearable
-                  />
-                </Grid>
-              </Grid>
-            </div> */}
             <Table
               tableHeaderColor="primary"
               tableHead={this.state.columns.map(col => {

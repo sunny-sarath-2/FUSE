@@ -127,7 +127,7 @@ if (id_token == null) {
         icon: Person,
         component: AffiliateRegister,
         layout: "/admin"
-      },
+      }
       // {
       //   path: "/content-manager",
       //   name: "Content Manager",
@@ -135,20 +135,20 @@ if (id_token == null) {
       //   component: ContentManager,
       //   layout: "/admin"
       // },
-      {
-        path: "/content/view/:model",
-        name: "Content Manager View",
-        icon: Language,
-        component: ContentManagerView,
-        layout: "/admin"
-      },
-      {
-        path: "/content/add/:model",
-        name: "Content Manager Add",
-        icon: Language,
-        component: ContentManagerAdd,
-        layout: "/admin"
-      }
+      // {
+      //   path: "/content/view/:model",
+      //   name: "Content Manager View",
+      //   icon: Language,
+      //   component: ContentManagerView,
+      //   layout: "/admin"
+      // },
+      // {
+      //   path: "/content/add/:model",
+      //   name: "Content Manager Add",
+      //   icon: Language,
+      //   component: ContentManagerAdd,
+      //   layout: "/admin"
+      // }
     ];
   } else if (userDetails.userType == "affilate") {
     dashboardRoutes = [

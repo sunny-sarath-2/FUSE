@@ -23,7 +23,6 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import Select from "react-select";
 import serviceBase from "../../../services/serviceBase";
 
-
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {

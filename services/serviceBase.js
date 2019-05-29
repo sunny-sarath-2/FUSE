@@ -54,7 +54,8 @@ function getUrl(url) {
   } else {
     return "https://localhost:1337" + url;
     //return "http://3.215.207.179:1337" + url; //devbox
-    // return "https://192.168.0.160:5432" + url; // test server
+    //return "https://192.168.0.160:5432" + url; // test server
+    //return "https://192.168.0.198:1337" + url; // test server
   }
 }
 
